@@ -1,0 +1,42 @@
+
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 1;
+    padding: 50px;
+    color: #ffffff;
+    background-color: #222222;
+}
+
+div.main {
+    position: relative;
+    height: 180px;
+}
+
+div.square {
+    position: absolute;
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+}
+
+div.square1 {
+    top: 0px;
+    left: 0px;
+    background-color: #2096fe;
+}
+
+div.square2 {
+    top: 50px;
+    left: 0px;
+    background-color: #20fe50;
+}
+
+div.square3 {
+    top: 100px;
+    left: 0px;
+    background-color: #fe8820;
+}
+
+input[type="range"] {
+    width:530px;
+}

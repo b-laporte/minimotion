@@ -1,0 +1,52 @@
+{
+    "name": "anim-js",
+    "version": "0.0.0-SNAPSHOT",
+    "description": "JavaScript animations with async timelines",
+    "keywords": [
+        "animation",
+        "javascript",
+        "typescript",
+        "css",
+        "dom",
+        "svg",
+        "canvas",
+        "timeline"
+    ],
+    "repository": {
+        "type": "git"
+    },
+    "author": "Bertrand Laporte",
+    "scripts": {
+        "clean": "rm -rf dist/",
+        "build-test": "rollup -c rollup.test.config.js",
+        "build": "yarn run build-test",
+        "build-samples": "cpx 'src/samples/*.{html,js,css,svg,png,json}' dist && rollup -c rollup.samples.config.js",
+        "mocha": "mocha dist/test.js --reporter dot",
+        "test": "yarn run build && yarn run mocha"
+    },
+    "license": "Apache-2.0",
+    "bugs": {},
+    "devDependencies": {
+        "@types/node": "^10.3.5",
+        "@types/mocha": "^5.2.3",
+        "rollup": "^0.61.2",
+        "rollup-watch": "^4.3.1",
+        "rollup-plugin-typescript2": "^0.15.0",
+        "rollup-plugin-node-resolve": "^3.3.0",
+        "rollup-plugin-node-builtins": "^2.1.2",
+        "rollup-plugin-uglify": "^4.0.0",
+        "rollup-plugin-minify-es": "^1.1.1",
+        "rollup-plugin-gzip": "^1.3.0",
+        "uglify-es": "^3.3.9",
+        "typescript": ">=2.9.2",
+        "mocha": "^5.2.0",
+        "cpx": "1.5.0",
+        "http-server": "^0.11.1"
+    },
+    "dependencies": {
+        "typescript": ">=2.9.2"
+    },
+    "engines": {
+        "node": ">=10.3.5"
+    }
+}
