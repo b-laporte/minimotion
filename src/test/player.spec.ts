@@ -111,10 +111,65 @@ describe("Player", () => {
         assert.deepEqual(traces, [0, 16, 32, 48, 64], "traces");
     });
 
-    // todo:
-    // pause
-    // stop
-    // isPlaying
-    // play inside play
+    it("should support isPlaying", async function () {
+        let p = new TestPlayer2(animCtxtXYZ(), anim2);
+        assert.equal(p.isPlaying, false, "not playing at start");
+        let pp = p.play({ raf: testRaf });
+        assert.equal(p.isPlaying, true, "p is playing");
+        await pp;
+        assert.equal(p.isPlaying, false, "not playing any more");
+    });
 
+    it("should support pause", async function () {
+        let p = new TestPlayer2(animCtxtXYZ(), anim2);
+        await p.play({
+            raf: testRaf, onupdate: (timePos) => {
+                if (timePos === 32) {
+                    p.pause();
+                }
+            }
+        });
+        assert.equal(p.position, 32, "paused at 32");
+
+        await p.play({ raf: testRaf });
+        assert.equal(p.position, 64, "play restarted to the end");
+    });
+
+    it("should support stop", async function () {
+        let p = new TestPlayer2(animCtxtXYZ(), anim2), sp;
+        await p.play({
+            raf: testRaf,
+            onupdate: (timePos) => {
+                if (timePos === 32) {
+                    sp = p.stop();
+                }
+            }
+        });
+        await sp;
+        assert.equal(p.position, 0, "position back to 0");
+    });
+
+    it("should automatically pause/restart when play is called inside a play call-stack", async function () {
+        let p = new TestPlayer2(animCtxtXYZ(), anim2), pp;
+        await p.play({
+            raf: testRaf,
+            onupdate: (timePos) => {
+                if (timePos === 48) {
+                    pp = p.play({ raf: testRaf, forward: false });
+                }
+            }
+        });
+        assert.equal(p.position !== 0, true, "initial play released before 2nd play completion");
+        await pp;
+        assert.deepEqual(logs(), [
+            '0: #x.left = 0px;',
+            '0: #x.left = 25px;',
+            '0: #x.left = 50px;',
+            '0: #x.left = 75px;',
+            '0: #x.left = 50px;',
+            '0: #x.left = 25px;',
+            '0: #x.left = 0px;'
+        ], "logs");
+    });
+    
 });

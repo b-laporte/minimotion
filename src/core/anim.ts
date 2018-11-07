@@ -831,6 +831,7 @@ class Delay extends Tween {
 }
 
 const LENGTH_UNPROCESSED = -2, LENGTH_INFINITE = -1;
+let PLAY_COUNT = 0;
 
 function nextTimeTick(t1: number, fwd: boolean) {
     if (t1 < 0) return 0;
@@ -843,6 +844,7 @@ export class Player implements AnimPlayer {
     protected timeLine: TimeLine;
     protected currentTick = -1;
     protected length = LENGTH_UNPROCESSED;
+    private playId = 0;
 
     constructor(public animFunction: (a: Anim, ...args: any[]) => any) {
         this.timeLine = new TimeLine("root", animFunction);
@@ -852,7 +854,7 @@ export class Player implements AnimPlayer {
     }
 
     async play(args?: PlayArguments): Promise<number> {
-        let onupdate: ((time: number) => void) | undefined, fwd = true, raf: ((callback: (time: number) => void) => void) | undefined;
+        let onupdate: ((time: number) => void) | undefined, p = this, fwd = true, raf: ((callback: (time: number) => void) => void) | undefined;
         if (args) {
             onupdate = args.onupdate;
             raf = args.raf;
@@ -861,9 +863,12 @@ export class Player implements AnimPlayer {
         raf = raf || requestAnimationFrame;
 
         return new Promise<number>((resolve) => {
-            let tl = this.timeLine;
+            let tl = this.timeLine, playId = p.playId = ++PLAY_COUNT;
             async function paint() {
                 let t1 = tl.currentTime, t2 = nextTimeTick(tl.currentTime, fwd)
+                if (p.playId !== playId) {
+                    return resolve(t1); // play was stopped or restarted in the meantime
+                }
                 await tl.move(t2)
                 let ct = tl.currentTime;
                 if (onupdate && t1 !== ct) {
@@ -871,12 +876,22 @@ export class Player implements AnimPlayer {
                 }
                 if ((fwd && tl.endTime === ct) || !fwd && ct === 0) {
                     resolve(ct);
+                    p.playId = 0;
                 } else {
                     raf!(paint);
                 }
             }
             paint();
         });
+    }
+
+    pause() {
+        this.playId = 0;
+    }
+
+    async stop(): Promise<number> {
+        this.playId = 0;
+        return this.timeLine.move(0);
     }
 
     async move(timeTarget) {
@@ -899,6 +914,10 @@ export class Player implements AnimPlayer {
     get position(): number {
         let t = this.timeLine.currentTime;
         return t < 0 ? 0 : t;
+    }
+
+    get isPlaying(): boolean {
+        return this.playId !== 0;
     }
 
     private async runTicker() {

@@ -102,7 +102,6 @@ export class TestPlayer2 extends Player {
 async function runTicker(tl: TimeLine, resolve: Function) {
     while (CURRENT_TICK < MAX_ITERATION) {
         CURRENT_TICK++;
-        // console.log("TICK", CURRENT_TICK);
         await tl.move(CURRENT_TICK * 16);
 
         if (tl.endTime === tl.currentTime) {

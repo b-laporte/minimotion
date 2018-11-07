@@ -118,9 +118,10 @@ export interface PlayArguments {
 
 export interface AnimPlayer {
     position: number;
+    isPlaying: boolean;
     duration(): Promise<number>; // -1 if infinite
     move(timePosition: number): Promise<number>;
     play(args?: PlayArguments): Promise<number>;
-    // pause();
-    // stop();
+    pause(): void;
+    stop(): Promise<number>;
 }
