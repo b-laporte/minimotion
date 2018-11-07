@@ -1,4 +1,4 @@
-import { easeInCubic, easeOutBack } from './../../misc/src/core/easings';
+import { easeInCubic, easeOutBack, linear } from './../../misc/src/core/easings';
 import { Anim } from "../core/types";
 import { easeInOutCubic, easeInCirc, easeOutCubic } from '../core/easings';
 import { Player } from '../core/anim';
@@ -6,19 +6,49 @@ import { Player } from '../core/anim';
 
 
 let r = document.getElementById("progressRange"), player: Player | undefined, animDuration = 0;
-if (r) {
-    r.addEventListener("input", e => {
+
+function syncPlayer() {
+    if (!r || !player) return;
+    (r as any).value = Math.trunc(100 * player.position / animDuration);
+}
+
+let listeners = {
+    "progressRange::input": function () {
         let v = parseInt(r!["value"], 10); // 0 <= v <= 100
         if (player && animDuration) {
             player.move(animDuration * v / 100);
         }
-    })
+    },
+    "playBtn::click": async function () {
+        if (!player) return;
+        if (player.position === animDuration) {
+            await player.move(0);
+        }
+        player.play({ onupdate: syncPlayer });
+    },
+    "playBackBtn::click": async function () {
+        if (!player) return;
+        if (player.position === 0) {
+            await player.move(animDuration);
+        }
+        player.play({ forward: false, onupdate: syncPlayer });
+    }
+}
+for (let k in listeners) {
+    if (!listeners.hasOwnProperty(k)) continue;
+    if (k.match(/(\w+)\:\:(\w+)/)) {
+        let b = document.getElementById(RegExp.$1);
+        if (b) {
+            b.addEventListener(RegExp.$2, listeners[k]);
+        }
+    }
+
 }
 
 async function sample1(a: Anim) {
-    a.defaults({ duration: 100, easing: easeInOutCubic })
-    await a.animate({ target: ".square1", left: [0, 500], release: -80 });
-    await a.animate({ target: ".square2", left: [0, 500], release: -80 });
+    a.defaults({ duration: 500, easing: easeInOutCubic })
+    await a.animate({ target: ".square1", left: [0, 500], release: -400 });
+    await a.animate({ target: ".square2", left: [0, 500], release: -80, easing: linear });
     a.animate({ target: ".square3", left: [0, 500] });
 }
 
@@ -43,7 +73,7 @@ async function sample4(a: Anim) {
 }
 
 async function init() {
-    player = new Player(sample4);
+    player = new Player(sample1);
     animDuration = await player.duration();
 }
 

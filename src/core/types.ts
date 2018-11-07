@@ -110,16 +110,17 @@ export interface AnimMarker {
 
 export interface PlayArguments {
     onupdate?: (time: number) => void;
+    forward?: boolean;
+    raf?: (callback: (time: number) => void) => void;
     // until?: number; // time position
-    // forward?: boolean;
     // speed?: number;
 }
 
 export interface AnimPlayer {
-    position(): number;
+    position: number;
     duration(): Promise<number>; // -1 if infinite
     move(timePosition: number): Promise<number>;
-    // play(args?:PlayArguments): Promise<number>;
+    play(args?: PlayArguments): Promise<number>;
     // pause();
     // stop();
 }

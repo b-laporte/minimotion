@@ -79,17 +79,23 @@ export function animCtxtXYZ() {
 }
 
 export class TestPlayer extends Player {
-
     constructor(public elements: TestElement[], public animFunction: (a: Anim, ...args: any[]) => any) {
         super(animFunction);
         this.timeLine.selectorCtxt = new TestSelectorCtxt(elements);
     }
 
-    async play() {
-        return new Promise((resolve) => {
+    async play(args?):Promise<number> {
+        return new Promise<number>((resolve) => {
             CURRENT_TICK = -1;
             runTicker(this.timeLine, resolve);
         });
+    }
+}
+
+export class TestPlayer2 extends Player {
+    constructor(public elements: TestElement[], public animFunction: (a: Anim, ...args: any[]) => any) {
+        super(animFunction);
+        this.timeLine.selectorCtxt = new TestSelectorCtxt(elements);
     }
 }
 
@@ -101,7 +107,7 @@ async function runTicker(tl: TimeLine, resolve: Function) {
 
         if (tl.endTime === tl.currentTime) {
             // done
-            resolve();
+            resolve(tl.endTime);
             return;
         }
         if (CURRENT_TICK === MAX_ITERATION) {

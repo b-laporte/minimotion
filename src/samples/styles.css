@@ -7,6 +7,10 @@ body {
     background-color: #222222;
 }
 
+a {
+    color: #ffffff;
+}
+
 div.main {
     position: relative;
     height: 180px;
@@ -39,4 +43,8 @@ div.square3 {
 
 input[type="range"] {
     width:530px;
+}
+
+div.player {
+    padding-top:10px;
 }

@@ -286,9 +286,8 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         let n = forward ? MAX_TIME : -1, n2 = -1, ae = this.rList, found = false;
         while (ae) {
             n2 = ae.getNextMarkerPosition(time, forward);
-            // if (time === 128) {
-            //     log(this.name, ": ae.getNextMarkerPosition for ", ae.name, " - time: ", time, " -> ", n2);
-            // }
+
+            log(this.name, ": ae.getNextMarkerPosition for ", ae.name, " - time: ", time, " -> ", n2);
             if (n2 > -1) {
                 if (forward) {
                     // keep the min of the markers
@@ -304,7 +303,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
                     }
                 }
             }
-            
+
             // if (this.name === "iteration#1") {
             //     log("ae", ae.name, ae.nextEntity? ae.nextEntity.name : "null")
             // }
@@ -743,7 +742,7 @@ class Tween implements AnimEntity {
     }
 
     displayFrame(time: number, targetTime: number, forward: boolean) {
-        //log(this.name, ": display frame", time, targetTime, forward)
+        // log(this.name, ": display frame", time, targetTime, forward)
         if (this.startTime <= time && time <= this.endTime) {
             this.currentTime = time;
             if (!this.skipRendering && !this.delayOnly) {
@@ -796,7 +795,6 @@ class Tween implements AnimEntity {
         // - if first time, releaseTime needs to be included, and we have 2 options:
         //         delayTime <= releaseTime <= doneTime (release<=0)
         //     or  delayTime <= doneTime <= releaseTime (release>0)
-
         if (forward) {
             if (time < this.delayTime) return this.delayTime;
 
@@ -834,6 +832,12 @@ class Delay extends Tween {
 
 const LENGTH_UNPROCESSED = -2, LENGTH_INFINITE = -1;
 
+function nextTimeTick(t1: number, fwd: boolean) {
+    if (t1 < 0) return 0;
+    let t2 = fwd ? t1 + FRAME_MS : t1 - FRAME_MS;
+    return t2 < 0 ? 0 : t2;
+}
+
 export class Player implements AnimPlayer {
     maxDuration: number = MAX_TL_DURATION_MS;
     protected timeLine: TimeLine;
@@ -847,13 +851,33 @@ export class Player implements AnimPlayer {
         }
     }
 
-    // async play(args?: PlayArguments): Promise<number> {
-    //     let onupdate: ((time: number) => void) | undefined;
-    //     if (args) {
-    //         onupdate = args.onupdate;
-    //     }
-    //     // TODO
-    // }
+    async play(args?: PlayArguments): Promise<number> {
+        let onupdate: ((time: number) => void) | undefined, fwd = true, raf: ((callback: (time: number) => void) => void) | undefined;
+        if (args) {
+            onupdate = args.onupdate;
+            raf = args.raf;
+            fwd = (args.forward !== undefined) ? !!args.forward : true;
+        }
+        raf = raf || requestAnimationFrame;
+
+        return new Promise<number>((resolve) => {
+            let tl = this.timeLine;
+            async function paint() {
+                let t1 = tl.currentTime, t2 = nextTimeTick(tl.currentTime, fwd)
+                await tl.move(t2)
+                let ct = tl.currentTime;
+                if (onupdate && t1 !== ct) {
+                    onupdate(ct);
+                }
+                if ((fwd && tl.endTime === ct) || !fwd && ct === 0) {
+                    resolve(ct);
+                } else {
+                    raf!(paint);
+                }
+            }
+            paint();
+        });
+    }
 
     async move(timeTarget) {
         return this.timeLine.move(timeTarget);
@@ -862,7 +886,7 @@ export class Player implements AnimPlayer {
     async duration(): Promise<number> {
         // TODO support infinite duration
         if (this.length === LENGTH_UNPROCESSED) {
-            let pos = this.position();
+            let pos = this.position;
             this.timeLine.skipRendering = true;
             await this.runTicker();
             this.length = this.timeLine.currentTime;
@@ -872,7 +896,7 @@ export class Player implements AnimPlayer {
         return this.length;
     }
 
-    position(): number {
+    get position(): number {
         let t = this.timeLine.currentTime;
         return t < 0 ? 0 : t;
     }
@@ -884,8 +908,7 @@ export class Player implements AnimPlayer {
             this.currentTick++;
             await tl.move(this.currentTick * FRAME_MS);
             if (tl.endTime === tl.currentTime) {
-                // done
-                return;
+                return; // done
             }
         }
     }
