@@ -112,23 +112,24 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
     }
 
     private checkState() {
+        // log(this.name, ":checkState @", this.currentTime, this.released, this.done, this.tlFunctionComplete, this.lastTargetForward);
         // check if the timeline has released or completed
         if (this.released && this.done) return;
-        if (this.tlFunctionComplete) {
+        if (this.tlFunctionComplete && this.lastTargetForward) {
             //console.log(this.name, ": check state");
             let ae = this.rList, allReleased = true, allDone = false;
             let count = 0;
             while (ae) {
-                // console.log(this.name, ": check ae: ", ae.name, " released: ", ae.released)
+                // log(this.name, ": check ae: ", ae.name, " released: ", ae.released)
                 count++
                 if (!ae.released) {
                     allReleased = false;
                 }
                 ae = ae.nextEntity;
             }
-            // console.log(this.name, ": check ", count, allReleased, allDone)
+            // log(this.name, ": check ", count, allReleased, allDone)
             if (allReleased) {
-                // console.log(this.name, ": RELEASED", (this.releaseCb !== undefined))
+                // log(this.name, ": RELEASED", (this.releaseCb !== undefined))
                 this.released = true;
                 if (this.releaseCb) {
                     this.releaseCb(); // will send release Signal
@@ -136,7 +137,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
                 }
             }
             if (count === 0) {
-                // console.log(this.name, ": DONE", (this.doneCb !== undefined))
+                // log(this.name, ": DONE")
                 this.done = true;
                 allDone = true;
             }
@@ -173,6 +174,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
             } else {
                 if (forward !== this.lastTargetForward) {
                     // we changed direction: we may have to re-display the current frame if we are on a marker
+                    // log(">> display last frame")
                     let m = this.getMarker(currentTime);
                     if (m) {
                         this.displayFrame(currentTime, timeTarget, forward);
@@ -218,7 +220,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
      * @param forward true if the animation is going forward (i.e. time is increasing)
      */
     displayFrame(time: number, targetTime: number, forward: boolean) {
-        // console.log(this.name, ":display @", time, "target:", targetTime, "forward:", forward);
+        // log(this.name, ":display @", time, "target:", targetTime, "forward:", forward);
         this.currentTime = time;
         this.lastTargetTime = targetTime;
         this.lastTargetForward = forward;
@@ -284,9 +286,9 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         let n = forward ? MAX_TIME : -1, n2 = -1, ae = this.rList, found = false;
         while (ae) {
             n2 = ae.getNextMarkerPosition(time, forward);
-            if (time === 128) {
-                log(this.name, ": ae.getNextMarkerPosition for ", ae.name, " - time: ", time, " -> ", n2);
-            }
+            // if (time === 128) {
+            //     log(this.name, ": ae.getNextMarkerPosition for ", ae.name, " - time: ", time, " -> ", n2);
+            // }
             if (n2 > -1) {
                 if (forward) {
                     // keep the min of the markers
@@ -302,6 +304,10 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
                     }
                 }
             }
+            
+            // if (this.name === "iteration#1") {
+            //     log("ae", ae.name, ae.nextEntity? ae.nextEntity.name : "null")
+            // }
             ae = ae.nextEntity;
         }
 
@@ -343,12 +349,13 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
             }
         }
 
+        // log(this.name, ": getNextMarkerPosition -> result = ", found ? n : -1)
         return found ? n : -1;
     }
 
     addEntity(ae: AnimEntity) {
         // this function is called through the calls done in the timeline function
-        log(this.name, ": addEntity", ae.name, " @", this.currentTime);
+        // log(this.name, ": addEntity", ae.name, " @", this.currentTime);
         ASYNC_COUNTER++;
         if (!ae.startRegistered) {
             ae.init(this.currentTime);
@@ -363,6 +370,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
 
         if (!this.rList) {
             this.rList = ae;
+            ae.nextEntity = null;
         } else {
             // insert new entity first
             ae.nextEntity = this.rList;
@@ -374,7 +382,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
     }
 
     removeEntity(ae: AnimEntity) {
-        log(this.name, ": removeEntity", ae.name, " @", this.currentTime);
+        // log(this.name, ": removeEntity", ae.name, " @", this.currentTime);
         ASYNC_COUNTER++;
         let e = this.rList;
         if (!ae.endRegistered && this.lastTargetForward) {
@@ -626,6 +634,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
                     ac.attach(a1 as TimeLine);
                     if (inSequence) {
                         await ac.releaseSignal();
+                        // log(">> release received: ", i);
                         ASYNC_COUNTER++;
                     }
                 }
@@ -734,12 +743,11 @@ class Tween implements AnimEntity {
     }
 
     displayFrame(time: number, targetTime: number, forward: boolean) {
-        // console.log(this.name, ": display frame", time, targetTime, forward)
+        //log(this.name, ": display frame", time, targetTime, forward)
         if (this.startTime <= time && time <= this.endTime) {
             this.currentTime = time;
             if (!this.skipRendering && !this.delayOnly) {
                 let targetFrame = time === targetTime;
-
                 if ((targetFrame && this.delayTime <= time && time <= this.doneTime)) {
                     this.setValue(time - this.delayTime);
                 } else if (!targetFrame) {
@@ -773,7 +781,10 @@ class Tween implements AnimEntity {
         let d = this.duration, progression = d === 0 ? 1 : elapsed / d;
         if (this.targetElt && this.isNumber) {
             // todo: 2nd easing parameter = elasticity
-            this.targetElt.style[this.propName] = roundNbr(this.propFrom + (this.propTo - this.propFrom) * this.easing(progression, 100)) + this.unit;
+            let v = roundNbr(this.propFrom + (this.propTo - this.propFrom) * this.easing(progression, 100)) + this.unit;
+            // log(">> style." + this.propName + "=" + v);
+            // log(">>", this.propFrom, this.propTo, "elapsed=" + elapsed, "delayTime=" + this.delayTime, "d=" + d, "progression=" + progression);
+            this.targetElt.style[this.propName] = v;
         }
     }
 

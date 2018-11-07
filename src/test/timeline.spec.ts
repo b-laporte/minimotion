@@ -374,21 +374,22 @@ describe("Timeline", () => {
             ], 'logs ok');
         });
 
-        async function moveFwdBackFwd(time1, time2, time3) {
+        async function moveFwdBackFwd(tl, time1, time2, time3) {
             let p = new TestPlayer(animCtxtXYZ(), tl);
-            // activateLogs();
-            // console.log("---- PART 1")
+            let trace = false;
+            trace && activateLogs();
+            trace && console.log("---- PART 1")
             await p.move(time1);
             reset();
-            // console.log("---- PART 2")
+            trace && console.log("---- PART 2")
             await p.move(time2);
             logs().push("BACK");
-            // console.log("---- PART 3")
+            trace && console.log("---- PART 3")
             return p.move(time3);
         }
 
         it("should allow to quickly jump partially fwd/back/fwd in a tween (1)", async function () {
-            await moveFwdBackFwd(144, 80, 224);
+            await moveFwdBackFwd(tl, 144, 80, 224);
             assert.deepEqual(logs(), [
                 '0: #x.top = 200px;',
                 '0: #z.top = 0px;',
@@ -403,7 +404,7 @@ describe("Timeline", () => {
         });
 
         it("should allow to quickly jump partially fwd/back/fwd in a tween (2)", async function () {
-            await moveFwdBackFwd(208, 144, 288);
+            await moveFwdBackFwd(tl, 208, 144, 288);
             assert.deepEqual(logs(), [
                 '0: #y.top = 200px;',
                 '0: #z.top = 150px;',
@@ -417,7 +418,7 @@ describe("Timeline", () => {
         });
 
         it("should allow to quickly jump partially fwd/back/fwd in a tween (3)", async function () {
-            await moveFwdBackFwd(48, 0, 48);
+            await moveFwdBackFwd(tl, 48, 0, 48);
             assert.deepEqual(logs(), [
                 '0: #x.top = 0px;',
                 'BACK',
@@ -425,8 +426,70 @@ describe("Timeline", () => {
             ], 'logs ok');
         });
 
+        async function tl2(a: Anim) {
+            a.iterate({ targets: "colItem", sequence: true }, a => {
+                a.animate({ left: [0, 100], duration: 100, easing: linear, release: -50 });
+            });
+        }
+
+        it("should support sequence iteration fwd/back/fwd (1)", async function () {
+            await moveFwdBackFwd(tl2, 200, 0, 96);
+            assert.deepEqual(logs(), [
+                '0: #z.left = 0px;',
+                '0: #y.left = 0px;',
+                '0: #x.left = 0px;',
+                'BACK',
+                '0: #y.left = 50px;',
+                '0: #x.left = 100px;',
+                '0: #z.left = 0px;'
+            ], 'logs ok');
+        });
+
+        it("should support sequence iteration fwd/back/fwd (2)", async function () {
+            await moveFwdBackFwd(tl2, 16, 0, 96);
+            assert.deepEqual(logs(), [
+                '0: #x.left = 0px;',
+                'BACK',
+                '0: #y.left = 50px;',
+                '0: #x.left = 100px;',
+                '0: #z.left = 0px;'
+            ], 'logs ok');
+        });
+
+        async function tl3(a: Anim) {
+            a.iterate({ targets: "colItem", sequence: false }, a => {
+                a.animate({ left: [0, 100], duration: 100, easing: linear, release: -50 });
+            });
+        }
+
+        it("should support parallel iteration fwd/back/fwd (1)", async function () {
+            await moveFwdBackFwd(tl3, 200, 0, 200);
+            assert.deepEqual(logs(), [
+                '0: #z.left = 0px;',
+                '0: #y.left = 0px;',
+                '0: #x.left = 0px;',
+                'BACK',
+                '0: #x.left = 100px;',
+                '0: #y.left = 100px;',
+                '0: #z.left = 100px;'
+            ], 'logs ok');
+        });
+
+        it("should support parallel iteration fwd/back/fwd (2)", async function () {
+            await moveFwdBackFwd(tl3, 32, 0, 64);
+            assert.deepEqual(logs(), [
+                '0: #z.left = 0px;',
+                '0: #y.left = 0px;',
+                '0: #x.left = 0px;',
+                'BACK',
+                '0: #x.left = 66.6px;',
+                '0: #y.left = 66.6px;',
+                '0: #z.left = 66.6px;'
+            ], 'logs ok');
+        });
+
         // + repeat
-        // + foreach
+        // + iterate
     });
 
 });

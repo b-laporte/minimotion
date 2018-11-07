@@ -5,13 +5,12 @@ import { Player } from '../core/anim';
 
 
 
-let r = document.getElementById("progressRange"), player: Player | undefined;
+let r = document.getElementById("progressRange"), player: Player | undefined, animDuration = 0;
 if (r) {
     r.addEventListener("input", e => {
         let v = parseInt(r!["value"], 10); // 0 <= v <= 100
-        let maxTime = 150;
-        if (player) {
-            player.move(maxTime * v / 100);
+        if (player && animDuration) {
+            player.move(animDuration * v / 100);
         }
     })
 }
@@ -24,13 +23,18 @@ async function sample1(a: Anim) {
 }
 
 async function sample2(a: Anim) {
-    // TODO: fix bugs
     a.iterate({ targets: ".square", sequence: true }, a => {
         a.animate({ left: [0, 500], duration: 100, easing: easeInOutCubic, release: -80 });
     });
 }
 
 async function sample3(a: Anim) {
+    a.iterate(".square", (a, idx) => {
+        a.animate({ left: [0, 500], duration: 100, easing: easeInOutCubic, delay: idx * 40 });
+    });
+}
+
+async function sample4(a: Anim) {
     a.iterate({ targets: ".square" }, async (a, idx) => {
         await a.animate({ delay: idx * 20, left: [0, 300], duration: 20, easing: easeInCubic });
         await a.animate({ left: [300, 100], duration: 10, easing: easeOutBack });
@@ -38,9 +42,9 @@ async function sample3(a: Anim) {
     });
 }
 
-function init() {
-    player = new Player(sample3);
-
+async function init() {
+    player = new Player(sample4);
+    animDuration = await player.duration();
 }
 
 init();
