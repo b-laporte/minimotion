@@ -40,6 +40,10 @@ export async function exhaustAsyncPipe() {
             // the first await allows animations to add new instructions on the await queue (and these awaits don't increment ASYNC_COUNTER)
             c1 = -1;
         }
+        if (ASYNC_COUNTER > 1000) {
+            // purpose of ASYNC_COUNTER is to track changes, we don't care of the actual value
+            ASYNC_COUNTER = 0;
+        }
         count++;
     }
     //console.log(" <<< exhaustAsyncPipe end:", count);
@@ -287,7 +291,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         while (ae) {
             n2 = ae.getNextMarkerPosition(time, forward);
 
-            log(this.name, ": ae.getNextMarkerPosition for ", ae.name, " - time: ", time, " -> ", n2);
+            // log(this.name, ": ae.getNextMarkerPosition for ", ae.name, " - time: ", time, " -> ", n2);
             if (n2 > -1) {
                 if (forward) {
                     // keep the min of the markers
@@ -303,10 +307,6 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
                     }
                 }
             }
-
-            // if (this.name === "iteration#1") {
-            //     log("ae", ae.name, ae.nextEntity? ae.nextEntity.name : "null")
-            // }
             ae = ae.nextEntity;
         }
 
@@ -544,6 +544,12 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         let tween: Tween | null = null;
         for (let p in params) {
             if (!defaultSettings.hasOwnProperty(p) && p !== 'target') {
+                // TODO
+                // - define tween type: style, attribute or transform
+                // - get to value & unit, determine if relative (i.e. starts with "+" or "-")
+                // - get from value (unit should be the same as to)
+                // - identify value type (dimension, color, unit-less)
+
                 let propName: string = p, val = params[p], propFrom: any, propTo: any;
                 if (Array.isArray(val)) {
                     if (val.length !== 2) {
@@ -557,6 +563,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
                     propTo = val
                 }
                 // create a tween for each prop to animate
+                // TODO clone if tween already exists to skip 2nd init
                 tween = new Tween(targetElt, propName, propFrom, propTo, duration, easing, delay, release);
                 tween.attach(this);
             }
@@ -581,32 +588,43 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         return;
     }
 
+    async group(instructions: ((a: Anim) => void));
+    async group(name: string, instructions: ((a: Anim) => void))
+    async group(nameOrInstructions: string | ((a: Anim) => void), instructions?: ((a: Anim) => void)) {
+        let name = "group";
+        if (typeof nameOrInstructions === "string") {
+            name = nameOrInstructions;
+        } else {
+            instructions = nameOrInstructions as ((a: Anim) => void);
+        }
+        if (instructions) {
+            let t = new TimeLine(name + "#" + ++AE_COUNT, instructions);
+            t.attach(this);
+            await t.releaseSignal();
+            ASYNC_COUNTER++;
+        }
+    }
+
     async sequence(...blocks: Instructions[]): Promise<any> {
         let len = blocks.length;
         if (!len) return;
-        let main = new TimeLine("sequence#" + ++AE_COUNT, async function (a) {
+        await this.group("sequence", async function (a) {
             for (let i = 0; len > i; i++) {
-                let ac = new TimeLine("block#" + i, blocks[i]);
-                ac.attach(a as TimeLine);
-                await ac.releaseSignal();
+                await a.group("block." + i, blocks[i]);
                 ASYNC_COUNTER++;
             }
         });
-        main.attach(this);
-        await main.releaseSignal();
         ASYNC_COUNTER++;
     }
 
     async parallelize(...tracks: ((a: Anim) => void)[]): Promise<any> {
         let len = tracks.length;
         if (!len) return;
-        let main = new TimeLine("tracks#" + ++AE_COUNT, function (a) {
+        await this.group("tracks", a => {
             for (let i = 0; len > i; i++) {
-                (new TimeLine("track#" + i, tracks[i])).attach(a as TimeLine);
+                a.group("track." + i, tracks[i]);
             }
         });
-        main.attach(this);
-        await main.releaseSignal();
         ASYNC_COUNTER++;
     }
 
@@ -623,41 +641,34 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         if (!elements) return;
         let len = elements.length;
         if (len) {
-            let main = new TimeLine("iteration#" + ++AE_COUNT, async function (a1: Anim) {
+            await this.group("iteration", async function (a1: Anim) {
                 for (let i = 0; len > i; i++) {
-                    let ac = new TimeLine("item#" + i, async function (a2) {
+                    let gp = a1.group("item." + i, async function (a2) {
                         let e = elements![i];
                         a2.defaults({ target: e });
                         await instructions(a2, i, len, e);
                     });
-                    ac.attach(a1 as TimeLine);
                     if (inSequence) {
-                        await ac.releaseSignal();
-                        // log(">> release received: ", i);
+                        await gp;
                         ASYNC_COUNTER++;
+                        // log(">> release received: ", i);
                     }
                 }
             });
-            main.attach(this);
-            await main.releaseSignal();
             ASYNC_COUNTER++;
         }
     }
 
     async repeat(times: number, instructions: ((a: Anim, loopCount: number) => void)) {
         if (times > 0) {
-            let main = new TimeLine("loop#" + ++AE_COUNT, async function (a) {
+            await this.group("loop", async function (a) {
                 for (let i = 0; times > i; i++) {
-                    let ac = new TimeLine("block#" + i, async a2 => {
+                    await a.group("block", async function (a2) {
                         await instructions(a2, i);
                     });
-                    ac.attach(a as TimeLine)
-                    await ac.releaseSignal();
                     ASYNC_COUNTER++;
                 }
             });
-            main.attach(this);
-            await main.releaseSignal();
             ASYNC_COUNTER++;
         }
     }
@@ -932,5 +943,3 @@ export class Player implements AnimPlayer {
         }
     }
 }
-
-

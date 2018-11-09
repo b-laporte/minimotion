@@ -63,9 +63,13 @@ export interface Anim {
     sequence(...blocks: ((a: Anim) => void)[]): Promise<any>;
     parallelize(...tracks: ((a: Anim) => void)[]): Promise<any>;
 
+    group(instructions: ((a: Anim) => void)): Promise<any>;
+    group(name:string, instructions: ((a: Anim) => void)): Promise<any>;
+
     // // setStyle
     // // addCssClass ->async // cf class list
-    // // swing()
+    // // swing() startPosition, endPosition = time or -1, backSpeed, fwdSpeed, cycles, dynamic
+    // player() -> returns a player ?
 
     delay(timeMs: number): Promise<any>;
     random(min: number, max: number): number;
