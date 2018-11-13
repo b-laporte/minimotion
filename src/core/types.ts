@@ -116,8 +116,8 @@ export interface PlayArguments {
     onupdate?: (time: number) => void;
     forward?: boolean;
     raf?: (callback: (time: number) => void) => void;
+    speed?: number;
     // until?: number; // time position
-    // speed?: number;
 }
 
 export interface AnimPlayer {

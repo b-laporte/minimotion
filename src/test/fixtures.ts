@@ -19,6 +19,10 @@ export function lastTick() {
     return CURRENT_TICK;
 }
 
+export function incrementTick() {
+    CURRENT_TICK++;
+}
+
 function traceProp(eltId, propName, value) {
     // console.log(`${CURRENT_TICK}: #${eltId}.${propName} = ${value}`)
     _logs.push(`${CURRENT_TICK}: #${eltId}.${propName} = ${value};`)
@@ -101,7 +105,7 @@ export class TestPlayer2 extends Player {
 
 async function runTicker(tl: TimeLine, resolve: Function) {
     while (CURRENT_TICK < MAX_ITERATION) {
-        CURRENT_TICK++;
+        incrementTick();
         await tl.move(CURRENT_TICK * 16);
 
         if (tl.endTime === tl.currentTime) {

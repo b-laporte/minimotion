@@ -11,6 +11,10 @@ a {
     color: #ffffff;
 }
 
+a.active {
+    color: #2cf91a;
+}
+
 div.main {
     position: relative;
     height: 180px;
@@ -47,4 +51,8 @@ input[type="range"] {
 
 div.player {
     padding-top:10px;
+}
+
+div.speeds {
+    padding-top:5px;
 }

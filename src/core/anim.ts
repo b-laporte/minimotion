@@ -844,9 +844,9 @@ class Delay extends Tween {
 const LENGTH_UNPROCESSED = -2, LENGTH_INFINITE = -1;
 let PLAY_COUNT = 0;
 
-function nextTimeTick(t1: number, fwd: boolean) {
+function nextTimeTick(t1: number, fwd: boolean, speed: number) {
     if (t1 < 0) return 0;
-    let t2 = fwd ? t1 + FRAME_MS : t1 - FRAME_MS;
+    let t2 = fwd ? t1 + FRAME_MS * speed : t1 - FRAME_MS * speed;
     return t2 < 0 ? 0 : t2;
 }
 
@@ -865,18 +865,22 @@ export class Player implements AnimPlayer {
     }
 
     async play(args?: PlayArguments): Promise<number> {
-        let onupdate: ((time: number) => void) | undefined, p = this, fwd = true, raf: ((callback: (time: number) => void) => void) | undefined;
+        let onupdate: ((time: number) => void) | undefined, p = this,
+            speed = 1,
+            fwd = true,
+            raf: ((callback: (time: number) => void) => void) | undefined;
         if (args) {
             onupdate = args.onupdate;
             raf = args.raf;
             fwd = (args.forward !== undefined) ? !!args.forward : true;
+            speed = args.speed || 1;
         }
         raf = raf || requestAnimationFrame;
 
         return new Promise<number>((resolve) => {
             let tl = this.timeLine, playId = p.playId = ++PLAY_COUNT;
             async function paint() {
-                let t1 = tl.currentTime, t2 = nextTimeTick(tl.currentTime, fwd)
+                let t1 = tl.currentTime, t2 = nextTimeTick(tl.currentTime, fwd, speed)
                 if (p.playId !== playId) {
                     return resolve(t1); // play was stopped or restarted in the meantime
                 }
