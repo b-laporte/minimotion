@@ -1,7 +1,7 @@
 {
-    "name": "anim-js",
+    "name": "minimotion",
     "version": "0.0.0-SNAPSHOT",
-    "description": "JavaScript animations with async timelines",
+    "description": "Composable JavaScript animations with async timelines",
     "keywords": [
         "animation",
         "javascript",
