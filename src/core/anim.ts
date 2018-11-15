@@ -1,7 +1,8 @@
-import { Anim, AnimateParams, AnimEntity, ControlParams, Selector, StyleElement, SelectorContext, Instructions, IterationParams, AnimMarker, AnimTimeLine, AnimContainer, AnimPlayer, PlayArguments } from './types';
+import { Anim, AnimateParams, AnimEntity, ControlParams, Selector, StyleElement, SelectorContext, Instructions, IterationParams, AnimMarker, AnimTimeLine, AnimContainer, AnimPlayer, PlayArguments, PlayParams } from './types';
 import { easeOutElastic } from './easings';
 
 const FRAME_MS = 16, MAX_TIME = Number.MAX_SAFE_INTEGER, MAX_ASYNC = 100, IDENTITY = x => x, MAX_TL_DURATION_MS = 600000; // 10mn
+const trunc = Math.trunc, ceil = Math.ceil;
 let ASYNC_COUNTER = 0; // count the changes that can be triggered by an async call
 let AE_COUNT = 0;
 
@@ -74,11 +75,15 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
     lastTargetForward = true;        // true if the last target was going forward (i.e. time increase)
     tlFunctionCalled = false;        // true when the tl function has been called
     tlFunctionComplete = false;      // true when the tl function has returned
+    tlFunctionArgs: any[] | undefined;
     released = false;
     done = false;                    // true when all child entities have been run
     releaseCb: Function | undefined;
+    doneCb: Function | undefined;
 
-    constructor(public name: string, public tlFunction: (a: Anim) => void) { }
+    constructor(public name: string, public tlFunction: (a: Anim) => void, tlFunctionArgs?: any[]) {
+        this.tlFunctionArgs = tlFunctionArgs;
+    }
 
     attach(parent: TimeLine) {
         if (!this.parent) {
@@ -143,6 +148,10 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
             if (count === 0) {
                 // log(this.name, ": DONE")
                 this.done = true;
+                if (this.doneCb) {
+                    this.doneCb(this.lastTargetTime);
+                    this.doneCb = undefined;
+                }
                 allDone = true;
             }
             if (this.parent && allReleased && this.done) {
@@ -154,7 +163,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         }
     }
 
-    async move(timeTarget: number): Promise<number> {
+    async move(timeTarget: number, manageAsyncPipe = true): Promise<number> {
         this.moveTarget = timeTarget;
 
         let currentTime = this.currentTime;
@@ -209,7 +218,9 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
             this.displayFrame(nextTarget, timeTarget, forward);
 
             // step #3
-            await exhaustAsyncPipe();
+            if (manageAsyncPipe) {
+                await exhaustAsyncPipe();
+            }
 
             // step #4
             currentTime = this.currentTime; // has been changed by displayFrame()
@@ -231,7 +242,12 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         if (!this.tlFunctionCalled) {
             this.tlFunctionCalled = true;
             // init the instructions - this will indirectly call addEntity / removeEntity
-            let r: any | Promise<any> = this.tlFunction(this);
+            let r: any | Promise<any>;
+            if (this.tlFunctionArgs) {
+                r = this.tlFunction.apply(null, [this].concat(this.tlFunctionArgs));
+            } else {
+                r = this.tlFunction(this);
+            }
             if (r && r.then) {
                 r.then(() => {
                     this.setTlFunctionComplete();
@@ -287,11 +303,14 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         // principle:
         // - find next in the running entity list
         // - if not found, look into own marker (will be redundant if already found in rList)
+        if (Math.abs(time - this.currentTime) === FRAME_MS) {
+            return time; // no need to dig into markers if we move to next frame
+        }
         let n = forward ? MAX_TIME : -1, n2 = -1, ae = this.rList, found = false;
         while (ae) {
             n2 = ae.getNextMarkerPosition(time, forward);
 
-            // log(this.name, ": ae.getNextMarkerPosition for ", ae.name, " - time: ", time, " -> ", n2);
+            log(this.name, ": ae.getNextMarkerPosition for ", ae.name, " - time: target:", time, " -> marker:", n2);
             if (n2 > -1) {
                 if (forward) {
                     // keep the min of the markers
@@ -354,7 +373,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
 
     addEntity(ae: AnimEntity) {
         // this function is called through the calls done in the timeline function
-        // log(this.name, ": addEntity", ae.name, " @", this.currentTime);
+        log(this.name, ": addEntity", ae.name, " @", this.currentTime);
         ASYNC_COUNTER++;
         if (!ae.startRegistered) {
             ae.init(this.currentTime);
@@ -381,7 +400,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
     }
 
     removeEntity(ae: AnimEntity) {
-        // log(this.name, ": removeEntity", ae.name, " @", this.currentTime);
+        log(this.name, ": removeEntity", ae.name, "@", this.currentTime);
         ASYNC_COUNTER++;
         let e = this.rList;
         if (!ae.endRegistered && this.lastTargetForward) {
@@ -508,7 +527,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
     }
 
     random(min: number, max: number): number {
-        return min + Math.trunc(Math.random() * (max + 1 - min));
+        return min + trunc(Math.random() * (max + 1 - min));
     }
 
     defaults(params: ControlParams): void {
@@ -571,7 +590,11 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         if (tween) {
             // return a promise associated to the last tween
             return new Promise((resolve) => {
-                tween!.releaseCb = resolve;
+                if (tween!.released) {
+                    resolve();
+                } else {
+                    tween!.releaseCb = resolve;
+                }
             });
         }
     }
@@ -672,6 +695,27 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
             ASYNC_COUNTER++;
         }
     }
+
+    async play(instructions: ((a: Anim) => void));
+    async play(params: PlayParams, instructions: ((a: Anim) => void))
+    async play(paramsOrInstructions: PlayParams | ((a: Anim) => void), instructions?: ((a: Anim) => void)) {
+        let params: PlayParams | undefined;
+        if (typeof paramsOrInstructions === "object") {
+            params = paramsOrInstructions;
+        } else {
+            instructions = paramsOrInstructions as ((a: Anim) => void);
+        }
+
+        if (instructions) {
+            let p = new PlayerEntity(instructions, this.settings, params);
+            p.timeLine.selectorCtxt = this.selectorCtxt;
+            p.attach(this);
+            return new Promise((resolve) => {
+                p.releaseCb = resolve;
+            });
+        }
+        return;
+    }
 }
 
 function createMarker(time: number, prev?: AnimMarker, next?: AnimMarker): AnimMarker {
@@ -691,39 +735,31 @@ function parseValue(name, params, defaults) {
 
 function roundNbr(v, decimalLevel = 10) {
     // todo: prevent sub-pixel positioning?
-    return Math.trunc(v * decimalLevel) / decimalLevel;
+    return trunc(v * decimalLevel) / decimalLevel;
 }
 
-class Tween implements AnimEntity {
-    name = "animate";
+abstract class TimelineEntity implements AnimEntity {
+    name: string;
     nextEntity: AnimEntity | null;
     isRunning = false;
     startRegistered = false;
     endRegistered = false;
-    releaseCb: (() => void) | null = null;
-    delayOnly = false;    // true if this tween is only used for a delay
-    parent: AnimContainer | undefined;
     skipRendering = false;
-
-    currentTime = -1;     // time at which the last frame has been displayed
-
+    released = false;
+    done = false;
+    parent: AnimContainer | undefined;
+    delay = 0;
+    release = 0;
+    duration = -1;
     startTime = -1;
     delayTime = -1;
     releaseTime = -1;
     doneTime = -1;
     endTime = -1;
+    releaseCb: (() => void) | null = null;
 
-    released = false;
-    done = false;
-
-    isNumber = false;
-    unit = "";
-
-    constructor(public targetElt: StyleElement | null, public propName: string, public propFrom, public propTo, public duration: number, public easing, public delay: number, public release: number) {
-        // todo normalize from / to, support colors, etc.
-        this.name = "tween#" + ++AE_COUNT;
-        this.isNumber = true;
-        this.unit = "px";
+    constructor(name) {
+        this.name = name;
     }
 
     attach(parent: AnimContainer) {
@@ -739,67 +775,44 @@ class Tween implements AnimEntity {
             this.delay = 0;
         }
         this.delayTime = startTime + this.delay;
-        let doneTime = this.delayTime + this.duration; // doneTime occurs when movement finishes - but this is not necessarily the end of the animation
-        this.doneTime = doneTime;
-        this.releaseTime = doneTime + this.release;
-        if (this.releaseTime < this.delayTime) {
-            this.release = -this.duration;
-            this.releaseTime = this.delayTime; // release cannot be bigger than duration
-        }
-        this.endTime = doneTime;
-        if (this.releaseTime > this.endTime) {
-            this.endTime = this.releaseTime;
+        if (this.duration >= 0) {
+            let doneTime = this.delayTime + this.duration; // doneTime occurs when movement finishes - but this is not necessarily the end of the animation
+            this.doneTime = doneTime;
+            this.releaseTime = doneTime + this.release;
+            if (this.releaseTime < this.delayTime) {
+                this.release = -this.duration;
+                this.releaseTime = this.delayTime; // release cannot be bigger than duration
+            }
+            this.endTime = doneTime;
+            if (this.releaseTime > this.endTime) {
+                this.endTime = this.releaseTime;
+            }
         }
     }
 
-    displayFrame(time: number, targetTime: number, forward: boolean) {
-        // log(this.name, ": display frame", time, targetTime, forward)
-        if (this.startTime <= time && time <= this.endTime) {
-            this.currentTime = time;
-            if (!this.skipRendering && !this.delayOnly) {
-                let targetFrame = time === targetTime;
-                if ((targetFrame && this.delayTime <= time && time <= this.doneTime)) {
-                    this.setValue(time - this.delayTime);
-                } else if (!targetFrame) {
-                    if (forward && targetTime >= this.doneTime && time === this.doneTime) {
-                        this.setValue(time - this.delayTime);
-                    } else if (!forward && targetTime <= this.delayTime && time === this.delayTime) {
-                        this.setValue(0);
-                    }
-                }
+    checkDoneAndRelease(time: number, forward: boolean) {
+        // log(this.name, "checkDoneAndRelease")
+        if (time === this.doneTime) {
+            this.done = true;
+        }
+        if (this.done && this.parent) {
+            if (forward && time === this.endTime) {
+                this.parent.removeEntity(this);
+            } else if (!forward && time === this.startTime) {
+                this.parent.removeEntity(this);
             }
-            if (time === this.doneTime) {
-                this.done = true;
-            }
-            if (this.parent) {
-                if (forward && time === this.endTime) {
-                    this.parent.removeEntity(this);
-                } else if (!forward && time === this.startTime) {
-                    this.parent.removeEntity(this);
-                }
-            }
-
-            if (this.releaseCb && time === this.releaseTime) {
-                this.released = true;
+        }
+        if (time === this.releaseTime) {
+            this.released = true;
+            if (this.releaseCb) {
                 this.releaseCb();
                 this.releaseCb = null;
             }
         }
     }
 
-    setValue(elapsed: number) {
-        let d = this.duration, progression = d === 0 ? 1 : elapsed / d;
-        if (this.targetElt && this.isNumber) {
-            // todo: 2nd easing parameter = elasticity
-            let v = roundNbr(this.propFrom + (this.propTo - this.propFrom) * this.easing(progression, 100)) + this.unit;
-            // log(">> style." + this.propName + "=" + v);
-            // log(">>", this.propFrom, this.propTo, "elapsed=" + elapsed, "delayTime=" + this.delayTime, "d=" + d, "progression=" + progression);
-            this.targetElt.style[this.propName] = v;
-        }
-    }
-
     getNextMarkerPosition(time: number, forward: boolean): number {
-        // console.log(this.name, ": next frame pos", timeTarget);
+        // log(this.name, ": next frame pos", time);
         // tween has 2 or 3 markers
         // - if release has already been triggered (i.e. tween doesn't run for the 1st time):
         //         delayTime <= doneTime
@@ -811,7 +824,6 @@ class Tween implements AnimEntity {
 
             if (this.releaseCb) {
                 // 1st time
-                // console.log("here", this.release, this.doneTime)
                 if (this.release <= 0) {
                     if (time < this.releaseTime) return this.releaseTime;
                     if (time < this.doneTime) return this.doneTime;
@@ -832,12 +844,163 @@ class Tween implements AnimEntity {
             return -1;
         }
     }
+
+    displayFrame(time: number, targetTime: number, forward: boolean) {
+        this.checkDoneAndRelease(time, forward);
+    }
 }
 
-class Delay extends Tween {
+class Tween extends TimelineEntity {
+    delayOnly = false;    // true if this tween is only used for a delay
+    currentTime = -1;     // time at which the last frame has been displayed
+    isNumber = false;
+    unit = "";
+
+    constructor(public targetElt: StyleElement | null, public propName: string, public propFrom, public propTo, public duration: number, public easing, delay: number, release: number) {
+        // todo normalize from / to, support colors, etc.
+        super("tween#" + ++AE_COUNT);
+        this.delay = delay;
+        this.release = release;
+        this.isNumber = true;
+        this.unit = "px";
+    }
+
+    displayFrame(time: number, targetTime: number, forward: boolean) {
+        // log(this.name, ": display frame", time, targetTime, forward)
+        if (this.delayTime <= time && time <= this.endTime) {
+            this.currentTime = time;
+            if (!this.skipRendering && !this.delayOnly) {
+                let targetFrame = time === targetTime;
+                if ((targetFrame && this.delayTime <= time && time <= this.doneTime)) {
+                    this.setValue(time - this.delayTime);
+                } else if (!targetFrame) {
+                    if (forward && targetTime >= this.doneTime && time === this.doneTime) {
+                        this.setValue(time - this.delayTime);
+                    } else if (!forward && targetTime <= this.delayTime && time === this.delayTime) {
+                        this.setValue(0);
+                    }
+                }
+            }
+            this.checkDoneAndRelease(time, forward);
+        }
+    }
+
+    setValue(elapsed: number) {
+        let d = this.duration, progression = d === 0 ? 1 : elapsed / d;
+        if (this.targetElt && this.isNumber) {
+            // todo: 2nd easing parameter = elasticity
+            let v = roundNbr(this.propFrom + (this.propTo - this.propFrom) * this.easing(progression, 100)) + this.unit;
+            // log(">> style." + this.propName + "=" + v);
+            // log(">>", this.propFrom, this.propTo, "elapsed=" + elapsed, "delayTime=" + this.delayTime, "d=" + d, "progression=" + progression);
+            this.targetElt.style[this.propName] = v;
+        }
+    }
+}
+
+class Delay extends TimelineEntity {
     constructor(duration: number) {
-        super(null, "", 0, 0, 0, IDENTITY, duration, 0);
-        this.delayOnly = true;
+        super("delay");
+        this.delay = duration;
+        this.duration = 0;
+    }
+}
+
+class PlayerEntity extends TimelineEntity {
+    timeLine: TimeLine;
+    alternate = false;
+    times = 1;
+    speed = 1;
+    backSpeed = 1;
+    d1 = -1; // duration of part 1 (= fwd part of a cycle)
+    d2 = -1; // duration of part 2 (= backward part of a cycle)
+
+    constructor(instructions: ((a: Anim) => void), defaults:ControlParams, params?: PlayParams) {
+        super("play")
+        let tl = new TimeLine("playTimeline", instructions);
+        this.timeLine = tl;
+        if (params) {
+            this.times = params.times || 1;
+            this.alternate = params.alternate || false;
+            this.speed = params.speed || 1;
+            this.backSpeed = params.backSpeed || 1;
+            this.delay = parseValue("delay", params, defaults) as number;
+            this.release = parseValue("release", params, defaults) as number;
+        }
+        tl.doneCb = tlDuration => {
+            this.d1 = trunc(tlDuration / this.speed);
+            this.d2 = this.alternate ? trunc(tlDuration / this.backSpeed) : 0;
+            this.duration = (this.d1 + this.d2) * this.times;
+            this.init(this.startTime);
+        }
+    }
+
+    getNextMarkerPosition(time: number, forward: boolean): number {
+        let tl = this.timeLine, start = this.delayTime;
+        if (this.duration === -1) {
+            // first cycle is not finished
+            if (time < this.delayTime) return forward ? this.delayTime : -1;
+
+            let m = tl.getNextMarkerPosition((time - start) * this.speed, forward);
+            return (m === -1) ? -1 : start + ceil(m / this.speed);
+        } else {
+            // d1, d2 and duration are defined (cf. doneCb)
+            let m1 = super.getNextMarkerPosition(time, forward), m2 = -1;
+            if (m1 >= this.delayTime && m1 <= this.doneTime) {
+                let d1 = this.d1, cycleLength = trunc(d1 + this.d2),
+                    relTime = time - start,
+                    t = relTime % cycleLength,
+                    nbrOfFullCycles = trunc(relTime / cycleLength);
+                if (t < d1) {
+                    // forward part
+                    m2 = tl.getNextMarkerPosition(t * this.speed, forward);
+                    if (m2 !== -1) {
+                        m2 = start + nbrOfFullCycles * cycleLength + ceil(m2 / this.speed);
+                    }
+                } else {
+                    // backward part
+                    m2 = tl.getNextMarkerPosition((cycleLength - t) * this.backSpeed, !forward);
+                    if (m2 !== -1) {
+                        m2 = start + nbrOfFullCycles * cycleLength + d1 + ceil((d1 - m2) / this.backSpeed);
+                    }
+                }
+            }
+            log("d1", this.d1, "d2", this.d2, "m1=", m1, "m2=", m2, "doneTime", this.doneTime);
+            if (m2 === -1) return m1;
+            if (m1 === -1) return m2;
+            if (forward) {
+                return (m2 < m1) ? m2 : m1;
+            } else {
+                return (m2 > m1) ? m2 : m1;
+            }
+        }
+    }
+
+    displayFrame(time: number, targetTime: number, forward: boolean) {
+        if (this.delayTime <= time) {
+            let tl = this.timeLine;
+            if (this.duration === -1) {
+                // first cycle is not finished
+                tl.move((time - this.delayTime) * this.speed, false);
+            } else {
+                // d1, d2 and duration are defined (cf. doneCb)
+                if (time >= this.delayTime && time <= this.doneTime) {
+                    let cycleLength = trunc(this.d1 + this.d2), t = (time - this.delayTime) % cycleLength;
+                    if (t === 0 && time !== this.delayTime) {
+                        t = cycleLength;
+                    }
+                    if (t <= this.d1) {
+                        // forward part
+                        // log("move fwd", t, time)
+                        tl.move(t * this.speed, false);
+                    } else {
+                        // backward part
+                        // log("move back", cycleLength - t, time)
+                        tl.move((cycleLength - t) * this.backSpeed, false);
+                    }
+                }
+            }
+        }
+        this.checkDoneAndRelease(time, forward);
     }
 }
 
@@ -857,8 +1020,8 @@ export class Player implements AnimPlayer {
     protected length = LENGTH_UNPROCESSED;
     private playId = 0;
 
-    constructor(public animFunction: (a: Anim, ...args: any[]) => any) {
-        this.timeLine = new TimeLine("root", animFunction);
+    constructor(public animFunction: (a: Anim, ...args: any[]) => any, animFunctionArgs?: any[]) {
+        this.timeLine = new TimeLine("root", animFunction, animFunctionArgs);
         if (typeof document !== "undefined") {
             this.timeLine.selectorCtxt = document as any;
         }
@@ -936,7 +1099,7 @@ export class Player implements AnimPlayer {
     }
 
     private async runTicker() {
-        let count = 0, tl = this.timeLine, max = Math.trunc(this.maxDuration / FRAME_MS);
+        let count = 0, tl = this.timeLine, max = trunc(this.maxDuration / FRAME_MS);
         while (count < max) {
             count++;
             this.currentTick++;

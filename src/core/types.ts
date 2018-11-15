@@ -54,6 +54,17 @@ export interface IterationParams {
     sequence?: boolean;
 }
 
+export interface PlayParams {
+    alternate?: boolean;
+    times?: number;
+    speed?: number;
+    backSpeed?: number;
+    delay?: number;
+    release?: number;
+    // startPos / endPos ?
+    // duration ? (replace endPos & times)
+}
+
 export interface Anim {
     defaults(params: ControlParams): void;
     animate(params: AnimateParams): Promise<any>; // animate a style property
@@ -64,7 +75,10 @@ export interface Anim {
     parallelize(...tracks: ((a: Anim) => void)[]): Promise<any>;
 
     group(instructions: ((a: Anim) => void)): Promise<any>;
-    group(name:string, instructions: ((a: Anim) => void)): Promise<any>;
+    group(name: string, instructions: ((a: Anim) => void)): Promise<any>;
+
+    play(instructions: ((a: Anim) => void)): Promise<any>;
+    play(params: PlayParams, instructions: ((a: Anim) => void)): Promise<any>;
 
     // // setStyle
     // // addCssClass ->async // cf class list

@@ -43,6 +43,30 @@ describe("Player", () => {
         assert.equal(p.position, 48, "back to 48");
     });
 
+    it("should provide duration with play statements", async function () {
+        async function sample(a: Anim) {
+            a.play({ alternate: true, times: 3, backSpeed: 3 }, a => {
+                a.animate({ target: "#x", left: [0, 500], duration: 400, easing: linear });
+            });
+        }
+        let p = new TestPlayer(animCtxtXYZ(), sample);
+        let d = await p.duration();
+        assert.equal(d, 1599, "duration"); // 1599 instead of 1600 because of rounding (as speed is 3)
+    });
+
+    it("should provide duration with play statements (2)", async function () {
+        async function sample(a: Anim) {
+            a.play({ alternate: true, times: 3, backSpeed: 3 }, a => {
+                a.iterate("colItem", (a, idx) => {
+                    a.animate({ left: [0, 500], duration: 400, easing: linear, delay: idx * 40 });
+                });
+            });
+        }
+        let p = new TestPlayer(animCtxtXYZ(), sample);
+        let d = await p.duration();
+        assert.equal(d, 1920, "duration");
+    });
+
     function anim2(a: Anim) {
         a.animate({ target: "#x", left: [0, 100], duration: 64, easing: linear });
     }
@@ -200,7 +224,6 @@ describe("Player", () => {
             '6: #x.left = 87.5px;',
             '7: #x.left = 100px;'
         ], "logs");
-
     });
 
 });

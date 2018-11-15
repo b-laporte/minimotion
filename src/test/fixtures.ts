@@ -24,7 +24,6 @@ export function incrementTick() {
 }
 
 function traceProp(eltId, propName, value) {
-    // console.log(`${CURRENT_TICK}: #${eltId}.${propName} = ${value}`)
     _logs.push(`${CURRENT_TICK}: #${eltId}.${propName} = ${value};`)
 }
 
@@ -83,12 +82,12 @@ export function animCtxtXYZ() {
 }
 
 export class TestPlayer extends Player {
-    constructor(public elements: TestElement[], public animFunction: (a: Anim, ...args: any[]) => any) {
-        super(animFunction);
+    constructor(public elements: TestElement[], public animFunction: (a: Anim, ...args: any[]) => any, animFunctionArgs?: any[]) {
+        super(animFunction, animFunctionArgs);
         this.timeLine.selectorCtxt = new TestSelectorCtxt(elements);
     }
 
-    async play(args?):Promise<number> {
+    async play(args?): Promise<number> {
         return new Promise<number>((resolve) => {
             CURRENT_TICK = -1;
             runTicker(this.timeLine, resolve);

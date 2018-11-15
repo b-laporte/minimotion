@@ -2,6 +2,7 @@ import * as assert from 'assert';
 import { Anim } from './../core/types';
 import { reset, TestPlayer, logs, animCtxtXYZ, lastTick } from "./fixtures";
 import { linear } from '../core/easings';
+import { activateLogs } from '../core/anim';
 
 describe("animate", () => {
 
@@ -72,6 +73,21 @@ describe("animate", () => {
             "0: #x.top = 100px;"
         ], "logs ok");
         assert.equal(lastTick(), 1, "lastTick");
+    });
+
+    it("should work with 0 ticks duration + await", async function () {
+        async function anim(a: Anim) {
+            await a.animate({ target: "#x", top: [0, 100], duration: 5, easing: linear });
+            a.animate({ target: "#y", top: [0, 100], duration: 16, easing: linear });
+        }
+        let p = new TestPlayer(animCtxtXYZ(), anim);
+        await p.play();
+
+        assert.deepEqual(logs(), [
+            "0: #x.top = 100px;",
+            "0: #y.top = 0px;",
+            "1: #y.top = 100px;"
+        ], "logs ok");
     });
 
     it("should support simple await sequences", async function () {

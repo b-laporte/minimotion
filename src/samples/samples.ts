@@ -98,8 +98,16 @@ async function sample4(a: Anim) {
     });
 }
 
+async function sample5(a: Anim) {
+    a.play({ alternate: true, times: 3, backSpeed: 3 }, a => {
+        a.iterate(".square", (a, idx) => {
+            a.animate({ left: [0, 500], duration: 400, easing: easeInOutCubic, delay: idx * 40 });
+        });
+    });
+}
+
 async function init() {
-    player = new Player(sample4);
+    player = new Player(sample5);
     animDuration = await player.duration();
     setSpeed(1);
 }

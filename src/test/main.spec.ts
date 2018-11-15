@@ -8,3 +8,4 @@ import "./defaults.spec";
 import "./iterate.spec";
 import "./repeat.spec";
 import "./player.spec";
+import "./play.spec";

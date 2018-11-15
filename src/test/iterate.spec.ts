@@ -145,6 +145,5 @@ describe("iterate", () => {
 
         assert.equal(lastTick(), 13, "lastTick");
     });
-
-
+    
 });
