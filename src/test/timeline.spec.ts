@@ -1,8 +1,9 @@
 import * as assert from 'assert';
-import { TimeLine, activateLogs } from '../core/anim';
+import { TimeLine } from '../core/anim';
 import { Anim } from '../core/types';
 import { linear } from '../core/easings';
 import { TestPlayer, animCtxtXYZ, logs, reset, lastTick } from './fixtures';
+import { activateLogs } from '../core/utils';
 
 describe("Timeline", () => {
 

@@ -2,7 +2,6 @@ import * as assert from 'assert';
 import { Anim } from './../core/types';
 import { reset, TestPlayer, logs, animCtxtXYZ, lastTick } from "./fixtures";
 import { linear } from '../core/easings';
-import { activateLogs } from '../core/anim';
 
 describe("animate", () => {
 

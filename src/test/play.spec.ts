@@ -2,7 +2,6 @@ import * as assert from 'assert';
 import { Anim } from '../core/types';
 import { reset, logs, animCtxtXYZ, TestPlayer } from "./fixtures";
 import { linear } from '../core/easings';
-import { activateLogs } from '../core/anim';
 
 describe("play", () => {
     beforeEach(reset);
