@@ -1,7 +1,7 @@
 import { Anim, AnimateParams, AnimEntity, ControlParams, Selector, StyleElement, SelectorContext, Instructions, IterationParams, AnimMarker, AnimTimeLine, AnimContainer, AnimPlayer, PlayArguments, PlayParams } from './types';
 import { easeOutElastic } from './easings';
 import { log, parseValue } from './utils';
-import { Tween, Delay, PlayerEntity } from './entities';
+import { Tween, Delay, PlayerEntity, createTweens } from './entities';
 
 const FRAME_MS = 16, MAX_TIME = Number.MAX_SAFE_INTEGER, MAX_ASYNC = 100, IDENTITY = x => x, MAX_TL_DURATION_MS = 600000; // 10mn
 let ASYNC_COUNTER = 0; // count the changes that can be triggered by an async call
@@ -552,34 +552,8 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
             return console.log('[anim] invalid target selector: ' + target);
         }
 
-        // identify css properties to animate and create a tween for each of them
-        let tween: Tween | null = null;
-        for (let p in params) {
-            if (!defaultSettings.hasOwnProperty(p) && p !== 'target') {
-                // TODO
-                // - define tween type: style, attribute or transform
-                // - get to value & unit, determine if relative (i.e. starts with "+" or "-")
-                // - get from value (unit should be the same as to)
-                // - identify value type (dimension, color, unit-less)
-
-                let propName: string = p, val = params[p], propFrom: any, propTo: any;
-                if (Array.isArray(val)) {
-                    if (val.length !== 2) {
-                        console.log('[anim] invalid property value: ' + val);
-                        continue;
-                    }
-                    propFrom = val[0];
-                    propTo = val[1];
-                } else {
-                    propFrom = undefined;
-                    propTo = val
-                }
-                // create a tween for each prop to animate
-                // TODO clone if tween already exists to skip 2nd init
-                tween = new Tween(targetElt, propName, propFrom, propTo, duration, easing, delay, release);
-                tween.attach(this);
-            }
-        }
+        // identify properties/attributes to animate and create a tween for each of them
+        let tween = createTweens(targetElt, params, d, this, duration, easing, delay, release);
         if (tween) {
             // return a promise associated to the last tween
             return new Promise((resolve) => {

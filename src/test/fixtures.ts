@@ -1,6 +1,6 @@
 import { TimeLine, Player } from './../core/anim';
 import { StyleElement, SelectorContext, Anim } from "../core/types";
-
+import { dom } from '../core/utils';
 
 let CURRENT_TICK = 0;
 const MAX_ITERATION = 100, MAX_ASYNC = 100;
@@ -27,9 +27,18 @@ function traceProp(eltId, propName, value) {
     _logs.push(`${CURRENT_TICK}: #${eltId}.${propName} = ${value};`)
 }
 
-class TestStyle {
-    _top: 0;
-    _left: 0;
+// path getCSSValue in Node environment
+dom.getCSSValue = function (el, prop: string) {
+    if (el.style) {
+        return el.style[prop]
+    }
+    return '';
+}
+
+class ElementStyle {
+    _top = "0px";
+    _left = "0px";
+    _opacity = 1;
 
     constructor(public id: string) { }
 
@@ -37,18 +46,31 @@ class TestStyle {
         this._top = v;
         traceProp(this.id, "top", this._top);
     }
+    get top() { return this._top };
 
     set left(v) {
         this._left = v;
         traceProp(this.id, "left", this._left);
     }
+    get left() { return this._left };
+
+    set opacity(v) {
+        this._opacity = v;
+        traceProp(this.id, "opacity", this._opacity);
+    }
+    get opacity() { return this._opacity };
 }
 
 export class TestElement implements StyleElement {
+    nodeType = 1;
     style: Object;
 
     constructor(public id: string, public className = "") {
-        this.style = new TestStyle(id);
+        this.style = new ElementStyle(id);
+    }
+
+    getAttribute(name: string) {
+        return null;
     }
 }
 

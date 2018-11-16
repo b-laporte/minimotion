@@ -45,6 +45,9 @@ interface StyleParams {
     [stylePropName: string]: any;
 }
 
+export type TweenType = 'transform' | 'attribute' | 'css' | 'invalid';
+export type RelativeOperator = '+=' | '-=' | '*=' | '';
+
 export interface AnimateParams extends ControlParams, StyleParams {
     onUpdate?: () => void; // callback function called on any update
 }

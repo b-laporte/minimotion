@@ -131,5 +131,77 @@ describe("animate", () => {
         assert.equal(lastTick(), 8, "last tick");
     });
 
+    async function anim1(a: Anim, topValue) {
+        a.animate({ target: "#x", top: topValue, duration: 32, easing: linear });
+    }
+
+    it("should support units", async function () {
+        let p = new TestPlayer(animCtxtXYZ(), anim1, [['0em', '100em']]);
+        await p.play();
+        assert.deepEqual(logs(), [
+            "0: #x.top = 0em;",
+            "1: #x.top = 50em;",
+            "2: #x.top = 100em;"
+        ], "logs");
+    });
+
+    it("should support target only", async function () {
+        let p = new TestPlayer(animCtxtXYZ(), anim1, ['100em']);
+        await p.play();
+        assert.deepEqual(logs(), [
+            "0: #x.top = 0em;",
+            "1: #x.top = 50em;",
+            "2: #x.top = 100em;"
+        ], "logs");
+    });
+
+    it("should support relative target += ", async function () {
+        let p = new TestPlayer(animCtxtXYZ(), anim1, [['200em', '+=100']]);
+        await p.play();
+        assert.deepEqual(logs(), [
+            "0: #x.top = 200em;",
+            "1: #x.top = 250em;",
+            "2: #x.top = 300em;"
+        ], "logs");
+    });
+
+    it("should support relative target -= ", async function () {
+        let p = new TestPlayer(animCtxtXYZ(), anim1, [['200', '-=100em']]);
+        await p.play();
+        assert.deepEqual(logs(), [
+            "0: #x.top = 200em;",
+            "1: #x.top = 150em;",
+            "2: #x.top = 100em;"
+        ], "logs");
+    });
+
+    it("should support relative target *= ", async function () {
+        let p = new TestPlayer(animCtxtXYZ(), anim1, [['200em', '*=2']]);
+        await p.play();
+        assert.deepEqual(logs(), [
+            "0: #x.top = 200em;",
+            "1: #x.top = 300em;",
+            "2: #x.top = 400em;"
+        ], "logs");
+    });
+
+    async function anim2(a: Anim, opacityValue) {
+        a.animate({ target: "#x", opacity: opacityValue, duration: 32, easing: linear });
+    }
+
+    it("should support unit-less properties ", async function () {
+        let p = new TestPlayer(animCtxtXYZ(), anim2, [0.5]);
+        await p.play();
+        assert.deepEqual(logs(), [
+            "0: #x.opacity = 1;",
+            "1: #x.opacity = 0.75;",
+            "2: #x.opacity = 0.5;"
+        ], "logs");
+    });
+
+    // transform prop
+    // colors
+    // svg attributes
+
     // should log error if no targets / invalid target
 });

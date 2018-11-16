@@ -1,5 +1,8 @@
-import { ControlParams, AnimEntity, AnimContainer, StyleElement, Anim, PlayParams } from "./types";
-import { parseValue, log } from './utils';
+import { ControlParams, AnimEntity, AnimContainer, StyleElement, Anim, PlayParams, TweenType, RelativeOperator } from "./types";
+import { parseValue, log, getAnimationType, dom } from './utils';
+
+const RX_NUMERIC_PROP = /^(\*=|\+=|-=)?([\+\-]?[0-9#\.]+)(%|px|pt|em|rem|in|cm|mm|ex|ch|pc|vw|vh|vmin|vmax|deg|rad|turn)?$/,
+    RX_DEFAULT_PX_PROPS = /(radius|width|height|top|left)$/i;
 
 const trunc = Math.trunc, ceil = Math.ceil;
 let AE_COUNT = 0;
@@ -121,19 +124,123 @@ abstract class TimelineEntity implements AnimEntity {
     }
 }
 
+export function createTweens(targetElt: StyleElement | null, params, settings, parent, duration: number, easing: Function, delay: number, release: number) {
+    let tween: Tween | null = null;
+    for (let p in params) {
+        if (settings[p] === undefined && p !== 'target') {
+            // TODO share init results across all tweens of a same family
+            let twn = new Tween(targetElt, p, params[p], duration, easing, delay, release);
+            if (twn.isValid) {
+                tween = twn;
+                tween.attach(parent);
+            }
+        }
+    }
+    return tween;
+}
+
 export class Tween extends TimelineEntity {
     delayOnly = false;    // true if this tween is only used for a delay
     currentTime = -1;     // time at which the last frame has been displayed
-    isNumber = false;
+    isValid = true;
+    isNumeric = false;
+    isColor = false;
+    relOperator: RelativeOperator = '';
     unit = "";
+    propFrom: any;
+    propTo: any;
+    type: TweenType;
+    roundLevel = 10;
 
-    constructor(public targetElt: StyleElement | null, public propName: string, public propFrom, public propTo, public duration: number, public easing, delay: number, release: number) {
+    constructor(public targetElt: StyleElement | null, public propName: string, propValue, public duration: number, public easing, delay: number, release: number) {
         // todo normalize from / to, support colors, etc.
         super("tween#" + ++AE_COUNT);
         this.delay = delay;
         this.release = release;
-        this.isNumber = true;
-        this.unit = "px";
+        let r = this.parsePropValue(propValue);
+        if (r !== 0) {
+            console.error("[animate] invalid syntax (Error " + r + ")");
+            this.isValid = false;
+        }
+    }
+
+    // return 0 if ok
+    parsePropValue(propValue): number {
+        // - define tween type: style, attribute or transform
+        // - get to value & unit, determine if relative (i.e. starts with "+" or "-")
+        // - get from value (unit should be the same as to)
+        // - identify value type (dimension, color, unit-less)
+        let target = this.targetElt,
+            propName = this.propName,
+            type = this.type = getAnimationType(target, propName);
+        if (type === 'invalid') return 100;
+
+        let propFrom: any, propTo: any;
+        if (Array.isArray(propValue)) {
+            if (propValue.length !== 2) return 101;
+            propFrom = '' + propValue[0];
+            propTo = '' + propValue[1];
+        } else {
+            propFrom = undefined;
+            propTo = '' + propValue;
+        }
+        if (!propTo) return 102;
+
+        let split = RX_NUMERIC_PROP.exec(propTo);
+        if (split) {
+            // propTo is a numeric prop - e.g. '+=300.3em'
+            this.isNumeric = true;
+            this.relOperator = split[1] as any;
+            this.propTo = parseFloat(split[2]);
+            this.unit = split[3] || '';
+
+            let propFromIsDom = false;
+            if (!propFrom) {
+                // read from dom
+                propFromIsDom = true;
+
+                if (type === 'css') {
+                    propFrom = dom.getCSSValue(target, propName);
+                } else if (type === 'transform') {
+                    // propFrom = getTransformValue(target, propName);
+                } else if (type === 'attribute') {
+                    // propFrom = target.getAttribute(propName)
+                    return 103.1;
+                } else {
+                    return 103;
+                }
+            }
+            // check consistency
+            let split2 = RX_NUMERIC_PROP.exec(propFrom);
+            if (!split2) return 200;
+            if (split2[1]) return 201; // cannot be relative
+            let fromUnit = split2[3] || '';
+            if (!propFromIsDom && this.unit && fromUnit && fromUnit !== this.unit) return 202; // units have to be the same
+            this.unit = this.unit || fromUnit; // if unit is not defined in to value, we use from value
+            this.propFrom = parseFloat(split2[2]);
+
+            if (!this.unit) {
+                // set default unit for common properties
+                if (this.type === 'css') {
+                    if (this.propName.match(RX_DEFAULT_PX_PROPS)) this.unit = 'px';
+                }
+            }
+
+            switch (this.relOperator) {
+                case '+=': { this.propTo += this.propFrom; break; }
+                case '-=': { this.propTo = this.propFrom - this.propTo; break; }
+                case '*=': { this.propTo *= this.propFrom; break; }
+            }
+        } else {
+            // propTo is not numeric -> color?
+            return 300; // TODO
+        }
+
+        if (!this.unit) {
+            this.roundLevel = 100; // unit-less properties should be rounded with 2 decimals by default (e.g. opacity)
+        }
+
+        return 0; // ok
     }
 
     displayFrame(time: number, targetTime: number, forward: boolean) {
@@ -158,12 +265,24 @@ export class Tween extends TimelineEntity {
 
     setValue(elapsed: number) {
         let d = this.duration, progression = d === 0 ? 1 : elapsed / d;
-        if (this.targetElt && this.isNumber) {
+        if (this.targetElt && this.isNumeric) {
             // todo: 2nd easing parameter = elasticity
-            let v = roundNbr(this.propFrom + (this.propTo - this.propFrom) * this.easing(progression, 100)) + this.unit;
+            let v = roundNbr(this.propFrom + (this.propTo - this.propFrom) * this.easing(progression, 100), this.roundLevel) + this.unit;
             // log(">> style." + this.propName + "=" + v);
             // log(">>", this.propFrom, this.propTo, "elapsed=" + elapsed, "delayTime=" + this.delayTime, "d=" + d, "progression=" + progression);
-            this.targetElt.style[this.propName] = v;
+
+            switch (this.type) {
+                case 'css':
+                    this.targetElt.style[this.propName] = v;
+                    break;
+                case 'transform':
+                    // transform: translateX(10px) rotate(10deg) translateY(5px);
+                    console.log("Todo: transforms");
+                    break;
+                default:
+                    console.log("[animate] unsupported animation type: " + this.type);
+            }
+
         }
     }
 }
