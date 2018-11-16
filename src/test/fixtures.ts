@@ -39,6 +39,7 @@ class ElementStyle {
     _top = "0px";
     _left = "0px";
     _opacity = 1;
+    _color= "rgb(255, 0, 0)"; // red by default
 
     constructor(public id: string) { }
 
@@ -59,6 +60,12 @@ class ElementStyle {
         traceProp(this.id, "opacity", this._opacity);
     }
     get opacity() { return this._opacity };
+
+    set color(v) {
+        this._color = v;
+        traceProp(this.id, "color", this._color);
+    }
+    get color() { return this._color };
 }
 
 export class TestElement implements StyleElement {

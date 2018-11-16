@@ -101,7 +101,7 @@ async function sample4(a: Anim) {
 async function sample5(a: Anim) {
     a.play({ alternate: true, times: 3, backSpeed: 3 }, a => {
         a.iterate(".square", (a, idx) => {
-            a.animate({ left: [0, 500], duration: 400, easing: easeInOutCubic, delay: idx * 40 });
+            a.animate({ left: [0, 500], backgroundColor: "#F00", borderRadius: [0, "25px"], duration: 400, easing: linear, delay: idx * 40 });
         });
     });
 }

@@ -199,8 +199,53 @@ describe("animate", () => {
         ], "logs");
     });
 
+    async function anim3(a: Anim, colorValue) {
+        a.animate({ target: "#x", color: colorValue, duration: 32, easing: linear });
+    }
+
+    it("should support color values (#xxx and #xxxxxx)", async function () {
+        let p = new TestPlayer(animCtxtXYZ(), anim3, [['#000', '#0AF0FF']]);
+        await p.play();
+        assert.deepEqual(logs(), [
+            "0: #x.color = rgba(0, 0, 0, 1);",
+            "1: #x.color = rgba(5, 120, 127, 1);",
+            "2: #x.color = rgba(10, 240, 255, 1);"
+        ], "logs");
+    });
+
+    it("should support color values (rgb and rgba)", async function () {
+        let p = new TestPlayer(animCtxtXYZ(), anim3, [['rgb(250,0,100)', 'rgba(100,100,200,0.5)']]);
+        await p.play();
+        assert.deepEqual(logs(), [
+            '0: #x.color = rgba(250, 0, 100, 1);',
+            '1: #x.color = rgba(175, 50, 150, 0.75);',
+            '2: #x.color = rgba(100, 100, 200, 0.5);'
+        ], "logs");
+    });
+
+    it("should support color values (hsl and hsla)", async function () {
+        let p = new TestPlayer(animCtxtXYZ(), anim3, [['hsl(120,100%,50%)', 'hsla(60, 0%, 100%, .5)']]);
+        await p.play();
+        assert.deepEqual(logs(), [
+            '0: #x.color = rgba(0, 255, 0, 1);',
+            '1: #x.color = rgba(127, 255, 127, 0.75);',
+            '2: #x.color = rgba(255, 255, 255, 0.5);'
+        ], "logs");
+    });
+
+    it("should support color values (no from value)", async function () {
+        let p = new TestPlayer(animCtxtXYZ(), anim3, ['#0AF0FF']);
+        await p.play();
+        assert.deepEqual(logs(), [
+            "0: #x.color = rgba(255, 0, 0, 1);", // dom value is red in test fixture
+            "1: #x.color = rgba(132, 120, 127, 1);",
+            "2: #x.color = rgba(10, 240, 255, 1);"
+        ], "logs");
+    });
+
+    // 
+
     // transform prop
-    // colors
     // svg attributes
 
     // should log error if no targets / invalid target
