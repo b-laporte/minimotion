@@ -1,8 +1,7 @@
 import { easeInCubic, easeOutBack, linear } from './../../misc/src/core/easings';
 import { Anim } from "../core/types";
-import { easeInOutCubic, easeOutCubic } from '../core/easings';
+import { easeInOutCubic, easeOutCubic, easeOutElastic } from '../core/easings';
 import { Player } from '../core/anim';
-import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
 
 let r = document.getElementById("progressRange"), player: Player | undefined, animDuration = 0, speed = 1;
 
@@ -101,7 +100,8 @@ async function sample4(a: Anim) {
 async function sample5(a: Anim) {
     a.play({ alternate: true, times: 3, backSpeed: 3 }, a => {
         a.iterate(".square", (a, idx) => {
-            a.animate({ left: [0, 500], backgroundColor: "#F00", borderRadius: [0, "25px"], duration: 400, easing: linear, delay: idx * 40 });
+            a.animate({ left: [0, 500], backgroundColor: "#F00", borderRadius: [0, "25px"], duration: 1200, 
+                easing: easeOutElastic, elasticity: .3, delay: idx * 40 });
         });
     });
 }

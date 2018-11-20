@@ -19,7 +19,7 @@ const defaultSettings: ControlParams = {
     duration: 1000,
     delay: 0,
     release: 0,
-    elasticity: 500,
+    elasticity: .5,
     speed: 1
 }
 
@@ -553,7 +553,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         }
 
         // identify properties/attributes to animate and create a tween for each of them
-        let tween = createTweens(targetElt, params, d, this, duration, easing, delay, release);
+        let tween = createTweens(targetElt, params, d, this, duration, easing, elasticity, delay, release);
         if (tween) {
             // return a promise associated to the last tween
             return new Promise((resolve) => {

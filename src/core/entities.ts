@@ -123,12 +123,12 @@ abstract class TimelineEntity implements AnimEntity {
     }
 }
 
-export function createTweens(targetElt: StyleElement | null, params, settings, parent, duration: number, easing: Function, delay: number, release: number) {
+export function createTweens(targetElt: StyleElement | null, params, settings, parent, duration: number, easing: Function, elasticity: number, delay: number, release: number) {
     let tween: Tween | null = null;
     for (let p in params) {
         if (settings[p] === undefined && p !== 'target') {
             // TODO share init results across all tweens of a same family
-            let twn = new Tween(targetElt, p, params[p], duration, easing, delay, release);
+            let twn = new Tween(targetElt, p, params[p], duration, easing, elasticity, delay, release);
             if (twn.isValid) {
                 tween = twn;
                 tween.attach(parent);
@@ -148,7 +148,7 @@ export class Tween extends TimelineEntity {
     type: TweenType;
     roundLevel = 10;
 
-    constructor(public targetElt: StyleElement | null, public propName: string, propValue, public duration: number, public easing, delay: number, release: number) {
+    constructor(public targetElt: StyleElement | null, public propName: string, propValue, public duration: number, public easing, public elasticity: number, delay: number, release: number) {
         // todo normalize from / to, support colors, etc.
         super("tween#" + ++AE_COUNT);
         this.delay = delay;
@@ -262,7 +262,7 @@ export class Tween extends TimelineEntity {
         if (!tg) return;
         let d = this.duration,
             progression = d === 0 ? 1 : elapsed / d,
-            easing = this.easing(progression, 100), // todo: 2nd easing parameter = elasticity
+            easing = this.easing(progression, this.elasticity),
             from = this.propFrom,
             to = this.propTo,
             value;

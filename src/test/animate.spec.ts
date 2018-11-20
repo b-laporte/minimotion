@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import { Anim } from './../core/types';
 import { reset, TestPlayer, logs, animCtxtXYZ, lastTick } from "./fixtures";
-import { linear } from '../core/easings';
+import { linear, easeOutElastic } from '../core/easings';
 
 describe("animate", () => {
 
@@ -43,6 +43,49 @@ describe("animate", () => {
             "5: #x.top = 100px;"
         ], "logs ok");
         assert.equal(lastTick(), 6, "lastTick");
+    });
+
+    it("should support elasticity", async function () {
+        async function anim(a: Anim) {
+            await a.animate({ target: "#x", top: [0, 100], duration: 200, easing: linear });
+            a.animate({ target: "#y", top: [0, 100], duration: 200, easing: easeOutElastic, elasticity: .7 });
+        }
+
+        let p = new TestPlayer(animCtxtXYZ(), anim);
+        await p.play();
+
+        assert.deepEqual(logs(), [
+            // linear
+            '0: #x.top = 0px;',
+            '1: #x.top = 7.6px;',
+            '2: #x.top = 15.3px;',
+            '3: #x.top = 23px;',
+            '4: #x.top = 30.7px;',
+            '5: #x.top = 38.4px;',
+            '6: #x.top = 46.1px;',
+            '7: #x.top = 53.8px;',
+            '8: #x.top = 61.5px;',
+            '9: #x.top = 69.2px;',
+            '10: #x.top = 76.9px;',
+            '11: #x.top = 84.6px;',
+            '12: #x.top = 92.3px;',
+            '13: #x.top = 100px;',
+            // easeOutElastic with .7 elasticity (very elastic)
+            '13: #y.top = 0px;',
+            '14: #y.top = 54.7px;',
+            '15: #y.top = 93.5px;',
+            '16: #y.top = 109.6px;',
+            '17: #y.top = 111px;',
+            '18: #y.top = 106.6px;',
+            '19: #y.top = 102.2px;',
+            '20: #y.top = 99.7px;',
+            '21: #y.top = 98.9px;',
+            '22: #y.top = 99.1px;',
+            '23: #y.top = 99.6px;',
+            '24: #y.top = 99.9px;',
+            '25: #y.top = 100px;',
+            '26: #y.top = 100px;'
+        ], "logs ok");
     });
 
     it("should work with 1 tick duration", async function () {
@@ -242,8 +285,6 @@ describe("animate", () => {
             "2: #x.color = rgba(10, 240, 255, 1);"
         ], "logs");
     });
-
-    // 
 
     // transform prop
     // svg attributes
