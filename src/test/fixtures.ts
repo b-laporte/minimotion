@@ -39,7 +39,7 @@ class ElementStyle {
     _top = "0px";
     _left = "0px";
     _opacity = 1;
-    _color= "rgb(255, 0, 0)"; // red by default
+    _color = "rgb(255, 0, 0)"; // red by default
 
     constructor(public id: string) { }
 
@@ -97,7 +97,7 @@ class TestSelectorCtxt implements SelectorContext {
     querySelectorAll(selector: string): StyleElement[] | null {
         let elts = this.elements, idx = elts.length, res: StyleElement[] = [];
         while (idx--) {
-            if (selector === elts[idx].className) {
+            if (selector === "." + elts[idx].className) {
                 res.push(elts[idx]);
             }
         }
@@ -121,6 +121,10 @@ export class TestPlayer extends Player {
             CURRENT_TICK = -1;
             runTicker(this.timeLine, resolve);
         });
+    }
+
+    get timeline() {
+        return this.timeLine;
     }
 }
 

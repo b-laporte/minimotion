@@ -21,7 +21,7 @@ describe("iterate", () => {
 
     it("should work for a simple animation in parallel", async function () {
         function anim(a: Anim) {
-            a.iterate("colItem", a => {
+            a.iterate(".colItem", a => {
                 a.animate({ top: [0, 100], duration: 50, easing: linear });
             });
         }
@@ -49,7 +49,7 @@ describe("iterate", () => {
 
     it("should work for a simple animation in sequence", async function () {
         function anim(a: Anim) {
-            a.iterate({ targets: "colItem", sequence: true }, a => {
+            a.iterate({ targets: ".colItem", sequence: true }, a => {
                 a.animate({ top: [0, 100], duration: 30, easing: linear });
             });
         }
@@ -75,7 +75,7 @@ describe("iterate", () => {
     it("should work for a simple animation in sequence with early release and defaults", async function () {
         async function anim(a: Anim) {
             a.defaults({ target: "#x", duration: 50, easing: linear })
-            await a.iterate({ targets: "colItem", sequence: true }, a => {
+            await a.iterate({ targets: ".colItem", sequence: true }, a => {
                 a.animate({ top: [0, 100], release: -20 });
             });
             a.animate({ top: [0, 100] })
@@ -109,7 +109,7 @@ describe("iterate", () => {
     it("should work for a simple animation in parallel with delay, target, defaults and forEach arguments", async function () {
         async function anim(a: Anim) {
             a.defaults({ target: "#x", duration: 50, easing: linear })
-            await a.iterate("colItem", async (a, idx, total, e) => {
+            await a.iterate(".colItem", async (a, idx, total, e) => {
                 await a.animate({ target: e, top: [0, 100], delay: 30 * idx });
                 if (idx === total - 1) {
                     a.animate({ left: [0, 100], duration: 30 });

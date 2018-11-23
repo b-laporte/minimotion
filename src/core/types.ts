@@ -83,6 +83,9 @@ export interface Anim {
     play(instructions: ((a: Anim) => void)): Promise<any>;
     play(params: PlayParams, instructions: ((a: Anim) => void)): Promise<any>;
 
+    select(selector: Selector, scope?: SelectorContext): StyleElement | null;
+    selectAll(selector: Selector, scope?: SelectorContext): StyleElement[] | null;
+
     // // setStyle
     // // addCssClass ->async // cf class list
     // // swing() startPosition, endPosition = time or -1, backSpeed, fwdSpeed, cycles, dynamic

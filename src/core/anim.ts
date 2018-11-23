@@ -24,20 +24,25 @@ const defaultSettings: ControlParams = {
 }
 
 export async function exhaustAsyncPipe() {
-    let c1 = -1, c2 = ASYNC_COUNTER, count = 0;
+    let c1 = -1, c2 = ASYNC_COUNTER, count = 0, count2 = 0;
     while (c1 !== c2 && count < MAX_ASYNC) {
         // c1 !== c2 means that some async callbacks have been run on the animation engine as ASYNC_COUNTER changed
         await Promise.resolve();
         c1 = c2;
         c2 = ASYNC_COUNTER;
-        if (count === 0) {
-            // force at least 2 rounds
+        if (c1 === c2) {
+            count2++;
+        } else {
+            count2 = 0;
+        }
+        if (count === 0 || count2 < 2) {
+            // force at least 2 identical rounds
             // the first await allows animations to add new instructions on the await queue (and these awaits don't increment ASYNC_COUNTER)
             c1 = -1;
         }
-        if (ASYNC_COUNTER > 1000) {
+        if (ASYNC_COUNTER > 10000) {
             // purpose of ASYNC_COUNTER is to track changes, we don't care of the actual value
-            ASYNC_COUNTER = 0;
+            ASYNC_COUNTER = 1;
         }
         count++;
     }
@@ -83,7 +88,6 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
             this.parent = parent;
             this.settings = parent.settings;
             this.selectorCtxt = parent.selectorCtxt;
-            //this.currentTime = this.startTime = parent.currentTime;
             parent.addEntity(this);
         }
     }
@@ -249,13 +253,6 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
                 this.setTlFunctionComplete();
             }
         } else {
-            let m = this.getMarker(time), startAes: AnimEntity[] | undefined, endAes: AnimEntity[] | undefined;
-            if (m) {
-                // console.log("marker @", time, m);
-                startAes = forward ? m.startEntities : m.endEntities;
-                endAes = forward ? m.endEntities : m.startEntities;
-            }
-
             // display frames for each running entity
             let ae = this.rList;
             while (ae) {
@@ -264,29 +261,42 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
                 ae = ae.nextEntity;
             }
 
-            // add all new entities according to marker info
-            if (startAes) {
-                let idx = startAes.length, ae: AnimEntity;
-                while (idx--) {
-                    ae = startAes[idx];
-                    if (!ae.isRunning) {
-                        this.addEntity(ae); // will trigger a display frame
-                    }
-                }
-            }
+            // load entities from rList
+            this.loadEntities(time, forward);
+        }
+        this.checkState();
+    }
 
-            // remove all done entities according to marker info
-            if (endAes) {
-                let idx = endAes.length, ae: AnimEntity;
-                while (idx--) {
-                    ae = endAes[idx];
-                    if (ae.isRunning) {
-                        this.removeEntity(ae);
-                    }
+    loadEntities(time: number, forward: boolean) {
+        //log(this.name, "loadEntities", time, forward);
+        let m = this.getMarker(time), startAes: AnimEntity[] | undefined, endAes: AnimEntity[] | undefined;
+        if (m) {
+            // console.log("marker @", time, m);
+            startAes = forward ? m.startEntities : m.endEntities;
+            endAes = forward ? m.endEntities : m.startEntities;
+        }
+        // add all new entities according to marker info
+        if (startAes) {
+            let idx = startAes.length, ae: AnimEntity;
+            while (idx--) {
+                ae = startAes[idx];
+                if (!ae.isRunning) {
+                    this.addEntity(ae); // will trigger a display frame
                 }
             }
         }
-        this.checkState();
+
+        // remove all done entities according to marker info
+        if (endAes) {
+            let idx = endAes.length, ae: AnimEntity;
+            while (idx--) {
+                ae = endAes[idx];
+                if (ae.isRunning) {
+                    this.removeEntity(ae);
+                }
+            }
+        }
+
     }
 
     getNextMarkerPosition(time: number, forward: boolean): number {
@@ -487,6 +497,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
 
     // this method can be overridden for specific contexts
     select(selector: Selector, scope?: SelectorContext): StyleElement | null {
+        if (!selector) return null;
         if (typeof selector === "string") {
             scope = scope || this.selectorCtxt;
             if (scope) {

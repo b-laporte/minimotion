@@ -428,7 +428,7 @@ describe("Timeline", () => {
         });
 
         async function tl2(a: Anim) {
-            a.iterate({ targets: "colItem", sequence: true }, a => {
+            a.iterate({ targets: ".colItem", sequence: true }, a => {
                 a.animate({ left: [0, 100], duration: 100, easing: linear, release: -50 });
             });
         }
@@ -458,7 +458,7 @@ describe("Timeline", () => {
         });
 
         async function tl3(a: Anim) {
-            a.iterate({ targets: "colItem", sequence: false }, a => {
+            a.iterate({ targets: ".colItem", sequence: false }, a => {
                 a.animate({ left: [0, 100], duration: 100, easing: linear, release: -50 });
             });
         }
@@ -488,6 +488,32 @@ describe("Timeline", () => {
                 '0: #z.left = 66.6px;'
             ], 'logs ok');
         });
+
+        async function tl4(a: Anim) {
+            a.play({ alternate: true }, a => {
+                a.animate({ target: "#x", left: [0, 100], duration: 96, easing: linear });
+            });
+        }
+
+        // it("should support play fwd/back/fwd (1)", async function () {
+        //     await moveFwdBackFwd(tl4, 48, 0, 24);
+        //     assert.deepEqual(logs(), [
+        //         '0: #x.left = 0px;',
+        //         'BACK',
+        //         '0: #x.left = 0px;',
+        //         '0: #x.left = 25px;'
+        //     ], 'logs');
+        // });
+
+        // it("should support play fwd/back/fwd (2)", async function () {
+        //     await moveFwdBackFwd(tl4, 48, 0, 80);
+        //     assert.deepEqual(logs(), [
+        //         '0: #x.left = 0px;',
+        //         'BACK',
+        //         '0: #x.left = 0px;',
+        //         '0: #x.left = 83.3px;'
+        //     ], 'logs');
+        // });
 
         // + repeat
         // + iterate

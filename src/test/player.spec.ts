@@ -56,7 +56,7 @@ describe("Player", () => {
     it("should provide duration with play statements (2)", async function () {
         async function sample(a: Anim) {
             a.play({ alternate: true, times: 3, backSpeed: 3 }, a => {
-                a.iterate("colItem", (a, idx) => {
+                a.iterate(".colItem", (a, idx) => {
                     a.animate({ left: [0, 500], duration: 400, easing: linear, delay: idx * 40 });
                 });
             });

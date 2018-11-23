@@ -239,7 +239,7 @@ export class Tween extends TimelineEntity {
     }
 
     displayFrame(time: number, targetTime: number, forward: boolean) {
-        // log(this.name, ": display frame", time, targetTime, forward)
+        log(this.name, ": display frame", time, targetTime, forward)
         if (this.delayTime <= time && time <= this.endTime) {
             if (!this.skipRendering) {
                 let targetFrame = time === targetTime;
@@ -276,6 +276,7 @@ export class Tween extends TimelineEntity {
             }
             value = "rgba(" + rgba.join(", ") + ")";
         }
+        log(">>>", this.name, ": setValue", this.propName, this.type, value);
         dom.setValue(tg, this.propName, this.type, value);
     }
 }
@@ -328,6 +329,10 @@ export class PlayerEntity extends TimelineEntity {
             // first cycle is not finished
             if (time < this.delayTime) return forward ? this.delayTime : -1;
 
+            // if (forward !== (tl as any).lastTargetForward) {
+            //     // direction changed, we need to trigger load of previous entities
+            //     (tl as any).loadEntities((tl as any).currentTime, forward);
+            // }
             let m = tl.getNextMarkerPosition((time - start) * this.speed, forward);
             return (m === -1) ? -1 : start + ceil(m / this.speed);
         } else {
@@ -352,7 +357,7 @@ export class PlayerEntity extends TimelineEntity {
                     }
                 }
             }
-            log("d1", this.d1, "d2", this.d2, "m1=", m1, "m2=", m2, "doneTime", this.doneTime);
+            log("getNextMarkerPosition: d1=", this.d1, "d2=", this.d2, "m1=", m1, "m2=", m2, "doneTime", this.doneTime);
             if (m2 === -1) return m1;
             if (m1 === -1) return m2;
             if (forward) {
