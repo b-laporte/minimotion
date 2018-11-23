@@ -495,25 +495,25 @@ describe("Timeline", () => {
             });
         }
 
-        // it("should support play fwd/back/fwd (1)", async function () {
-        //     await moveFwdBackFwd(tl4, 48, 0, 24);
-        //     assert.deepEqual(logs(), [
-        //         '0: #x.left = 0px;',
-        //         'BACK',
-        //         '0: #x.left = 0px;',
-        //         '0: #x.left = 25px;'
-        //     ], 'logs');
-        // });
+        it("should support play fwd/back/fwd (1)", async function () {
+            await moveFwdBackFwd(tl4, 48, 0, 24);
+            assert.deepEqual(logs(), [
+                '0: #x.left = 0px;',
+                'BACK',
+                '0: #x.left = 0px;',
+                '0: #x.left = 25px;'
+            ], 'logs');
+        });
 
-        // it("should support play fwd/back/fwd (2)", async function () {
-        //     await moveFwdBackFwd(tl4, 48, 0, 80);
-        //     assert.deepEqual(logs(), [
-        //         '0: #x.left = 0px;',
-        //         'BACK',
-        //         '0: #x.left = 0px;',
-        //         '0: #x.left = 83.3px;'
-        //     ], 'logs');
-        // });
+        it("should support play fwd/back/fwd (2)", async function () {
+            await moveFwdBackFwd(tl4, 48, 0, 80);
+            assert.deepEqual(logs(), [
+                '0: #x.left = 0px;',
+                'BACK',
+                '0: #x.left = 0px;',
+                '0: #x.left = 83.3px;'
+            ], 'logs');
+        });
 
         // + repeat
         // + iterate

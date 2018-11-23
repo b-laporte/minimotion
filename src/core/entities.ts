@@ -329,10 +329,10 @@ export class PlayerEntity extends TimelineEntity {
             // first cycle is not finished
             if (time < this.delayTime) return forward ? this.delayTime : -1;
 
-            // if (forward !== (tl as any).lastTargetForward) {
-            //     // direction changed, we need to trigger load of previous entities
-            //     (tl as any).loadEntities((tl as any).currentTime, forward);
-            // }
+            if (forward !== (tl as any).lastTargetForward) {
+                // direction changed, we need to trigger load of previous entities
+                (tl as any).loadEntities((tl as any).currentTime, forward);
+            }
             let m = tl.getNextMarkerPosition((time - start) * this.speed, forward);
             return (m === -1) ? -1 : start + ceil(m / this.speed);
         } else {
