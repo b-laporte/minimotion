@@ -21,7 +21,7 @@
         "clean": "rm -rf dist/",
         "build-test": "rollup -c rollup.test.config.js",
         "build": "tsc -p tsconfig.build.json",
-        "build-samples": "cpx 'src/samples/*.{html,js,css,svg,png,json}' dist && rollup -c rollup.samples.config.js",
+        "demo": "rollup -c rollup.demo.config.js",
         "mocha": "mocha dist/test.js --reporter dot",
         "test": "yarn run build-test && yarn run mocha"
     },
@@ -30,14 +30,16 @@
     "devDependencies": {
         "@types/mocha": "5.2.7",
         "@types/node": "12.6.3",
-        "cpx": "1.5.0",
         "http-server": "^0.11.1",
         "mocha": "6.1.4",
         "rollup": "1.17.0",
+        "rollup-plugin-copy": "3.0.0",
         "rollup-plugin-gzip": "2.2.0",
         "rollup-plugin-node-resolve": "5.2.0",
+        "rollup-plugin-svelte": "5.1.0",
         "rollup-plugin-terser": "5.1.1",
         "rollup-plugin-typescript2": "0.22.0",
+        "svelte": "3.6.7",
         "typescript": "3.5.3"
     },
     "engines": {
