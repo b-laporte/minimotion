@@ -16,13 +16,14 @@
         "type": "git"
     },
     "author": "Bertrand Laporte",
+    "main": "dist/lib/index.js",
     "scripts": {
         "clean": "rm -rf dist/",
         "build-test": "rollup -c rollup.test.config.js",
-        "build": "yarn run build-test",
+        "build": "tsc",
         "build-samples": "cpx 'src/samples/*.{html,js,css,svg,png,json}' dist && rollup -c rollup.samples.config.js",
         "mocha": "mocha dist/test.js --reporter dot",
-        "test": "yarn run build && yarn run mocha"
+        "test": "yarn run build-test && yarn run mocha"
     },
     "license": "Apache-2.0",
     "bugs": {},
