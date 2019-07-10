@@ -1,6 +1,5 @@
-import { easeInCubic, easeOutBack, linear } from './../../misc/src/core/easings';
 import { Anim } from "../core/types";
-import { easeInOutCubic, easeOutCubic, easeOutElastic } from '../core/easings';
+import { easeInCubic, easeOutBack, linear, easeInOutCubic, easeOutCubic, easeOutElastic } from '../core/easings';
 import { Player } from '../core/anim';
 
 let r = document.getElementById("progressRange"), player: Player | undefined, animDuration = 0, speed = 1;
