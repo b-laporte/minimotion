@@ -1,10 +1,9 @@
 {
+  "include": ["src/core/*.ts"],
+  "compileOnSave": false,
   "compilerOptions": {
     "target": "ES6",
-    "lib": [
-      "es2015",
-      "dom"
-    ],
+    "lib": ["es2015", "dom"],
     "module": "ESNext",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -20,9 +19,5 @@
     "noImplicitReturns": true,
     "baseUrl": "./node_modules",
     "allowUnusedLabels": true
-  },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "compileOnSave": false
+  }
 }
