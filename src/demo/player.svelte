@@ -4,12 +4,20 @@
 
   export let animation;
 
-  const player = new Player(animation);
+  let player;
   let animDuration = 0;
-  (async function() {
+
+  export async function reset() {
+    if (player) {
+      await player.stop();
+    }
+    animDuration = 0;
+    player = new Player(animation);
     await tick();
     animDuration = await player.duration();
-  })();
+  }
+
+  $: reset(animation);
 
   let speed = 1;
   let progression = 0;
@@ -32,8 +40,8 @@
   }
 
   async function play() {
-    if (player.position === animDuration) {
-      await player.move(0);
+    if (player.position === animDuration || player.position === 0) {
+      await reset();
     }
     player.play({ speed, onupdate });
   }
