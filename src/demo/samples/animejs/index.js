@@ -1,0 +1,43 @@
+import staggeringBasics from "./staggeringBasics";
+import staggeringStartValue from "./staggeringStartValue";
+import rangeValueStaggering from "./rangeValueStaggering";
+import staggeringFrom from "./staggeringFrom";
+import staggeringDirection from "./staggeringDirection";
+import staggeringEasing from "./staggeringEasing";
+import gridStaggering from "./gridStaggering";
+import gridAxisStaggering from "./gridAxisStaggering";
+
+export const DEMOS = [
+  {
+    title: "animejs - staggeringBasics",
+    sample: staggeringBasics
+  },
+  {
+    title: "animejs - staggeringStartValue",
+    sample: staggeringStartValue
+  },
+  {
+    title: "animejs - rangeValueStaggering",
+    sample: rangeValueStaggering
+  },
+  {
+    title: "animejs - staggeringFrom",
+    sample: staggeringFrom
+  },
+  {
+    title: "animejs - staggeringDirection",
+    sample: staggeringDirection
+  },
+  {
+    title: "animejs - staggeringEasing",
+    sample: staggeringEasing
+  },
+  {
+    title: "animejs - gridStaggering",
+    sample: gridStaggering
+  },
+  {
+    title: "animejs - gridAxisStaggering",
+    sample: gridAxisStaggering
+  }
+];
