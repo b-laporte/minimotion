@@ -10,3 +10,4 @@ import "./repeat.spec";
 import "./player.spec";
 import "./play.spec";
 import "./select.spec";
+import "./transforms.spec";

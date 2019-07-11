@@ -1,4 +1,5 @@
 import { TweenType } from './types';
+import { getTransformValue, setTransformValue, TRANSFORMS } from './transforms';
 
 let LOG_ACTIVE = false;
 
@@ -24,7 +25,6 @@ export function parseValue(name, params, defaults) {
 // --------------------------------------------------------------------------------------------------------------------
 // utilities from http://animejs.com
 
-const TRANSFORMS = { translateX: 1, translateY: 1, translateZ: 1, rotate: 1, rotateX: 1, rotateY: 1, rotateZ: 1, scale: 1, scaleX: 1, scaleY: 1, scaleZ: 1, skewX: 1, skewY: 1, perspective: 1 };
 const RX_CSS_NAME = /([a-z])([A-Z])/g;
 
 /**
@@ -63,7 +63,7 @@ export let dom = {
     getValue(targetElt, propName, propType) {
         switch (propType) {
             case 'css': return dom.getCSSValue(targetElt, propName);
-            case 'transform': return null; // todo getTransformValue(target, propName);
+            case 'transform': return getTransformValue(targetElt, propName);
             case 'attribute': return null; // todo target.getAttribute(propName)
         }
         return null;
@@ -76,8 +76,7 @@ export let dom = {
                 targetElt.style[propName] = value;
                 break;
             case 'transform':
-                // transform: translateX(10px) rotate(10deg) translateY(5px);
-                console.log("Todo: transforms");
+                setTransformValue(targetElt, propName, value);
                 break;
             default:
                 console.log("[animate] unsupported animation type: " + propType);

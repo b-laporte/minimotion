@@ -1,5 +1,6 @@
 import { ControlParams, AnimEntity, AnimContainer, StyleElement, PlayParams, TweenType, RelativeOperator } from "./types";
 import { parseValue, log, getAnimationType, dom, parseColor } from './utils';
+import { getTransformUnit } from './transforms';
 
 const RX_NUMERIC_PROP = /^(\*=|\+=|-=)?([\+\-]?[0-9#\.]+)(%|px|pt|em|rem|in|cm|mm|ex|ch|pc|vw|vh|vmin|vmax|deg|rad|turn)?$/,
     RX_DEFAULT_PX_PROPS = /(radius|width|height|top|left)$/i;
@@ -210,6 +211,8 @@ export class Tween extends TimelineEntity {
                 // set default unit for common properties
                 if (this.type === 'css') {
                     if (this.propName.match(RX_DEFAULT_PX_PROPS)) this.unit = 'px';
+                } else if (this.type === 'transform') {
+                    this.unit = getTransformUnit(this.propName);
                 }
             }
 
