@@ -1,3 +1,5 @@
+import animationKeyframes from "./animationKeyframes";
+import propertyKeyframes from "./propertyKeyframes";
 import staggeringBasics from "./staggeringBasics";
 import staggeringStartValue from "./staggeringStartValue";
 import rangeValueStaggering from "./rangeValueStaggering";
@@ -8,6 +10,14 @@ import gridStaggering from "./gridStaggering";
 import gridAxisStaggering from "./gridAxisStaggering";
 
 export const DEMOS = [
+  {
+    title: "animejs - animationKeyframes",
+    sample: animationKeyframes
+  },
+  {
+    title: "animejs - propertyKeyframes",
+    sample: propertyKeyframes
+  },
   {
     title: "animejs - staggeringBasics",
     sample: staggeringBasics
