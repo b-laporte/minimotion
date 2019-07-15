@@ -8,6 +8,9 @@ import staggeringDirection from "./staggeringDirection";
 import staggeringEasing from "./staggeringEasing";
 import gridStaggering from "./gridStaggering";
 import gridAxisStaggering from "./gridAxisStaggering";
+import timelineBasics from "./timelineBasics";
+import timelineOffsets from "./timelineOffsets";
+import TLParamsInheritance from "./TLParamsInheritance";
 
 export const DEMOS = [
   {
@@ -49,5 +52,17 @@ export const DEMOS = [
   {
     title: "animejs - gridAxisStaggering",
     sample: gridAxisStaggering
+  },
+  {
+    title: "animejs - timelineBasics",
+    sample: timelineBasics
+  },
+  {
+    title: "animejs - timelineOffsets",
+    sample: timelineOffsets
+  },
+  {
+    title: "animejs - TLParamsInheritance",
+    sample: TLParamsInheritance
   }
 ];
