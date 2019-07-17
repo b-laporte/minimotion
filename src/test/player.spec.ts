@@ -196,7 +196,7 @@ describe("Player", () => {
     });
 
     it("should support speed", async function () {
-        let p = new TestPlayer2(animCtxtXYZ(), anim2), sp;
+        let p = new TestPlayer2(animCtxtXYZ(), anim2);
         await p.play({
             raf: testRaf,
             speed: 2
