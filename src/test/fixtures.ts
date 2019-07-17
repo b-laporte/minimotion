@@ -3,7 +3,7 @@ import { StyleElement, SelectorContext, Anim } from "../core/types";
 import { dom } from '../core/utils';
 
 let CURRENT_TICK = 0;
-const MAX_ITERATION = 100, MAX_ASYNC = 100;
+const MAX_ITERATION = 100;
 let _logs: string[] = [];
 
 export function reset() {
@@ -70,7 +70,7 @@ class ElementStyle {
 
 export class TestElement implements StyleElement {
     nodeType = 1;
-    style: Object;
+    style: ElementStyle;
 
     constructor(public id: string, public className = "") {
         this.style = new ElementStyle(id);

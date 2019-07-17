@@ -6,7 +6,7 @@
   let center = 2.5;
 
   async function animation(a) {
-    a.iterate(".square.el", async (a, index, length) => {
+    a.iterate(".square.el", async (a, index) => {
       a.animate({
         translateX: [0, 270],
         delay: Math.abs(index - center) * 100

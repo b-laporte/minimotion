@@ -1,4 +1,4 @@
-import { TweenType, RelativeOperator } from './types';
+import { TweenType } from './types';
 
 let LOG_ACTIVE = false;
 

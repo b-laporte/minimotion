@@ -1,5 +1,5 @@
-import { ControlParams, AnimEntity, AnimContainer, StyleElement, Anim, PlayParams, TweenType, RelativeOperator } from "./types";
-import { parseValue, log, getAnimationType, dom, parseColor, activateLogs, deactivateLogs } from './utils';
+import { ControlParams, AnimEntity, AnimContainer, StyleElement, PlayParams, TweenType, RelativeOperator } from "./types";
+import { parseValue, log, getAnimationType, dom, parseColor } from './utils';
 
 const RX_NUMERIC_PROP = /^(\*=|\+=|-=)?([\+\-]?[0-9#\.]+)(%|px|pt|em|rem|in|cm|mm|ex|ch|pc|vw|vh|vmin|vmax|deg|rad|turn)?$/,
     RX_DEFAULT_PX_PROPS = /(radius|width|height|top|left)$/i;

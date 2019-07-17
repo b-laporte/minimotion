@@ -1,9 +1,9 @@
 import { Anim, AnimateParams, AnimEntity, ControlParams, Selector, StyleElement, SelectorContext, Instructions, IterationParams, AnimMarker, AnimTimeLine, AnimContainer, AnimPlayer, PlayArguments, PlayParams } from './types';
 import { easeOutElastic } from './easings';
 import { log, parseValue } from './utils';
-import { Tween, Delay, PlayerEntity, createTweens } from './entities';
+import { Delay, PlayerEntity, createTweens } from './entities';
 
-const FRAME_MS = 16, MAX_TIME = Number.MAX_SAFE_INTEGER, MAX_ASYNC = 100, IDENTITY = x => x, MAX_TL_DURATION_MS = 600000; // 10mn
+const FRAME_MS = 16, MAX_TIME = Number.MAX_SAFE_INTEGER, MAX_ASYNC = 100, MAX_TL_DURATION_MS = 600000; // 10mn
 let ASYNC_COUNTER = 0; // count the changes that can be triggered by an async call
 
 /**
@@ -518,11 +518,11 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         } else if (selector["style"]) {
             return [selector] as StyleElement[];
         } else if (Array.isArray(selector)) {
-            let r = [], len = selector.length;
+            let r: StyleElement[] = [], len = selector.length;
             for (let i = 0; len > i; i++) {
                 let r2 = this.selectAll(selector[i], scope);
                 if (r2) {
-                    r = r.concat(<any>r2);
+                    r = r.concat(r2);
                 }
             }
             return r;
@@ -631,7 +631,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
 
     async iterate(targetsOrParams: Selector | IterationParams, instructions: (a: Anim, idx: number, total: number, e: StyleElement) => void | Promise<any>) {
         let targets: Selector, inSequence = false
-        if ((<any>targetsOrParams).targets !== undefined) {
+        if ((targetsOrParams as any).targets !== undefined) {
             targets = (targetsOrParams as IterationParams).targets;
             inSequence = (targetsOrParams as IterationParams).sequence === true
         } else {
@@ -707,7 +707,7 @@ function createMarker(time: number, prev?: AnimMarker, next?: AnimMarker): AnimM
     }
 }
 
-const LENGTH_UNPROCESSED = -2, LENGTH_INFINITE = -1;
+const LENGTH_UNPROCESSED = -2;
 let PLAY_COUNT = 0;
 
 function nextTimeTick(t1: number, fwd: boolean, speed: number) {

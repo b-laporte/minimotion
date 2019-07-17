@@ -1,6 +1,6 @@
 
 
-export type Selector = StyleElement | String;
+export type Selector = StyleElement | string;
 
 export interface SelectorContext {
     querySelector(selector: string): StyleElement | null;
