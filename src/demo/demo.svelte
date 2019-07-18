@@ -1,19 +1,20 @@
 <script>
+  import Sidebar from "./sidebar";
   import { DEMOS } from "./samples";
-  let currentSampleIndex = 0;
+  let activeDemo = DEMOS[0];
 
   function fromHash() {
     let value = decodeURIComponent(window.location.hash.slice(1));
-    let index = DEMOS.findIndex(demo => demo.title === value);
-    if (index > -1) {
-      currentSampleIndex = index;
+    let demo = DEMOS.find(demo => demo.title === value);
+    if (demo != null) {
+      activeDemo = demo;
     } else {
-      toHash(currentSampleIndex);
+      toHash(activeDemo);
     }
   }
 
-  function toHash(sampleIndex) {
-    const hash = `#${encodeURIComponent(DEMOS[sampleIndex].title)}`;
+  function toHash(demo) {
+    const hash = `#${encodeURIComponent(demo.title)}`;
     if (window.location.hash !== hash) {
       window.location.hash = hash;
     }
@@ -21,33 +22,38 @@
 
   fromHash();
 
-  $: toHash(currentSampleIndex);
+  $: toHash(activeDemo);
 </script>
 
 <style>
   :global(body) {
     font-family: Helvetica, Arial, sans-serif;
     font-size: 1;
-    padding: 50px;
+    /* padding: 50px; */
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
     color: #ffffff;
     background-color: #222222;
   }
 
-  div.sample-selector {
-    margin-bottom: 50px;
+  .layout {
+    display: grid;
+    grid-template-columns: 3fr 14fr;
+    gap: 1em;
+    height: 100%;
+  }
+
+  .content {
+    padding: 1em;
   }
 </style>
 
 <svelte:window on:hashchange={fromHash} />
-<div class="sample-selector">
-  <label>
-    Select a sample:
-    <select bind:value={currentSampleIndex}>
-      {#each DEMOS as demo, index}
-        <option value={index}>{demo.title}</option>
-      {/each}
-    </select>
-  </label>
-</div>
 
-<svelte:component this={DEMOS[currentSampleIndex].sample} />
+<div class="layout">
+  <Sidebar bind:activeDemo />
+  <div class="content">
+    <svelte:component this={activeDemo.sample} />
+  </div>
+</div>
