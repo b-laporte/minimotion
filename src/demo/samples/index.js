@@ -9,6 +9,10 @@ import { DEMOS as animejsDemos } from "./animejs";
 
 export const DEMOS = [
   {
+    type: "category",
+    title: "Initial samples"
+  },
+  {
     title: "Sample 1",
     sample: sample1
   },
@@ -29,6 +33,10 @@ export const DEMOS = [
     sample: sample5
   },
   {
+    type: "category",
+    title: "New samples"
+  },
+  {
     title: "Transform chain",
     sample: transformChain
   },
@@ -36,5 +44,12 @@ export const DEMOS = [
     title: "Apply function",
     sample: applyFunction
   },
-  ...animejsDemos
+  {
+    type: "category",
+    title: "animejs"
+  },
+  ...animejsDemos.map(({ title, sample }) => ({
+    title: title.replace("animejs - ", ""),
+    sample
+  }))
 ];
