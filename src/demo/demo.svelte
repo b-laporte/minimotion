@@ -29,7 +29,6 @@
   :global(body) {
     font-family: Helvetica, Arial, sans-serif;
     font-size: 1;
-    /* padding: 50px; */
     margin: 0;
     height: 100vh;
     width: 100vw;
