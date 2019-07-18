@@ -1,4 +1,23 @@
-import { Anim, AnimateParams, AnimEntity, ControlParams, Selector, StyleElement, SelectorContext, Instructions, IterationParams, AnimMarker, AnimTimeLine, AnimContainer, AnimPlayer, PlayArguments, PlayParams } from './types';
+import {
+    Anim,
+    AnimateParams,
+    AnimEntity,
+    ControlParams,
+    Selector,
+    StyleElement,
+    SelectorContext,
+    Instructions,
+    IterationParams,
+    AnimMarker,
+    AnimTimeLine,
+    AnimContainer,
+    AnimPlayer,
+    PlayArguments,
+    PlayParams,
+    Target,
+    ResolvedTarget,
+    isTargetFunction,
+} from './types';
 import { easeOutElastic } from './easings';
 import { log, parseValue } from './utils';
 import { Delay, PlayerEntity, createTweens } from './entities';
@@ -538,7 +557,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
     async animate(params: AnimateParams): Promise<any> {
         // read all control args
         let d = this.settings,
-            target = parseValue("target", params, d) as Selector,
+            target = parseValue("target", params, d) as Target,
             easing = parseValue("easing", params, d) as Function,
             speed = parseValue("speed", params, d) as number,
             duration = convertDuration(parseValue("duration", params, d), speed), // convertDuration
@@ -547,13 +566,19 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
             elasticity = parseValue("elasticity", params, d) as number;
 
         // identify target
-        let targetElt = this.select(target);
-        if (!targetElt) {
-            return console.log('[anim] invalid target selector: ' + target);
+        let finalTarget: ResolvedTarget;
+        if (isTargetFunction(target)) {
+            finalTarget = target;
+        } else {
+            const targetElement = this.select(target);
+            if (targetElement == null) {
+                return console.log('[anim] invalid target selector: ' + target);
+            }
+            finalTarget = targetElement;
         }
-
+    
         // identify properties/attributes to animate and create a tween for each of them
-        let tween = createTweens(targetElt, params, d, this, duration, easing, elasticity, delay, release);
+        let tween = createTweens(finalTarget, params, d, this, duration, easing, elasticity, delay, release);
         if (tween) {
             // return a promise associated to the last tween
             return new Promise((resolve) => {
