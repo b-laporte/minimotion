@@ -38,14 +38,27 @@
   }
 
   .layout {
-    display: grid;
-    grid-template-columns: 3fr 14fr;
-    gap: 1em;
     height: 100%;
+    display: grid;
+    gap: 1em;
+    grid-template-columns: 4fr 14fr;
+    grid-template-rows: 100%;
   }
 
   .content {
     padding: 1em;
+    display: grid;
+    gap: 1em;
+    grid-template-rows: auto 1fr;
+  }
+
+  .demo-title {
+    padding: 1em;
+
+    color: orange;
+    font-weight: bold;
+
+    border-bottom: 3px solid orange;
   }
 </style>
 
@@ -54,6 +67,9 @@
 <div class="layout">
   <Sidebar bind:activeDemo />
   <div class="content">
-    <svelte:component this={activeDemo.sample} />
+    <div class="demo-title">{activeDemo.title}</div>
+    <div>
+      <svelte:component this={activeDemo.sample} />
+    </div>
   </div>
 </div>
