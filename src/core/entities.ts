@@ -1,16 +1,10 @@
-import { ControlParams, AnimEntity, AnimContainer, StyleElement, PlayParams, TweenType, RelativeOperator } from "./types";
-import { parseValue, log, getAnimationType, dom, parseColor } from './utils';
-import { getTransformUnit } from './transforms';
-
-const RX_NUMERIC_PROP = /^(\*=|\+=|-=)?([\+\-]?[0-9#\.]+)(%|px|pt|em|rem|in|cm|mm|ex|ch|pc|vw|vh|vmin|vmax|deg|rad|turn)?$/,
-    RX_DEFAULT_PX_PROPS = /(radius|width|height|top|left)$/i;
+import { ControlParams, AnimEntity, AnimContainer, StyleElement, PlayParams, TweenType } from "./types";
+import { parseValue, log, getAnimationType, dom } from './utils';
+import { ValueInterpolator } from './interpolators/types';
+import { createInterpolator } from './interpolators';
 
 const trunc = Math.trunc, ceil = Math.ceil;
 let AE_COUNT = 0;
-
-function interpolate(from: number, to: number, easing: number, decimalLevel: number) {
-    return trunc((from + (to - from) * easing) * decimalLevel) / decimalLevel;
-}
 
 abstract class TimelineEntity implements AnimEntity {
     name: string;
@@ -141,13 +135,8 @@ export function createTweens(targetElt: StyleElement | null, params, settings, p
 
 export class Tween extends TimelineEntity {
     isValid = true;
-    isNumeric = false; // if false, it is a color
-    relOp: RelativeOperator = '';
-    unit = "";
-    propFrom: any;
-    propTo: any;
     type: TweenType;
-    roundLevel = 10;
+    interpolator: ValueInterpolator | null;
 
     constructor(public targetElt: StyleElement | null, public propName: string, propValue, public duration: number, public easing, public elasticity: number, delay: number, release: number) {
         // todo normalize from / to, support colors, etc.
@@ -172,73 +161,24 @@ export class Tween extends TimelineEntity {
             type = this.type = getAnimationType(target, propName);
         if (type === 'invalid') return 100;
 
+        let fromIsDom = false;
         let propFrom: any, propTo: any;
         if (Array.isArray(propValue)) {
             if (propValue.length !== 2) return 101;
             propFrom = '' + propValue[0];
             propTo = '' + propValue[1];
         } else {
-            propFrom = undefined;
+            fromIsDom = true;
+            propFrom = '' + dom.getValue(target, propName, type);
             propTo = '' + propValue;
         }
-        if (!propTo) return 102;
 
-        let split = RX_NUMERIC_PROP.exec(propTo);
-        if (split) {
-            // propTo is a numeric prop - e.g. '20px' or '+=300.3em' or '0.3'
-            this.isNumeric = true;
-            this.relOp = split[1] as any;
-            this.propTo = parseFloat(split[2]);
-            this.unit = split[3] || '';
-
-            let propFromIsDom = false;
-            if (!propFrom) {
-                // read from dom
-                propFromIsDom = true;
-                propFrom = dom.getValue(target, propName, type);
-                if (propFrom === null) return 103;
-            }
-            // check consistency
-            let split2 = RX_NUMERIC_PROP.exec(propFrom);
-            if (!split2) return 200;
-            if (split2[1]) return 201; // cannot be relative
-            let fromUnit = split2[3] || '';
-            if (!propFromIsDom && this.unit && fromUnit && fromUnit !== this.unit) return 202; // units have to be the same
-            this.unit = this.unit || fromUnit; // if unit is not defined in to value, we use from value
-            this.propFrom = parseFloat(split2[2]);
-
-            if (!this.unit) {
-                // set default unit for common properties
-                if (this.type === 'css') {
-                    if (this.propName.match(RX_DEFAULT_PX_PROPS)) this.unit = 'px';
-                } else if (this.type === 'transform') {
-                    this.unit = getTransformUnit(this.propName);
-                }
-            }
-
-            switch (this.relOp) {
-                case '+=': { this.propTo += this.propFrom; break; }
-                case '-=': { this.propTo = this.propFrom - this.propTo; break; }
-                case '*=': { this.propTo *= this.propFrom; break; }
-            }
-        } else {
-            // not numeric - may be a color?
-            let c = parseColor(propTo);
-            if (!c) return 300; // invalid value
-            this.propTo = c;
-            if (!propFrom) {
-                c = parseColor(dom.getValue(target, propName, type)) || [0, 0, 0, 1];
-            } else {
-                c = parseColor(propFrom);
-                if (!c) return 301; // invalid from color value
-            }
-            this.propFrom = c;
-        }
-
-        if (!this.unit) {
-            this.roundLevel = 100; // unit-less properties should be rounded with 2 decimals by default (e.g. opacity)
-        }
-        return 0; // ok
+        this.interpolator = createInterpolator(propFrom, propTo, {
+            fromIsDom,
+            propName,
+            type
+        })
+        return this.interpolator ? 0 /* ok */ : 102 /* invalid */;
     }
 
     displayFrame(time: number, targetTime: number, forward: boolean) {
@@ -261,24 +201,12 @@ export class Tween extends TimelineEntity {
     }
 
     setProgression(elapsed: number) {
-        let tg = this.targetElt;
-        if (!tg) return;
-        let d = this.duration,
+        const tg = this.targetElt;
+        if (!tg || !this.isValid) return;
+        const d = this.duration,
             progression = d === 0 ? 1 : elapsed / d,
             easing = this.easing(progression, this.elasticity),
-            from = this.propFrom,
-            to = this.propTo,
-            value;
-
-        if (this.isNumeric) {
-            value = interpolate(from, to, easing, this.roundLevel) + this.unit;
-        } else {
-            let rgba: number[] = [];
-            for (let i = 0; 4 > i; i++) {
-                rgba.push(interpolate(from[i], to[i], easing, i == 3 ? 100 : 1));
-            }
-            value = "rgba(" + rgba.join(", ") + ")";
-        }
+            value = this.interpolator!.getValue(easing);
         dom.setValue(tg, this.propName, this.type, value);
     }
 }
