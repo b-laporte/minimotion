@@ -4,6 +4,7 @@ import sample3 from "./sample3";
 import sample4 from "./sample4";
 import sample5 from "./sample5";
 import transformChain from "./transformChain";
+import applyFunction from "./applyFunction";
 import { DEMOS as animejsDemos } from "./animejs";
 
 export const DEMOS = [
@@ -30,6 +31,10 @@ export const DEMOS = [
   {
     title: "Transform chain",
     sample: transformChain
+  },
+  {
+    title: "Apply function",
+    sample: applyFunction
   },
   ...animejsDemos
 ];
