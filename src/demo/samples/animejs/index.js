@@ -1,3 +1,4 @@
+import svgAttr from "./svgAttr";
 import animationKeyframes from "./animationKeyframes";
 import propertyKeyframes from "./propertyKeyframes";
 import staggeringBasics from "./staggeringBasics";
@@ -11,8 +12,13 @@ import gridAxisStaggering from "./gridAxisStaggering";
 import timelineBasics from "./timelineBasics";
 import timelineOffsets from "./timelineOffsets";
 import TLParamsInheritance from "./TLParamsInheritance";
+import morphing from "./morphing";
 
 export const DEMOS = [
+  {
+    title: "animejs - svgAttr",
+    sample: svgAttr
+  },
   {
     title: "animejs - animationKeyframes",
     sample: animationKeyframes
@@ -64,5 +70,9 @@ export const DEMOS = [
   {
     title: "animejs - TLParamsInheritance",
     sample: TLParamsInheritance
+  },
+  {
+    title: "animejs - morphing",
+    sample: morphing
   }
 ];
