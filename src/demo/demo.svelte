@@ -59,6 +59,11 @@
 
     border-bottom: 3px solid orange;
   }
+
+  .source {
+    padding-top: 2em;
+    font-size: larger;
+  }
 </style>
 
 <svelte:window on:hashchange={fromHash} />
@@ -69,6 +74,7 @@
     <div class="demo-title">{activeDemo.title}</div>
     <div>
       <svelte:component this={activeDemo.sample} />
+      <pre class="source">{activeDemo.source}</pre>
     </div>
   </div>
 </div>
