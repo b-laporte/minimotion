@@ -10,54 +10,65 @@
       easing: easeOutElastic,
       elasticity: 0.8
     });
-    a.parallelize(
-      async function() {
-        await a.animate({
-          translateX: [0, 250],
-          duration: 1000,
-          delay: 500
-        });
-        await a.animate({ translateX: [250, 0], duration: 1000, delay: 500 });
+
+    a.sequence(
+      async a => {
+        // a.setStyle;
+        a.animate({ translateY: [0, -40], duration: 500 });
+        a.animate({ scaleY: [1.75, 1], duration: 500 });
       },
-      async function() {
-        await a.animate({ translateY: [0, -40], duration: 500 });
-        await a.animate({ translateY: [-40, 40], duration: 500, delay: 1000 });
-        await a.animate({ translateY: [40, 0], duration: 500, delay: 1000 });
+      async a => {
+        a.group(async a => {
+          await a.animate({
+            scaleX: [1, 4],
+            duration: 100,
+            easing: easeOutExpo
+          });
+          a.animate({ scaleX: [4, 1], duration: 900 });
+        });
+        a.animate({ translateX: [0, 250], duration: 1000 });
       },
-      async function() {
-        await a.animate({
-          scaleX: [1, 4],
-          duration: 100,
-          delay: 500,
-          easing: easeOutExpo
-        });
-        await a.animate({ scaleX: [4, 1], duration: 900 });
-        await a.animate({
-          scaleX: [1, 4],
-          duration: 100,
-          delay: 500,
-          easing: easeOutExpo
-        });
-        await a.animate({ scaleX: [4, 1], duration: 900 });
+      async a => {
+        a.animate({ translateY: [-40, 40], duration: 500 });
       },
-      async function() {
-        await a.animate({ scaleY: [1.75, 1], duration: 500 });
-        await a.animate({
-          scaleY: [1, 2],
-          duration: 50,
-          delay: 1000,
-          easing: easeOutExpo
-        });
-        await a.animate({ scaleY: [2, 1], duration: 450 });
-        await a.animate({
-          scaleY: [1, 1.75],
-          duration: 50,
-          delay: 1000,
-          easing: easeOutExpo
-        });
-        await a.animate({ scaleY: [1.75, 1], duration: 450 });
+      async a => {
+        a.animate({ translateX: [250, 0], duration: 1000 });
+      },
+      async a => {
+        a.animate({ translateY: [40, 0], duration: 500 });
       }
     );
+
+    // a.parallelize(
+    //   async function() {
+    //
+    //
+    //   },
+    //
+    //   },
+    //   async function() {
+    //     await
+    //     await a.animate({ scaleX: [4, 1], duration: 900 });
+    //     await a.animate({
+    //       scaleX: [1, 4],
+    //       duration: 100,
+    //       delay: 500,
+    //       easing: easeOutExpo
+    //     });
+    //     await a.animate({ scaleX: [4, 1], duration: 900 });
+    //   },
+    //   async function() {
+    //     await a.animate({ scaleY: [1.75, 1], duration: 500 });
+    //     
+    //     await a.animate({
+    //       scaleY: [1, 1.75],
+    //       duration: 50,
+    //       delay: 1000,
+    //       easing: easeOutExpo
+    //     });
+    //     await a.animate({ scaleY: [1.75, 1], duration: 450 });
+    //   }
+    // );
   }
 </script>
 
