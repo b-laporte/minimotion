@@ -16,8 +16,8 @@ const demoSourceCodePlugin = {
         id.length - SOURCE_SUFFIX.length
       );
       let source = await fs.readFile(fileId, "utf8");
-      source = source.replace(/^[\s\S]*(async function animation)/, '$1').replace(/ $/, '');
-      source = source.replace(/<\/script>[\s\S]*$/, '').replace(/ $/, '');
+      source = source.replace(/^[\s\S]*(async function animation)/, '$1');
+      source = source.replace(/<\/script>[\s\S]*$/, '');
       return `export default ${JSON.stringify(source)};`;
     }
     return null;
