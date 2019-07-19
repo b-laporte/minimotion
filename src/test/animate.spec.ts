@@ -12,7 +12,7 @@ describe("animate", () => {
             a.animate({ target: "#x", top: [100, 200], duration: 100, easing: linear });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -33,7 +33,7 @@ describe("animate", () => {
             a.animate({ target: "#x", top: [0, 100], duration: 50, delay: 30, easing: linear });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -51,7 +51,7 @@ describe("animate", () => {
             a.animate({ target: "#y", top: [0, 100], duration: 200, easing: easeOutElastic, elasticity: .7 });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -93,7 +93,7 @@ describe("animate", () => {
             a.animate({ target: "#x", top: [0, 100], duration: 20, easing: linear });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -108,7 +108,7 @@ describe("animate", () => {
             a.animate({ target: "#x", top: [0, 100], duration: 5, easing: linear });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -122,7 +122,7 @@ describe("animate", () => {
             await a.animate({ target: "#x", top: [0, 100], duration: 5, easing: linear });
             a.animate({ target: "#y", top: [0, 100], duration: 16, easing: linear });
         }
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -138,7 +138,7 @@ describe("animate", () => {
             a.animate({ target: "#y", left: [0, 100], duration: 50, easing: linear });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -159,7 +159,7 @@ describe("animate", () => {
             await a.animate({ target: "#x", top: [0, 100], duration: 50, easing: linear, release: 30 });
             a.animate({ target: "#y", left: [0, 100], duration: 30, easing: linear });
         }
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -179,7 +179,7 @@ describe("animate", () => {
     }
 
     it("should support units", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim1, [['0em', '100em']]);
+        const p = new TestPlayer(animCtxtXYZ(), anim1, [['0em', '100em']]);
         await p.play();
         assert.deepEqual(logs(), [
             "0: #x.top = 0em;",
@@ -189,7 +189,7 @@ describe("animate", () => {
     });
 
     it("should support target only", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim1, ['100em']);
+        const p = new TestPlayer(animCtxtXYZ(), anim1, ['100em']);
         await p.play();
         assert.deepEqual(logs(), [
             "0: #x.top = 0em;",
@@ -199,7 +199,7 @@ describe("animate", () => {
     });
 
     it("should support relative target += ", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim1, [['200em', '+=100']]);
+        const p = new TestPlayer(animCtxtXYZ(), anim1, [['200em', '+=100']]);
         await p.play();
         assert.deepEqual(logs(), [
             "0: #x.top = 200em;",
@@ -209,7 +209,7 @@ describe("animate", () => {
     });
 
     it("should support relative target -= ", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim1, [['200', '-=100em']]);
+        const p = new TestPlayer(animCtxtXYZ(), anim1, [['200', '-=100em']]);
         await p.play();
         assert.deepEqual(logs(), [
             "0: #x.top = 200em;",
@@ -219,7 +219,7 @@ describe("animate", () => {
     });
 
     it("should support relative target *= ", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim1, [['200em', '*=2']]);
+        const p = new TestPlayer(animCtxtXYZ(), anim1, [['200em', '*=2']]);
         await p.play();
         assert.deepEqual(logs(), [
             "0: #x.top = 200em;",
@@ -233,7 +233,7 @@ describe("animate", () => {
     }
 
     it("should support unit-less properties ", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim2, [0.5]);
+        const p = new TestPlayer(animCtxtXYZ(), anim2, [0.5]);
         await p.play();
         assert.deepEqual(logs(), [
             "0: #x.opacity = 1;",
@@ -247,7 +247,7 @@ describe("animate", () => {
     }
 
     it("should support color values (#xxx and #xxxxxx)", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim3, [['#000', '#0AF0FF']]);
+        const p = new TestPlayer(animCtxtXYZ(), anim3, [['#000', '#0AF0FF']]);
         await p.play();
         assert.deepEqual(logs(), [
             "0: #x.color = rgba(0, 0, 0, 1);",
@@ -257,7 +257,7 @@ describe("animate", () => {
     });
 
     it("should support color values (rgb and rgba)", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim3, [['rgb(250,0,100)', 'rgba(100,100,200,0.5)']]);
+        const p = new TestPlayer(animCtxtXYZ(), anim3, [['rgb(250,0,100)', 'rgba(100,100,200,0.5)']]);
         await p.play();
         assert.deepEqual(logs(), [
             '0: #x.color = rgba(250, 0, 100, 1);',
@@ -267,7 +267,7 @@ describe("animate", () => {
     });
 
     it("should support color values (hsl and hsla)", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim3, [['hsl(120,100%,50%)', 'hsla(60, 0%, 100%, .5)']]);
+        const p = new TestPlayer(animCtxtXYZ(), anim3, [['hsl(120,100%,50%)', 'hsla(60, 0%, 100%, .5)']]);
         await p.play();
         assert.deepEqual(logs(), [
             '0: #x.color = rgba(0, 255, 0, 1);',
@@ -277,7 +277,7 @@ describe("animate", () => {
     });
 
     it("should support color values (no from value)", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim3, ['#0AF0FF']);
+        const p = new TestPlayer(animCtxtXYZ(), anim3, ['#0AF0FF']);
         await p.play();
         assert.deepEqual(logs(), [
             "0: #x.color = rgba(255, 0, 0, 1);", // dom value is red in test fixture

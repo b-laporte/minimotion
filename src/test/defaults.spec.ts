@@ -13,7 +13,7 @@ describe("defaults", () => {
             a.animate({ top: [100, 200] });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -34,7 +34,7 @@ describe("defaults", () => {
             a.animate({ top: [100, 200] });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [

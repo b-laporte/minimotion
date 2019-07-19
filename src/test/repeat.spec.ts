@@ -15,7 +15,7 @@ describe("repeat", () => {
             a.animate({ target: "#y", top: [0, 100], duration: 5, easing: linear });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
         assert.deepEqual(logs(), [
             '0: #y.top = 100px;'
@@ -32,7 +32,7 @@ describe("repeat", () => {
             a.animate({ target: "#y", top: [0, 100], duration: 30, easing: linear });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
         assert.deepEqual(logs(), [
             '0: #x.top = 0px;',
@@ -56,7 +56,7 @@ describe("repeat", () => {
             });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
         assert.deepEqual(logs(), [
             '0: #x.top = 0px;',

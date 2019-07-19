@@ -3,10 +3,10 @@ import { interpolate } from "./interpolate";
 
 const RX_HEX1 = /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
   RX_HEX2 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i,
-  RX_RGB = /rgb\(\s*(\d+)\s*\,\s*(\d+)\s*\,\s*(\d+)\s*\)/,
-  RX_RGBA = /rgba\(\s*(\d+)\s*\,\s*(\d+)\s*\,\s*(\d+)\s*\,\s*([\d\.]+)\s*\)/,
-  RX_HSL = /hsl\(\s*(\d+)\s*,\s*([\d\.]+)%\s*,\s*([\d\.]+)%\s*\)/,
-  RX_HSLA = /hsla\(\s*(\d+)\s*,\s*([\d\.]+)%\s*,\s*([\d\.]+)%\s*\,\s*([\d\.]+)\s*\)/;
+  RX_RGB = /rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/,
+  RX_RGBA = /rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*([\d.]+)\s*\)/,
+  RX_HSL = /hsl\(\s*(\d+)\s*,\s*([\d.]+)%\s*,\s*([\d.]+)%\s*\)/,
+  RX_HSLA = /hsla\(\s*(\d+)\s*,\s*([\d.]+)%\s*,\s*([\d.]+)%\s*,\s*([\d.]+)\s*\)/;
 
 /**
  * Parse a CSS color string and return an array [r, g, b, a] or null is the value is not a color
@@ -91,7 +91,7 @@ export const colorInterpolatorFactory: ValueInterpolatorFactory = (
 
   return {
     getValue(easing: number) {
-      let rgba: number[] = [];
+      const rgba: number[] = [];
       for (let i = 0; 4 > i; i++) {
         rgba.push(interpolate(from![i], to[i], easing, i == 3 ? 100 : 1));
       }

@@ -2,7 +2,6 @@ import * as assert from 'assert';
 import { Anim } from '../core/types';
 import { reset, logs, animCtxtXYZ, TestPlayer } from "./fixtures";
 import { linear } from '../core/easings';
-import { activateLogs, deactivateLogs } from '../core/utils';
 
 describe("play", () => {
     beforeEach(reset);
@@ -16,7 +15,7 @@ describe("play", () => {
             })
             a.animate({ target: "#z", top: [0, 100], duration: 16, easing: linear });
         }
-        let p = new TestPlayer(animCtxtXYZ(), anim1);
+        const p = new TestPlayer(animCtxtXYZ(), anim1);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -45,7 +44,7 @@ describe("play", () => {
     }
 
     it("should work with alternate mode", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim2, [{ alternate: true }]);
+        const p = new TestPlayer(animCtxtXYZ(), anim2, [{ alternate: true }]);
 
         await p.play();
         assert.deepEqual(logs(), [
@@ -72,7 +71,7 @@ describe("play", () => {
     }
 
     it("should work with cycles (simple timeline)", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim3, [{ times: 3 }]);
+        const p = new TestPlayer(animCtxtXYZ(), anim3, [{ times: 3 }]);
         await p.play();
         assert.deepEqual(logs(), [
             // cycle 1
@@ -92,7 +91,7 @@ describe("play", () => {
     });
 
     it("should work with cycles (advanced timeline)", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim2, [{ times: 3 }]);
+        const p = new TestPlayer(animCtxtXYZ(), anim2, [{ times: 3 }]);
         await p.play();
         assert.deepEqual(logs(), [
             '0: #x.top = 100px;',
@@ -123,7 +122,7 @@ describe("play", () => {
     });
 
     it("should work with cycles + alternate (simple timeline)", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim3, [{ times: 3, alternate: true }]);
+        const p = new TestPlayer(animCtxtXYZ(), anim3, [{ times: 3, alternate: true }]);
         await p.play();
         assert.deepEqual(logs(), [
             // cycle 1
@@ -155,7 +154,7 @@ describe("play", () => {
     });
 
     it("should work support different backward speed", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim3, [{ times: 3, alternate: true, backSpeed: 0.5 }]);
+        const p = new TestPlayer(animCtxtXYZ(), anim3, [{ times: 3, alternate: true, backSpeed: 0.5 }]);
         await p.play();
         assert.deepEqual(logs(), [
             // cycle 1
@@ -196,7 +195,7 @@ describe("play", () => {
     });
 
     it("should work support different forward speed", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim3, [{ times: 3, alternate: true, speed: 0.5 }]);
+        const p = new TestPlayer(animCtxtXYZ(), anim3, [{ times: 3, alternate: true, speed: 0.5 }]);
         await p.play();
         assert.deepEqual(logs(), [
             // cycle 1
@@ -237,7 +236,7 @@ describe("play", () => {
     });
 
     it("should support delay", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim2, [{ alternate: true, delay: 48 }, 16]);
+        const p = new TestPlayer(animCtxtXYZ(), anim2, [{ alternate: true, delay: 48 }, 16]);
         await p.play();
         assert.deepEqual(logs(), [
             '0: #x.top = 0px;',
@@ -260,7 +259,7 @@ describe("play", () => {
     });
 
     it("should support negative release", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim2, [{ alternate: true, release: -48 }, 16]);
+        const p = new TestPlayer(animCtxtXYZ(), anim2, [{ alternate: true, release: -48 }, 16]);
         await p.play();
         assert.deepEqual(logs(), [
             '0: #x.top = 0px;',
@@ -295,7 +294,7 @@ describe("play", () => {
     }
 
     it("should support delay and positive release (from defaults)", async function () {
-        let p = new TestPlayer(animCtxtXYZ(), anim4, [{ alternate: true }, 16]);
+        const p = new TestPlayer(animCtxtXYZ(), anim4, [{ alternate: true }, 16]);
         await p.play();
         assert.deepEqual(logs(), [
             '0: #x.top = 0px;',

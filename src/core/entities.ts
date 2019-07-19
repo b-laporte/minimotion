@@ -44,7 +44,7 @@ abstract class TimelineEntity implements AnimEntity {
         }
         this.delayTime = startTime + this.delay;
         if (this.duration >= 0) {
-            let doneTime = this.delayTime + this.duration; // doneTime occurs when movement finishes - but this is not necessarily the end of the animation
+            const doneTime = this.delayTime + this.duration; // doneTime occurs when movement finishes - but this is not necessarily the end of the animation
             this.doneTime = doneTime;
             this.releaseTime = doneTime + this.release;
             if (this.releaseTime < this.delayTime) {
@@ -130,10 +130,10 @@ export function createTweens(
     release: number
 ) {
     let tween: Tween | null = null;
-    for (let p in params) {
+    for (const p in params) {
         if (settings[p] === undefined && p !== 'target') {
             // TODO share init results across all tweens of a same family
-            let twn = new Tween(target, p, params[p], duration, easing, elasticity, delay, release);
+            const twn = new Tween(target, p, params[p], duration, easing, elasticity, delay, release);
             if (twn.isValid) {
                 tween = twn;
                 tween.attach(parent);
@@ -162,7 +162,7 @@ export class Tween extends TimelineEntity {
         super("tween#" + ++AE_COUNT);
         this.delay = delay;
         this.release = release;
-        let r = this.parsePropValue(propValue);
+        const r = this.parsePropValue(propValue);
         if (r !== 0) {
             console.error("[animate] invalid syntax (Error " + r + ")");
             this.isValid = false;
@@ -175,7 +175,7 @@ export class Tween extends TimelineEntity {
         // - get to value & unit, determine if relative (i.e. starts with "+" or "-")
         // - get from value (unit should be the same as to)
         // - identify value type (dimension, color, unit-less)
-        let target = this.target,
+        const target = this.target,
             propName = this.propName,
             type = this.type = getAnimationType(target, propName);
         if (type === 'invalid') return 100;
@@ -208,7 +208,7 @@ export class Tween extends TimelineEntity {
         log(this.name, ": display frame", time, targetTime, forward)
         if (this.delayTime <= time && time <= this.endTime) {
             if (!this.skipRendering) {
-                let targetFrame = time === targetTime;
+                const targetFrame = time === targetTime;
                 if ((targetFrame && this.delayTime <= time && time <= this.doneTime)) {
                     this.setProgression(time - this.delayTime);
                 } else if (!targetFrame) {
@@ -231,7 +231,7 @@ export class Tween extends TimelineEntity {
             easing = this.easing(progression, this.elasticity),
             value = this.interpolator!.getValue(easing);
         if (isTargetFunction(target)) {
-            target({property: this.propName, value})
+            target({ property: this.propName, value })
         } else {
             dom.setValue(target, this.propName, this.type, value);
         }
@@ -281,7 +281,7 @@ export class PlayerEntity extends TimelineEntity {
     }
 
     getNextMarkerPosition(time: number, forward: boolean): number {
-        let tl = this.timeLine, start = this.delayTime;
+        const tl = this.timeLine, start = this.delayTime;
         if (this.duration === -1) {
             // first cycle is not finished
             if (time < this.delayTime) return forward ? this.delayTime : -1;
@@ -290,13 +290,14 @@ export class PlayerEntity extends TimelineEntity {
                 // direction changed, we need to trigger load of previous entities
                 (tl as any).loadEntities((tl as any).currentTime, forward);
             }
-            let m = tl.getNextMarkerPosition((time - start) * this.speed, forward);
+            const m = tl.getNextMarkerPosition((time - start) * this.speed, forward);
             return (m === -1) ? -1 : start + ceil(m / this.speed);
         } else {
             // d1, d2 and duration are defined (cf. doneCb)
-            let m1 = super.getNextMarkerPosition(time, forward), m2 = -1;
+            const m1 = super.getNextMarkerPosition(time, forward);
+            let m2 = -1;
             if (m1 >= this.delayTime && m1 <= this.doneTime) {
-                let d1 = this.d1, cycleLength = trunc(d1 + this.d2),
+                const d1 = this.d1, cycleLength = trunc(d1 + this.d2),
                     relTime = time - start,
                     t = relTime % cycleLength,
                     nbrOfFullCycles = trunc(relTime / cycleLength);
@@ -327,14 +328,15 @@ export class PlayerEntity extends TimelineEntity {
 
     displayFrame(time: number, targetTime: number, forward: boolean) {
         if (this.delayTime <= time) {
-            let tl = this.timeLine;
+            const tl = this.timeLine;
             if (this.duration === -1) {
                 // first cycle is not finished
                 tl.move((time - this.delayTime) * this.speed, false);
             } else {
                 // d1, d2 and duration are defined (cf. doneCb)
                 if (time >= this.delayTime && time <= this.doneTime) {
-                    let cycleLength = trunc(this.d1 + this.d2), t = (time - this.delayTime) % cycleLength;
+                    const cycleLength = trunc(this.d1 + this.d2);
+                    let t = (time - this.delayTime) % cycleLength;
                     if (t === 0 && time !== this.delayTime) {
                         t = cycleLength;
                     }

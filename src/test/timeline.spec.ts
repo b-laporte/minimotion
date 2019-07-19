@@ -10,7 +10,7 @@ describe("Timeline", () => {
     beforeEach(reset);
 
     describe("convertDuration", () => {
-        let convertDuration = TimeLine.convertDuration;
+        const convertDuration = TimeLine.convertDuration;
 
         it("should work for positive numbers", function () {
             assert.equal(convertDuration(7, 1), 0, "7::1");
@@ -38,9 +38,9 @@ describe("Timeline", () => {
 
     it("should provide random numbers within a defined range", function () {
         // simply check that we are within range
-        let ac = new TimeLine("random test", a => { });
+        const ac = new TimeLine("random test", a => { });
 
-        let v1 = ac.random(10, 20),
+        const v1 = ac.random(10, 20),
             v2 = ac.random(10, 20),
             v3 = ac.random(10, 20);
         [v1, v2, v3].forEach((v) => {
@@ -71,7 +71,7 @@ describe("Timeline", () => {
         // z:       XXXX    XXXX
 
         it("should end at 288ms", async function () {
-            let p = new TestPlayer(animCtxtXYZ(), tl);
+            const p = new TestPlayer(animCtxtXYZ(), tl);
             await p.play();
             assert.equal(lastTick(), (288 + 16) / 16, "lastTick");
 
@@ -83,7 +83,7 @@ describe("Timeline", () => {
             // note: 96 is not in the list below as it belongs to the sequence markers
             assert.deepEqual(arr, [0, 64, 128, 160, 192, 224, 288], "root timeline markers");
 
-            let sequence = p["timeLine"].getMarker(64)!.startEntities![0] as TimeLine;
+            const sequence = p["timeLine"].getMarker(64)!.startEntities![0] as TimeLine;
             m = sequence.firstMarker; arr = [];
             while (m) {
                 arr.push(m.time);
@@ -93,12 +93,12 @@ describe("Timeline", () => {
         });
 
         async function moveFwd(time) {
-            let p = new TestPlayer(animCtxtXYZ(), tl);
+            const p = new TestPlayer(animCtxtXYZ(), tl);
             return p.move(time);
         }
 
         it("should allow to quickly jump forward in a tween (1)", async function () {
-            let pos = await moveFwd(48);
+            const pos = await moveFwd(48);
             assert.equal(pos, 48, "pos is 48");
             assert.deepEqual(logs(), [
                 '0: #x.top = 150px;'
@@ -189,7 +189,7 @@ describe("Timeline", () => {
         });
 
         async function moveFullFwdBack(time) {
-            let p = new TestPlayer(animCtxtXYZ(), tl);
+            const p = new TestPlayer(animCtxtXYZ(), tl);
             await p.move(288);
             reset();
             return p.move(time);
@@ -278,7 +278,7 @@ describe("Timeline", () => {
         });
 
         async function moveFullFwdBackFwd(time) {
-            let p = new TestPlayer(animCtxtXYZ(), tl);
+            const p = new TestPlayer(animCtxtXYZ(), tl);
             await p.move(288);
             await p.move(0);
             reset();
@@ -376,8 +376,8 @@ describe("Timeline", () => {
         });
 
         async function moveFwdBackFwd(tl, time1, time2, time3) {
-            let p = new TestPlayer(animCtxtXYZ(), tl);
-            let trace = false;
+            const p = new TestPlayer(animCtxtXYZ(), tl);
+            const trace = false;
             trace && activateLogs();
             trace && console.log("---- PART 1")
             await p.move(time1);

@@ -5,7 +5,7 @@ let LOG_ACTIVE = false;
 
 export function log(...args: any[]) {
     if (LOG_ACTIVE) {
-        console.log.apply(console, args);
+        console.log(...args);
     }
 }
 
@@ -18,7 +18,7 @@ export function deactivateLogs() {
 }
 
 export function parseValue(name, params, defaults) {
-    let v = params[name];
+    const v = params[name];
     return (v === undefined) ? defaults[name] : v;
 }
 
@@ -51,13 +51,13 @@ export function getAnimationType(target: ResolvedTarget, propName: string): Twee
 
     if (target.nodeType || isSVG(target)) {
         if ((target.getAttribute(propName) || (isSVG(target) && target[propName]))) return 'attribute';
-        if (TRANSFORMS.hasOwnProperty(propName)) return 'transform';
+        if (TRANSFORMS[propName] === 1) return 'transform';
         return 'css';
     }
     return 'invalid';
 }
 
-export let dom = {
+export const dom = {
     /**
      * Return the current value of a targeted property
      * @param targetElt 

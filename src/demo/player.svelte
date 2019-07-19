@@ -8,13 +8,17 @@
   let animDuration = 0;
 
   export async function reset() {
-    if (player) {
-      await player.stop();
-    }
+    const newPlayer = new Player(animation);
+    const oldPlayer = player;
+    player = newPlayer;
     animDuration = 0;
-    player = new Player(animation);
-    await tick();
-    animDuration = await player.duration();
+    if (oldPlayer) {
+      await oldPlayer.stop();
+    }
+    if (player == newPlayer) {
+      await tick();
+      animDuration = await player.duration();
+    }
   }
 
   $: reset(animation);

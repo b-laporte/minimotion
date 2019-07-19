@@ -15,7 +15,7 @@ describe("sequence", () => {
             await a.animate({ target: "#y", top: [100, 200], duration: 20, easing: linear });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -37,7 +37,7 @@ describe("sequence", () => {
             await a.animate({ target: "#y", top: [100, 200], duration: 20, easing: linear });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -57,7 +57,7 @@ describe("sequence", () => {
             });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -79,7 +79,7 @@ describe("sequence", () => {
             await a.animate({ target: "#x", top: [200, 300], duration: 30, easing: linear });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -106,7 +106,7 @@ describe("sequence", () => {
             });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -132,7 +132,7 @@ describe("sequence", () => {
             });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -159,7 +159,7 @@ describe("sequence", () => {
             a.animate({ target: "#z", top: [0, 100], duration: 50, easing: linear });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
         
         assert.deepEqual(logs(), [
@@ -190,7 +190,7 @@ describe("sequence", () => {
             a.animate({ target: "#z", top: [0, 100], duration: 50, easing: linear });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
         
         assert.deepEqual(logs(), [
@@ -220,7 +220,7 @@ describe("sequence", () => {
             a.animate({ target: "#z", top: [0, 100], duration: 50, easing: linear });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
