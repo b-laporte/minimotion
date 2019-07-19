@@ -12,7 +12,7 @@ describe("delay", () => {
             logs().push(lastTick()+": delay executed");
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -27,7 +27,7 @@ describe("delay", () => {
             a.animate({ target: "#x", top: [0, 100], duration: 50, easing: linear });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -45,7 +45,7 @@ describe("delay", () => {
             a.animate({ target: "#x", top: [0, 100], duration: 50, easing: linear });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -63,7 +63,7 @@ describe("delay", () => {
             await a.delay(50);
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [
@@ -82,7 +82,7 @@ describe("delay", () => {
             a.animate({ target: "#y", left: [0, 100], duration: 50, easing: linear });
         }
 
-        let p = new TestPlayer(animCtxtXYZ(), anim);
+        const p = new TestPlayer(animCtxtXYZ(), anim);
         await p.play();
 
         assert.deepEqual(logs(), [

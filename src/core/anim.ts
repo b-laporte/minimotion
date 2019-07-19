@@ -42,6 +42,7 @@ const defaultSettings: ControlParams = {
 }
 
 export async function exhaustAsyncPipe() {
+    /* eslint require-atomic-updates: warn */
     let c1 = -1, c2 = ASYNC_COUNTER, count = 0;
     while (c1 !== c2 && count < MAX_ASYNC) {
         // c1 !== c2 means that some async callbacks have been run on the animation engine as ASYNC_COUNTER changed
@@ -180,7 +181,8 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         let currentTime = this.currentTime;
         if (timeTarget === currentTime) return currentTime;
 
-        let forward = (timeTarget > currentTime), nextTarget: number;
+        const forward = (timeTarget > currentTime);
+        let nextTarget: number;
 
         // principle: display first all marker frames, then last frame is calculated between markers
         // key steps
@@ -199,7 +201,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
                 if (forward !== this.lastTargetForward) {
                     // we changed direction: we may have to re-display the current frame if we are on a marker
                     // log(">> display last frame")
-                    let m = this.getMarker(currentTime);
+                    const m = this.getMarker(currentTime);
                     if (m) {
                         this.displayFrame(currentTime, timeTarget, forward);
                         await exhaustAsyncPipe();
@@ -267,7 +269,8 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
                 this.setTlFunctionComplete();
             }
         } else {
-            let m = this.getMarker(time), startAes: AnimEntity[] | undefined, endAes: AnimEntity[] | undefined;
+            const m = this.getMarker(time);
+            let startAes: AnimEntity[] | undefined, endAes: AnimEntity[] | undefined;
             if (m) {
                 // console.log("marker @", time, m);
                 startAes = forward ? m.startEntities : m.endEntities;
@@ -388,7 +391,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         ASYNC_COUNTER++;
         if (!ae.startRegistered) {
             ae.init(this.currentTime);
-            let m = this.createMarker(this.currentTime);
+            const m = this.createMarker(this.currentTime);
             if (!m.startEntities) {
                 m.startEntities = [ae];
             } else {
@@ -416,7 +419,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         let e = this.rList;
         if (!ae.endRegistered && this.lastTargetForward) {
             // only register the end in forward mode
-            let m = this.createMarker(this.currentTime);
+            const m = this.createMarker(this.currentTime);
             if (!m.endEntities) {
                 m.endEntities = [ae];
             } else {
@@ -447,7 +450,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
     getMarker(time: number): AnimMarker | undefined {
         let m = this.currentMarker;
         if (!m) return undefined;
-        let forward = time >= m.time;
+        const forward = time >= m.time;
         while (m) {
             if (m.time === time) return m;
             // Warning: this part can be fragile (works only if currentMarker is well positioned)
@@ -471,7 +474,8 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         if (!this.firstMarker) {
             return this.firstMarker = this.lastMarker = this.currentMarker = createMarker(time);
         } else {
-            let cm = start || this.currentMarker!, m: AnimMarker | undefined;
+            const cm = start || this.currentMarker!;
+            let m: AnimMarker | undefined;
             if (cm.time === time) {
                 return cm;
             }
@@ -525,9 +529,10 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         } else if (selector["style"]) {
             return [selector];
         } else if (Array.isArray(selector)) {
-            let r: HTMLElement[] = [], len = selector.length;
+            let r: HTMLElement[] = [];
+            const len = selector.length;
             for (let i = 0; len > i; i++) {
-                let r2 = this.selectAll(selector[i], scope);
+                const r2 = this.selectAll(selector[i], scope);
                 if (r2) {
                     r = r.concat(r2);
                 }
@@ -543,11 +548,9 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
 
     defaults(params: ControlParams): void {
         if (params) {
-            let newSettings = Object.create(this.settings);
-            for (let k in params) {
-                if (params.hasOwnProperty(k)) {
-                    newSettings[k] = params[k];
-                }
+            const newSettings = Object.create(this.settings);
+            for (const k of Object.keys(params)) {
+                newSettings[k] = params[k];
             }
             this.settings = newSettings;
         }
@@ -555,7 +558,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
 
     async animate(params: AnimateParams): Promise<any> {
         // read all control args
-        let d = this.settings,
+        const d = this.settings,
             target = parseValue("target", params, d) as Target,
             easing = parseValue("easing", params, d) as Function,
             speed = parseValue("speed", params, d) as number,
@@ -577,7 +580,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         }
     
         // identify properties/attributes to animate and create a tween for each of them
-        let tween = createTweens(finalTarget, params, d, this, duration, easing, elasticity, delay, release);
+        const tween = createTweens(finalTarget, params, d, this, duration, easing, elasticity, delay, release);
         if (tween) {
             // return a promise associated to the last tween
             return new Promise((resolve) => {
@@ -591,9 +594,9 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
     }
 
     async delay(timeMs: number) {
-        let d = convertDuration(timeMs, this.settings.speed!);
+        const d = convertDuration(timeMs, this.settings.speed!);
         if (d > 0) {
-            let delay = new Delay(d);
+            const delay = new Delay(d);
             delay.attach(this);
             return new Promise((resolve) => {
                 delay.releaseCb = resolve;
@@ -612,7 +615,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
             instructions = nameOrInstructions as ((a: Anim) => void);
         }
         if (instructions) {
-            let t = new TimeLine(name, instructions);
+            const t = new TimeLine(name, instructions);
             t.attach(this);
             await t.releaseSignal();
             ASYNC_COUNTER++;
@@ -620,7 +623,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
     }
 
     async sequence(...blocks: Instructions[]): Promise<any> {
-        let len = blocks.length;
+        const len = blocks.length;
         if (!len) return;
         await this.group("sequence", async function (a) {
             for (let i = 0; len > i; i++) {
@@ -632,7 +635,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
     }
 
     async parallelize(...tracks: ((a: Anim) => void)[]): Promise<any> {
-        let len = tracks.length;
+        const len = tracks.length;
         if (!len) return;
         await this.group("tracks", a => {
             for (let i = 0; len > i; i++) {
@@ -651,14 +654,14 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
             targets = targetsOrParams as Selector;
         }
 
-        let elements = this.selectAll(targets);
+        const elements = this.selectAll(targets);
         if (!elements) return;
-        let len = elements.length;
+        const len = elements.length;
         if (len) {
             await this.group("iteration", async function (a1: Anim) {
                 for (let i = 0; len > i; i++) {
-                    let gp = a1.group("item." + i, async function (a2) {
-                        let e = elements![i];
+                    const gp = a1.group("item." + i, async function (a2) {
+                        const e = elements![i];
                         a2.defaults({ target: e });
                         await instructions(a2, i, len, e);
                     });
@@ -698,9 +701,9 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         }
 
         if (instructions) {
-            let tl = new TimeLine("playTimeline", instructions);
+            const tl = new TimeLine("playTimeline", instructions);
             tl.selectorCtxt = this.selectorCtxt;
-            let p = new PlayerEntity(tl, this.settings, params);
+            const p = new PlayerEntity(tl, this.settings, params);
             p.attach(this);
             return new Promise((resolve) => {
                 p.releaseCb = resolve;
@@ -725,7 +728,7 @@ let PLAY_COUNT = 0;
 
 function nextTimeTick(t1: number, fwd: boolean, speed: number) {
     if (t1 < 0) return 0;
-    let t2 = fwd ? t1 + FRAME_MS * speed : t1 - FRAME_MS * speed;
+    const t2 = fwd ? t1 + FRAME_MS * speed : t1 - FRAME_MS * speed;
     return t2 < 0 ? 0 : t2;
 }
 
@@ -744,7 +747,7 @@ export class Player implements AnimPlayer {
     }
 
     async play(args?: PlayArguments): Promise<number> {
-        let onupdate: ((time: number) => void) | undefined, p = this,
+        let onupdate: ((time: number) => void) | undefined,
             speed = 1,
             fwd = true,
             raf: ((callback: (time: number) => void) => void) | undefined;
@@ -757,20 +760,20 @@ export class Player implements AnimPlayer {
         raf = raf || requestAnimationFrame;
 
         return new Promise<number>((resolve) => {
-            let tl = this.timeLine, playId = p.playId = ++PLAY_COUNT;
-            async function paint() {
-                let t1 = tl.currentTime, t2 = nextTimeTick(tl.currentTime, fwd, speed)
-                if (p.playId !== playId) {
+            const tl = this.timeLine, playId = this.playId = ++PLAY_COUNT;
+            const paint = async () => {
+                const t1 = tl.currentTime, t2 = nextTimeTick(tl.currentTime, fwd, speed)
+                if (this.playId !== playId) {
                     return resolve(t1); // play was stopped or restarted in the meantime
                 }
                 await tl.move(t2)
-                let ct = tl.currentTime;
+                const ct = tl.currentTime;
                 if (onupdate && t1 !== ct) {
                     onupdate(ct);
                 }
                 if ((fwd && tl.endTime === ct) || !fwd && ct === 0) {
                     resolve(ct);
-                    p.playId = 0;
+                    this.playId = 0;
                 } else {
                     raf!(paint);
                 }
@@ -795,7 +798,7 @@ export class Player implements AnimPlayer {
     async duration(): Promise<number> {
         // TODO support infinite duration
         if (this.length === LENGTH_UNPROCESSED) {
-            let pos = this.position;
+            const pos = this.position;
             this.timeLine.skipRendering = true;
             await this.runTicker();
             this.length = this.timeLine.currentTime;
@@ -806,7 +809,7 @@ export class Player implements AnimPlayer {
     }
 
     get position(): number {
-        let t = this.timeLine.currentTime;
+        const t = this.timeLine.currentTime;
         return t < 0 ? 0 : t;
     }
 
@@ -815,7 +818,8 @@ export class Player implements AnimPlayer {
     }
 
     private async runTicker() {
-        let count = 0, tl = this.timeLine, max = Math.trunc(this.maxDuration / FRAME_MS);
+        const tl = this.timeLine, max = Math.trunc(this.maxDuration / FRAME_MS);
+        let count = 0;
         while (count < max) {
             count++;
             this.currentTick++;

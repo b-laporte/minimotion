@@ -2,7 +2,7 @@ import { getTransformUnit } from "../transforms";
 import { ValueInterpolatorFactory } from "./types";
 import { interpolate } from "./interpolate";
 
-const RX_NUMERIC_PROP = /^(\*=|\+=|-=)?([\+\-]?[0-9#\.]+)(%|px|pt|em|rem|in|cm|mm|ex|ch|pc|vw|vh|vmin|vmax|deg|rad|turn)?$/,
+const RX_NUMERIC_PROP = /^(\*=|\+=|-=)?([+-]?[0-9#.]+)(%|px|pt|em|rem|in|cm|mm|ex|ch|pc|vw|vh|vmin|vmax|deg|rad|turn)?$/,
   RX_DEFAULT_PX_PROPS = /(radius|width|height|top|left)$/i;
 
 export const numericInterpolatorFactory: ValueInterpolatorFactory = (
@@ -23,10 +23,10 @@ export const numericInterpolatorFactory: ValueInterpolatorFactory = (
   let roundLevel = 10;
 
   // check consistency
-  let split2 = RX_NUMERIC_PROP.exec(propFrom);
+  const split2 = RX_NUMERIC_PROP.exec(propFrom);
   if (!split2) return null;
   if (split2[1]) return null; // cannot be relative
-  let fromUnit = split2[3] || "";
+  const fromUnit = split2[3] || "";
   if (unit && fromUnit && !fromIsDom && fromUnit !== unit) return null; // units have to be the same
   unit = unit || fromUnit; // if unit is not defined in to value, we use from value
   const from = parseFloat(split2[2]);

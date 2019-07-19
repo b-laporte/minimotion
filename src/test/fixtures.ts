@@ -47,25 +47,25 @@ class ElementStyle {
         this._top = v;
         traceProp(this.id, "top", this._top);
     }
-    get top() { return this._top };
+    get top() { return this._top }
 
     set left(v) {
         this._left = v;
         traceProp(this.id, "left", this._left);
     }
-    get left() { return this._left };
+    get left() { return this._left }
 
     set opacity(v) {
         this._opacity = v;
         traceProp(this.id, "opacity", this._opacity);
     }
-    get opacity() { return this._opacity };
+    get opacity() { return this._opacity }
 
     set color(v) {
         this._color = v;
         traceProp(this.id, "color", this._color);
     }
-    get color() { return this._color };
+    get color() { return this._color }
 }
 
 export class TestElement {
@@ -85,7 +85,8 @@ class TestSelectorCtxt implements SelectorContext {
     constructor(public elements: TestElement[]) { }
 
     querySelector(selector: string): HTMLElement | null {
-        let elts = this.elements, idx = elts.length;
+        const elts = this.elements;
+        let idx = elts.length;
         while (idx--) {
             if (selector === "#" + elts[idx].id) {
                 return elts[idx] as any as HTMLElement;
@@ -95,7 +96,8 @@ class TestSelectorCtxt implements SelectorContext {
     }
 
     querySelectorAll(selector: string): HTMLElement[] | null {
-        let elts = this.elements, idx = elts.length, res: HTMLElement[] = [];
+        const elts = this.elements, res: HTMLElement[] = [];
+        let idx = elts.length;
         while (idx--) {
             if (selector === elts[idx].className) {
                 res.push(elts[idx] as any as HTMLElement);
@@ -106,7 +108,7 @@ class TestSelectorCtxt implements SelectorContext {
 }
 
 export function animCtxtXYZ() {
-    let x = new TestElement("x", "colItem"), y = new TestElement("y", "colItem"), z = new TestElement("z", "colItem");
+    const x = new TestElement("x", "colItem"), y = new TestElement("y", "colItem"), z = new TestElement("z", "colItem");
     return [x, y, z];
 }
 

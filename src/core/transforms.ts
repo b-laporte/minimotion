@@ -60,7 +60,7 @@ export function clearFastElementTransformsCache(el?: HTMLElement) {
 
 export function stringifyTransforms(transforms: Map<string, string>) {
   let output = "";
-  for (let entry of transforms.entries()) {
+  for (const entry of transforms.entries()) {
     output += ` ${entry[0]}(${entry[1]})`;
   }
   return output;

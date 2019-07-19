@@ -12,9 +12,15 @@ module.exports = {
   plugins: ["svelte3"],
   parser: "@typescript-eslint/parser",
   extends: [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier/@typescript-eslint"
   ],
+  env: {
+    browser: true,
+    node: true
+  },
   rules: {
     "@typescript-eslint/explicit-function-return-type": 0,
     "@typescript-eslint/explicit-member-accessibility": 0,
