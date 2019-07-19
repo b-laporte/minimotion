@@ -1,6 +1,4 @@
-export type StyleElement = HTMLElement;
-
-export type Selector = StyleElement | string;
+export type Selector = HTMLElement | string;
 
 export interface TargetFunctionArg {
     property: string;
@@ -14,11 +12,11 @@ export function isTargetFunction(value: any): value is TargetFunction {
 
 export type Target = Selector | TargetFunction;
 
-export type ResolvedTarget = StyleElement | TargetFunction;
+export type ResolvedTarget = HTMLElement | TargetFunction;
 
 export interface SelectorContext {
-    querySelector(selector: string): StyleElement | null;
-    querySelectorAll(selector: string): StyleElement[] | null;
+    querySelector(selector: string): HTMLElement | null;
+    querySelectorAll(selector: string): HTMLElement[] | null;
 }
 
 
@@ -83,7 +81,7 @@ export interface Anim {
     defaults(params: ControlParams): void;
     animate(params: AnimateParams): Promise<any>; // animate a style property
 
-    iterate(targetsOrParams: Selector | IterationParams, instructions: (a: Anim, idx: number, total: number, e: StyleElement) => void | Promise<any>): Promise<any>;
+    iterate(targetsOrParams: Selector | IterationParams, instructions: (a: Anim, idx: number, total: number, e: HTMLElement) => void | Promise<any>): Promise<any>;
     repeat(times: number, instructions: ((a: Anim, loopCount: number) => void)): Promise<any>;
     sequence(...blocks: ((a: Anim) => void)[]): Promise<any>;
     parallelize(...tracks: ((a: Anim) => void)[]): Promise<any>;

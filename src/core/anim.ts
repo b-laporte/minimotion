@@ -4,7 +4,6 @@ import {
     AnimEntity,
     ControlParams,
     Selector,
-    StyleElement,
     SelectorContext,
     Instructions,
     IterationParams,
@@ -505,28 +504,28 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
     }
 
     // this method can be overridden for specific contexts
-    select(selector: Selector, scope?: SelectorContext): StyleElement | null {
+    select(selector: Selector, scope?: SelectorContext): HTMLElement | null {
         if (typeof selector === "string") {
             scope = scope || this.selectorCtxt;
             if (scope) {
                 return scope!.querySelector(selector);
             }
         } else if (selector["style"]) {
-            return selector as StyleElement;
+            return selector;
         }
         return null;
     }
 
-    selectAll(selector: Selector, scope?: SelectorContext): StyleElement[] | null {
+    selectAll(selector: Selector, scope?: SelectorContext): HTMLElement[] | null {
         if (typeof selector === "string") {
             scope = scope || this.selectorCtxt;
             if (scope) {
                 return scope!.querySelectorAll(selector);
             }
         } else if (selector["style"]) {
-            return [selector] as StyleElement[];
+            return [selector];
         } else if (Array.isArray(selector)) {
-            let r: StyleElement[] = [], len = selector.length;
+            let r: HTMLElement[] = [], len = selector.length;
             for (let i = 0; len > i; i++) {
                 let r2 = this.selectAll(selector[i], scope);
                 if (r2) {
@@ -643,7 +642,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         ASYNC_COUNTER++;
     }
 
-    async iterate(targetsOrParams: Selector | IterationParams, instructions: (a: Anim, idx: number, total: number, e: StyleElement) => void | Promise<any>) {
+    async iterate(targetsOrParams: Selector | IterationParams, instructions: (a: Anim, idx: number, total: number, e: HTMLElement) => void | Promise<any>) {
         let targets: Selector, inSequence = false
         if ((targetsOrParams as any).targets !== undefined) {
             targets = (targetsOrParams as IterationParams).targets;
