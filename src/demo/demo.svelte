@@ -1,11 +1,13 @@
 <script>
   import Sidebar from "./sidebar";
   import { DEMOS } from "./samples";
-  let activeDemo = DEMOS[0];
+  let activeDemo = DEMOS.find(demo => demo.type != "category");
 
   function fromHash() {
     let value = decodeURIComponent(window.location.hash.slice(1));
-    let demo = DEMOS.find(demo => demo.title === value);
+    let demo = DEMOS.find(
+      demo => demo.title === value && demo.type != "category"
+    );
     if (demo != null) {
       activeDemo = demo;
     } else {
