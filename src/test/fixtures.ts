@@ -1,5 +1,5 @@
 import { TimeLine, Player } from './../core/anim';
-import { StyleElement, SelectorContext, Anim } from "../core/types";
+import { SelectorContext, Anim } from "../core/types";
 import { dom } from '../core/utils';
 
 let CURRENT_TICK = 0;
@@ -68,7 +68,7 @@ class ElementStyle {
     get color() { return this._color };
 }
 
-export class TestElement implements StyleElement {
+export class TestElement {
     nodeType = 1;
     style: ElementStyle;
 
@@ -84,21 +84,21 @@ export class TestElement implements StyleElement {
 class TestSelectorCtxt implements SelectorContext {
     constructor(public elements: TestElement[]) { }
 
-    querySelector(selector: string): StyleElement | null {
+    querySelector(selector: string): HTMLElement | null {
         let elts = this.elements, idx = elts.length;
         while (idx--) {
             if (selector === "#" + elts[idx].id) {
-                return elts[idx];
+                return elts[idx] as any as HTMLElement;
             }
         }
         return null;
     }
 
-    querySelectorAll(selector: string): StyleElement[] | null {
-        let elts = this.elements, idx = elts.length, res: StyleElement[] = [];
+    querySelectorAll(selector: string): HTMLElement[] | null {
+        let elts = this.elements, idx = elts.length, res: HTMLElement[] = [];
         while (idx--) {
             if (selector === "." + elts[idx].className) {
-                res.push(elts[idx]);
+                res.push(elts[idx] as any as HTMLElement);
             }
         }
         return res.length ? res.reverse() : null;
