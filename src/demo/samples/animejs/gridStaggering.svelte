@@ -4,6 +4,8 @@
   import Grid from "./common/grid";
   import { easeOutSine, easeInOutQuad } from "../../../core/easings";
 
+  let width = 14;
+  let height = 5;
   let xCenter = 6.5;
   let yCenter = 2;
   let nDistance = 2;
@@ -17,8 +19,8 @@
 
   async function animation(a) {
     a.iterate(".square.el", async (a, index) => {
-      const x = index % 14;
-      const y = Math.floor(index / 14);
+      const x = index % width;
+      const y = Math.floor(index / width);
       const distFromCenter = distanceN(x, y, xCenter, yCenter, nDistance);
       await a.animate({
         scale: [1, 0.1],
@@ -31,9 +33,19 @@
   }
 </script>
 
-<Grid />
+<Grid {width} {height}/>
 
 <Player {animation} />
+<br />
+<label>
+  Width:
+  <input type="number" bind:value={width} />
+</label>
+<br />
+<label>
+  Height:
+  <input type="number" bind:value={height} />
+</label>
 <br />
 <label>
   Center X:
