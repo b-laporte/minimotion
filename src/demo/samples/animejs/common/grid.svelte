@@ -1,48 +1,46 @@
 <script>
-  const rects = [];
-  rects.length = 14 * 5;
+  export let width = 14;
+  export let height = 5;
+
+  function createArray(size) {
+    const result = [];
+    result.length = size;
+    return result;
+  }
+
+  $: widthArray = createArray(width);
+  $: heightArray = createArray(height);
 </script>
 
 <style>
   .wrapper {
-    padding: 50px;
-  }
-  .content {
+    margin: 50px;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    width: 290px;
-    height: 100%;
-  }
-  .grid {
-    display: flex;
-    flex-wrap: wrap;
   }
   .square {
-    margin: 1px;
+    position: absolute;
     width: 18px;
     height: 18px;
     background-color: #00d672;
   }
   .shadow {
-    position: absolute;
     opacity: 0.2;
   }
 </style>
 
-<div class="wrapper">
-  <div class="content">
-    <div class="grid">
-      {#each rects as rect}
-        <div class="square el" />
+<div class="wrapper" style="width: {width * 20 + 2}px; height: {height * 20 + 2}px;">
+  <div class="grid">
+    {#each heightArray as yItem, y}
+      {#each widthArray as xItem, x}
+        <div class="square el" style="left: {x * 20 + 1}px; top: {y * 20 + 1}px;" />
       {/each}
-    </div>
-    <div class="grid shadow">
-      {#each rects as rect}
-        <div class="square" />
+    {/each}
+  </div>
+  <div class="grid shadow">
+    {#each heightArray as yItem, y}
+      {#each widthArray as xItem, x}
+        <div class="square" style="left: {x * 20 + 1}px; top: {y * 20 + 1}px;" />
       {/each}
-    </div>
+    {/each}
   </div>
 </div>
