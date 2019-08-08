@@ -115,7 +115,9 @@ export interface AnimEntity {
     startRegistered: boolean;          // false if the entity hasn't registered in the parent start markers
     endRegistered: boolean;            // false if the entity hasn't registered in the parent end markers
     nextEntity: AnimEntity | null;     // next entity in the running list
-    skipRendering: boolean;            // true if rendering should not be done (e.g. for duration() calculation)
+
+    // Skipping rendering leads to wrong results for animations that rely on reading the current value from the DOM
+    // skipRendering: boolean;            // true if rendering should not be done (e.g. for duration() calculation)
 
     attach(parent: AnimContainer);
     init(startTime: number): void;

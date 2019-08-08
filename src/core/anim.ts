@@ -72,7 +72,7 @@ export async function exhaustAsyncPipe() {
 
 export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
     static convertDuration = convertDuration;
-    skipRendering = false;
+    // skipRendering = false;
     selectorCtxt: SelectorContext | undefined;
     isRunning = false;
     startRegistered = false;
@@ -276,7 +276,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
             // display frames for each running entity
             let ae = this.rList;
             while (ae) {
-                ae.skipRendering = this.skipRendering;
+                // ae.skipRendering = this.skipRendering;
                 ae.displayFrame(time, targetTime, forward);
                 ae = ae.nextEntity;
             }
@@ -419,7 +419,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
             this.rList = ae;
         }
         ae.isRunning = true;
-        ae.skipRendering = this.skipRendering;
+        // ae.skipRendering = this.skipRendering;
         ae.displayFrame(this.currentTime, this.lastTargetTime, this.lastTargetForward);
     }
 
@@ -810,11 +810,15 @@ export class Player implements AnimPlayer {
         // TODO support infinite duration
         if (this.length === LENGTH_UNPROCESSED) {
             const pos = this.position;
-            this.timeLine.skipRendering = true;
+            // Skipping rendering leads to wrong results for
+            // animations that rely on reading the current
+            // value from the DOM
+
+            // this.timeLine.skipRendering = true;
             await this.runTicker();
             this.length = this.timeLine.currentTime;
             await this.move(pos); // move back to original position
-            this.timeLine.skipRendering = false;
+            // this.timeLine.skipRendering = false;
         }
         return this.length;
     }
