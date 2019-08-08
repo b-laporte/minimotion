@@ -7,10 +7,7 @@
     a.defaults({ easing: easeInOutExpo });
     a.animate({
       target: "polygon",
-      points: [
-        "64 68.64 8.574 100 63.446 67.68 64 4 64.554 67.68 119.426 100",
-        "64 128 8.574 96 8.574 32 64 0 119.426 32 119.426 96"
-      ]
+      points: "64 128 8.574 96 8.574 32 64 0 119.426 32 119.426 96"
     });
     a.animate({
       target: "feTurbulence",
