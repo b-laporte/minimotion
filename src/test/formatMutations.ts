@@ -36,8 +36,18 @@ export function formatMutations(
 ) {
   const res: string[] = [];
   const processedAttributes = new Map<HTMLElement, Set<string>>();
+  const processedTextContent = new Set<HTMLElement>();
   for (const mutation of mutations) {
-    if (mutation.type == "attributes") {
+    if (mutation.type == "characterData") {
+      const target = mutation.target as Text;
+      const parent = target.parentElement!;
+      if (!processedTextContent.has(parent)) {
+        processedTextContent.add(parent);
+        const value = parent.textContent!;
+        const targetName = getElementName(parent);
+        res.push(`${tick}: ${targetName} textContent=${value}`);
+      }
+    } else if (mutation.type == "attributes") {
       const target = mutation.target as HTMLElement;
       let targetProcessedAttributes = processedAttributes.get(target);
       if (!targetProcessedAttributes) {

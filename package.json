@@ -21,7 +21,7 @@
         "clean": "rm -rf dist/",
         "build": "tsc -p tsconfig.build.json",
         "demo": "rollup -c rollup.demo.config.js",
-        "lint": "eslint 'src/**/*.{js,ts,svelte}'",
+        "lint": "eslint \"src/**/*.{js,ts,svelte}\"",
         "test": "jest"
     },
     "license": "Apache-2.0",

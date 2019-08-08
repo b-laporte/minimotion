@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import { Anim } from './../core/types';
-import { reset, TestPlayer, logs, animCtxtXYZ, lastTick } from "./fixtures";
+import { reset, TestPlayer, logs, animCtxtXYZ, lastTick, TestElement } from "./fixtures";
 import { linear, easeOutElastic } from '../core/easings';
 
 describe("animate", () => {
@@ -311,6 +311,131 @@ describe("animate", () => {
            "1: #x.top = -0.000334%;",
            "2: #x.top = 0.000333%;",
            "3: #x.top = 0.001%;",
+        ], "logs");
+    });
+    
+    it("should support applyProperties", async function () {
+        const player = new TestPlayer([], animate);
+
+        const actualProperties = {
+            length: [],
+            color: [],
+        };
+
+        function animate(a) {
+            a.animate({
+                applyProperties: (properties) => {
+                    for (const [property, value] of Object.entries(properties)) {
+                        actualProperties[property].push(value);
+                    }
+                },
+                duration: 32,
+                easing: linear,
+
+                length: [0, 100],
+                color: ['#000000', '#FFFFFF'],
+            });
+        }
+
+        await player.play();
+        assert.deepEqual(actualProperties, {
+            length: ['0', '50', '100'],
+            color: [
+                'rgba(0, 0, 0, 1)',
+                'rgba(128, 128, 128, 1)',
+                'rgba(255, 255, 255, 1)',
+            ],
+        });
+    });
+
+    it("should support applyProperties with no 'from' but an initProperties instead", async function () {
+        const player = new TestPlayer([], animate);
+
+        const actualProperties = {
+            length: [],
+            color: [],
+        };
+
+        function animate(a) {
+            a.animate({
+                initProperties: (properties) => {
+                    properties.length = 0;
+                    properties.color = '#000000';
+                },
+                applyProperties: (properties) => {
+                    for (const [property, value] of Object.entries(properties)) {
+                        actualProperties[property].push(value);
+                    }
+                },
+                duration: 32,
+                easing: linear,
+
+                length: 100,
+                color: '#FFFFFF',
+            });
+        }
+
+        await player.play();
+        assert.deepEqual(actualProperties, {
+            length: ['0', '50', '100'],
+            color: [
+                'rgba(0, 0, 0, 1)',
+                'rgba(128, 128, 128, 1)',
+                'rgba(255, 255, 255, 1)',
+            ],
+        });
+    });
+
+    it("should receive target inside initProperties and applyProperties", async function () {
+        const target = new TestElement('x');
+        const player = new TestPlayer([target], animate);
+
+        function animate(a) {
+            a.animate({
+                target: '#x',
+                initProperties: (properties, target) => assert.strictEqual(target, target),
+                applyProperties: (properties, target) => assert.strictEqual(target, target),
+                duration: 32,
+                dummy: 100,
+            });
+        }
+
+        await player.play();
+    });
+
+    it("should support initProperties with no applyProperties in condition a target is given", async function () {
+        const player = new TestPlayer([new TestElement('x')], animate);
+
+        function animate(a) {
+            a.animate({
+                target: '#x',
+                initProperties: (properties) => {
+                    const offset = 0;
+                    properties.top = offset;
+                    properties.left = offset;
+                    properties.color = '#000000';
+                },
+                duration: 32,
+                easing: linear,
+
+                top: 100,
+                left: 100,
+                color: '#FFFFFF',
+            });
+        }
+        await player.play();
+        assert.deepEqual(logs(), [
+            "0: #x.top = 0px;",
+            "0: #x.left = 0px;",
+            "0: #x.color = rgba(0, 0, 0, 1);",
+
+            "1: #x.top = 50px;",
+            "1: #x.left = 50px;",
+            "1: #x.color = rgba(128, 128, 128, 1);",
+
+            "2: #x.top = 100px;",
+            "2: #x.left = 100px;",
+            "2: #x.color = rgba(255, 255, 255, 1);",
         ], "logs");
     });
 
