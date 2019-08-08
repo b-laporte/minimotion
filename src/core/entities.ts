@@ -12,7 +12,7 @@ abstract class TimelineEntity implements AnimEntity {
     isRunning = false;
     startRegistered = false;
     endRegistered = false;
-    skipRendering = false;
+    // skipRendering = false;
     released = false;
     done = false;
     parent: AnimContainer | undefined;
@@ -207,7 +207,7 @@ export class Tween extends TimelineEntity {
     displayFrame(time: number, targetTime: number, forward: boolean) {
         log(this.name, ": display frame", time, targetTime, forward)
         if (this.delayTime <= time && time <= this.endTime) {
-            if (!this.skipRendering) {
+            // if (!this.skipRendering) {
                 const targetFrame = time === targetTime;
                 if ((targetFrame && this.delayTime <= time && time <= this.doneTime)) {
                     this.setProgression(time - this.delayTime);
@@ -218,7 +218,7 @@ export class Tween extends TimelineEntity {
                         this.setProgression(0);
                     }
                 }
-            }
+            // }
             this.checkDoneAndRelease(time, forward);
         }
     }
