@@ -10,11 +10,18 @@ import { constantInterpolatorFactory } from "./constant";
 import { numericInterpolatorFactory } from "./numeric";
 import { colorInterpolatorFactory } from "./color";
 import { createArrayInterpolatorFactory } from "./array";
+import { instantInterpolatorFactory } from "./instant";
 
 export const INTERPOLATORS = [
   constantInterpolatorFactory,
   numericInterpolatorFactory,
-  colorInterpolatorFactory
+  colorInterpolatorFactory,
+  // the array interpolator will be inserted here
+  instantInterpolatorFactory // this interpolator should be the last one (as it never fails)
 ];
 export const createInterpolator = createAutoInterpolatorFactory(INTERPOLATORS);
-INTERPOLATORS.push(createArrayInterpolatorFactory(createInterpolator));
+INTERPOLATORS.splice(
+  INTERPOLATORS.length - 1,
+  0,
+  createArrayInterpolatorFactory(createInterpolator)
+);
