@@ -11,11 +11,11 @@
       easing: easeOutElastic,
       elasticity: 0.8
     });
-    await a.animate({ translateY: [0, -40] });
-    await a.animate({ translateX: [0, 250] });
-    await a.animate({ translateY: [-40, 40] });
-    await a.animate({ translateX: [250, 0] });
-    await a.animate({ translateY: [40, 0] });
+    await a.animate({ translateY: -40 });
+    await a.animate({ translateX: 250 });
+    await a.animate({ translateY: 40 });
+    await a.animate({ translateX: 0 });
+    await a.animate({ translateY: 0 });
   }
 </script>
 
