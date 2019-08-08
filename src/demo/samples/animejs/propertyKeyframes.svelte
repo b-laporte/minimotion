@@ -11,64 +11,32 @@
       elasticity: 0.8
     });
 
-    a.sequence(
-      async a => {
-        // a.setStyle;
-        a.animate({ translateY: [0, -40], duration: 500 });
-        a.animate({ scaleY: [1.75, 1], duration: 500 });
-      },
-      async a => {
-        a.group(async a => {
-          await a.animate({
-            scaleX: [1, 4],
-            duration: 100,
-            easing: easeOutExpo
-          });
-          a.animate({ scaleX: [4, 1], duration: 900 });
-        });
-        a.animate({ translateX: [0, 250], duration: 1000 });
-      },
-      async a => {
-        a.animate({ translateY: [-40, 40], duration: 500 });
-      },
-      async a => {
-        a.animate({ translateX: [250, 0], duration: 1000 });
-      },
-      async a => {
-        a.animate({ translateY: [40, 0], duration: 500 });
-      }
-    );
+    async function move(a, xORy, value, duration, scaleMax, scaleMaxTime) {
+      a.animate({
+        [`translate${xORy}`]: value,
+        duration
+      });
+      await a.animate({
+        [`scale${xORy}`]: [1, scaleMax],
+        duration: scaleMaxTime,
+        easing: easeOutExpo
+      });
+      a.animate({
+        [`scale${xORy}`]: [scaleMax, 1],
+        duration: duration - scaleMaxTime
+      });
+    }
 
-    // a.parallelize(
-    //   async function() {
-    //
-    //
-    //   },
-    //
-    //   },
-    //   async function() {
-    //     await
-    //     await a.animate({ scaleX: [4, 1], duration: 900 });
-    //     await a.animate({
-    //       scaleX: [1, 4],
-    //       duration: 100,
-    //       delay: 500,
-    //       easing: easeOutExpo
-    //     });
-    //     await a.animate({ scaleX: [4, 1], duration: 900 });
-    //   },
-    //   async function() {
-    //     await a.animate({ scaleY: [1.75, 1], duration: 500 });
-    //     
-    //     await a.animate({
-    //       scaleY: [1, 1.75],
-    //       duration: 50,
-    //       delay: 1000,
-    //       easing: easeOutExpo
-    //     });
-    //     await a.animate({ scaleY: [1.75, 1], duration: 450 });
-    //   }
-    // );
+    a.set({
+      transform: "translateX(0px) translateY(0px) scaleX(1) scaleY(1)"
+    });
+    await a.sequence(
+      async a => await move(a, "Y", -40, 500, 1.75, 50),
+      async a => await move(a, "X", 250, 1000, 4, 100),
+      async a => await move(a, "Y", 40, 500, 2, 50),
+      async a => await move(a, "X", 0, 1000, 4, 100),
+      async a => await move(a, "Y", 0, 500, 1.75, 50)
+    );
   }
 </script>
 
