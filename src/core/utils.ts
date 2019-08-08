@@ -1,4 +1,4 @@
-import { TweenType, ResolvedTarget, isTargetFunction } from './types';
+import { TweenType, Target } from './types';
 import { getTransformValue, setTransformValue, TRANSFORMS } from './transforms';
 
 let LOG_ACTIVE = false;
@@ -44,48 +44,41 @@ function isSVG(el) {
  * @param target 
  * @param propName 
  */
-export function getAnimationType(target: ResolvedTarget, propName: string): TweenType {
-    if (isTargetFunction(target)) {
-        return 'function';
-    }
-
-    if (target.nodeType || isSVG(target)) {
+export function getAnimationType(target: Target, propName: string): TweenType {
+    if (target != null && (target.nodeType || isSVG(target))) {
         if ((target.hasAttribute(propName) || (isSVG(target) && target[propName]))) return 'attribute';
         if (TRANSFORMS[propName] === 1) return 'transform';
         return 'css';
     }
-    return 'invalid';
+    return 'custom';
 }
 
 export const dom = {
     /**
      * Return the current value of a targeted property
-     * @param targetElt 
-     * @param propName 
-     * @param propType 
      */
-    getValue(targetElt, propName, propType) {
-        switch (propType) {
-            case 'css': return dom.getCSSValue(targetElt, propName);
-            case 'transform': return getTransformValue(targetElt, propName);
-            case 'attribute': return targetElt.getAttribute(propName);
+    getValue(property, target, type) {
+        switch (type) {
+            case 'css': return dom.getCSSValue(target, property);
+            case 'transform': return getTransformValue(target, property);
+            case 'attribute': return target.getAttribute(property);
         }
     },
 
-    setValue(targetElt, propName, propType, value) {
-        if (!targetElt) return;
-        switch (propType) {
+    setValue(property, target, type, value) {
+        if (!target) return;
+        switch (type) {
             case 'css':
-                targetElt.style[propName] = value;
+                target.style[property] = value;
                 break;
             case 'transform':
-                setTransformValue(targetElt, propName, value);
+                setTransformValue(target, property, value);
                 break;
             case 'attribute':
-                targetElt.setAttribute(propName, value);
+                target.setAttribute(property, value);
                 break;
             default:
-                console.log("[animate] unsupported animation type: " + propType);
+                console.log("[animate] unsupported animation type: " + type);
         }
     },
 

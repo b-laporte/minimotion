@@ -10,8 +10,8 @@ import sample5 from "./sample5.svelte";
 import sample5Src from "source:./sample5.svelte";
 import transformChain from "./transformChain.svelte";
 import transformChainSrc from "source:./transformChain.svelte";
-import applyFunction from "./applyFunction.svelte";
-import applyFunctionSrc from "source:./applyFunction.svelte";
+import applyProperties from "./applyProperties.svelte";
+import applyPropertiesSrc from "source:./applyProperties.svelte";
 import { DEMOS as animejsDemos } from "./animejs";
 
 export const DEMOS = [
@@ -54,9 +54,9 @@ export const DEMOS = [
     source: transformChainSrc
   },
   {
-    title: "Apply function",
-    sample: applyFunction,
-    source: applyFunctionSrc
+    title: "Custom init/apply properties",
+    sample: applyProperties,
+    source: applyPropertiesSrc
   },
   {
     type: "category",

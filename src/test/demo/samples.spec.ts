@@ -41,6 +41,7 @@ describe("samples", () => {
       expect(mockPlayer.instances).toHaveLength(1);
       mutationObserver.observe(dom, {
         subtree: true,
+        characterData: true,
         attributes: true,
         attributeOldValue: true
       });
