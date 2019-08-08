@@ -3,6 +3,7 @@ function stringContains(str: string, text: string) {
 }
 
 export const TRANSFORMS = {
+  transform: 1, // special property: contains the full transform value
   translateX: 1,
   translateY: 1,
   translateZ: 1,
@@ -67,6 +68,9 @@ export function stringifyTransforms(transforms: Map<string, string>) {
 }
 
 export function getTransformValue(el: HTMLElement, propName: string) {
+  if (propName === "transform") {
+    return el.style.transform || "";
+  }
   return (
     getFastElementTransforms(el).get(propName) ||
     (stringContains(propName, "scale") ? "1" : 0 + getTransformUnit(propName))
@@ -74,6 +78,11 @@ export function getTransformValue(el: HTMLElement, propName: string) {
 }
 
 export function setTransformValue(el: HTMLElement, propName: string, value) {
+  if (propName === "transform") {
+    el.style.transform = value;
+    clearFastElementTransformsCache(el);
+    return;
+  }
   const transforms = getFastElementTransforms(el);
   transforms.set(propName, value);
   const transform = stringifyTransforms(transforms);
