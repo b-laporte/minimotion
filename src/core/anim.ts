@@ -575,6 +575,13 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         }
     }
 
+    set(params: AnimateParams) {
+        return this.animate({
+            ...params,
+            duration: 0
+        });
+    }
+
     async animate(params: AnimateParams): Promise<any> {
         // read all control args
         const d = this.settings,
