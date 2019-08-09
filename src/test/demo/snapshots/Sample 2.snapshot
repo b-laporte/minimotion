@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`samples Sample 2 1`] = `
+Array [
+  "0: DIV.square.square1 style.left=0px",
+  "1: DIV.square.square1 style.left=19.3px",
+  "1: DIV.square.square2 style.left=0px",
+  "2: DIV.square.square1 style.left=84.8px",
+  "2: DIV.square.square2 style.left=19.3px",
+  "2: DIV.square.square3 style.left=0px",
+  "3: DIV.square.square1 style.left=258.4px",
+  "3: DIV.square.square2 style.left=84.8px",
+  "3: DIV.square.square3 style.left=19.3px",
+  "4: DIV.square.square1 style.left=427.6px",
+  "4: DIV.square.square2 style.left=258.4px",
+  "4: DIV.square.square3 style.left=84.8px",
+  "5: DIV.square.square1 style.left=486.7px",
+  "5: DIV.square.square2 style.left=427.6px",
+  "5: DIV.square.square3 style.left=258.4px",
+  "6: DIV.square.square1 style.left=500px",
+  "6: DIV.square.square2 style.left=486.7px",
+  "6: DIV.square.square3 style.left=427.6px",
+  "7: DIV.square.square2 style.left=500px",
+  "7: DIV.square.square3 style.left=486.7px",
+  "8: DIV.square.square3 style.left=500px",
+]
+`;

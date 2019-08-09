@@ -1,9 +1,9 @@
 import { TimeLine, Player } from './../core/anim';
-import { SelectorContext, Anim } from "../core/types";
+import { SelectorContext, Anim, PlayArguments } from "../core/types";
 import { dom } from '../core/utils';
 
 let CURRENT_TICK = 0;
-const MAX_ITERATION = 100;
+const MAX_ITERATION = 1000;
 let _logs: string[] = [];
 
 export function reset() {
@@ -27,12 +27,18 @@ function traceProp(eltId, propName, value) {
     _logs.push(`${CURRENT_TICK}: #${eltId}.${propName} = ${value};`)
 }
 
-// path getCSSValue in Node environment
-dom.getCSSValue = function (el, prop: string) {
-    if (el.style) {
-        return el.style[prop]
+// patch getCSSValue in Node environment
+function mockDomGetCSSValue() {
+    if (jest.isMockFunction(dom.getCSSValue)) {
+        // already patched!
+        return;
     }
-    return '';
+    jest.spyOn(dom, "getCSSValue").mockImplementation((el, prop: string) => {
+        if (el.style) {
+            return el.style[prop]
+        }
+        return '';
+    });
 }
 
 class ElementStyle {
@@ -108,25 +114,26 @@ class TestSelectorCtxt implements SelectorContext {
 }
 
 export function animCtxtXYZ() {
+    mockDomGetCSSValue();
     const x = new TestElement("x", "colItem"), y = new TestElement("y", "colItem"), z = new TestElement("z", "colItem");
     return [x, y, z];
 }
 
-export class TestPlayer extends Player {
-    constructor(public elements: TestElement[], public animFunction: (a: Anim, ...args: any[]) => any, animFunctionArgs?: any[]) {
-        super(animFunction, animFunctionArgs);
-        this.timeLine.selectorCtxt = new TestSelectorCtxt(elements);
-    }
-
-    async play(args?): Promise<number> {
-        return new Promise<number>((resolve) => {
-            CURRENT_TICK = -1;
-            runTicker(this.timeLine, resolve);
-        });
+export class TickerPlayer extends Player {
+    async play(args?: PlayArguments): Promise<number> {
+        CURRENT_TICK = -1;
+        return runTicker(this.timeLine, args);
     }
 
     get timeline() {
         return this.timeLine;
+    }
+}
+
+export class TestPlayer extends TickerPlayer {
+    constructor(public elements: TestElement[], public animFunction: (a: Anim, ...args: any[]) => any, animFunctionArgs?: any[]) {
+        super(animFunction, animFunctionArgs);
+        this.timeLine.selectorCtxt = new TestSelectorCtxt(elements);
     }
 }
 
@@ -137,18 +144,18 @@ export class TestPlayer2 extends Player {
     }
 }
 
-async function runTicker(tl: TimeLine, resolve: Function) {
+async function runTicker(tl: TimeLine, args: PlayArguments = {}) {
+    const { onupdate } = args;
     while (CURRENT_TICK < MAX_ITERATION) {
         incrementTick();
-        await tl.move(CURRENT_TICK * 16);
+        const currentTime = CURRENT_TICK * 16;
+        await tl.move(currentTime);
+        if (onupdate) onupdate(currentTime);
 
         if (tl.endTime === tl.currentTime) {
             // done
-            resolve(tl.endTime);
-            return;
-        }
-        if (CURRENT_TICK === MAX_ITERATION) {
-            throw new Error("Max iteration reached");
+            return tl.endTime ;
         }
     }
+    throw new Error("Max iteration reached");
 }

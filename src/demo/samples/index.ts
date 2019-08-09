@@ -1,17 +1,17 @@
-import sample1 from "./sample1";
-import sample1Src from "source:./sample1";
-import sample2 from "./sample2";
-import sample2Src from "source:./sample2";
-import sample3 from "./sample3";
-import sample3Src from "source:./sample3";
-import sample4 from "./sample4";
-import sample4Src from "source:./sample4";
-import sample5 from "./sample5";
-import sample5Src from "source:./sample5";
-import transformChain from "./transformChain";
-import transformChainSrc from "source:./transformChain";
-import applyFunction from "./applyFunction";
-import applyFunctionSrc from "source:./applyFunction";
+import sample1 from "./sample1.svelte";
+import sample1Src from "source:./sample1.svelte";
+import sample2 from "./sample2.svelte";
+import sample2Src from "source:./sample2.svelte";
+import sample3 from "./sample3.svelte";
+import sample3Src from "source:./sample3.svelte";
+import sample4 from "./sample4.svelte";
+import sample4Src from "source:./sample4.svelte";
+import sample5 from "./sample5.svelte";
+import sample5Src from "source:./sample5.svelte";
+import transformChain from "./transformChain.svelte";
+import transformChainSrc from "source:./transformChain.svelte";
+import applyFunction from "./applyFunction.svelte";
+import applyFunctionSrc from "source:./applyFunction.svelte";
 import { DEMOS as animejsDemos } from "./animejs";
 
 export const DEMOS = [
