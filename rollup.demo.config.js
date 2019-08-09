@@ -33,7 +33,7 @@ const demoSourceCodePlugin = {
 };
 
 export default {
-  input: "src/demo/main.js",
+  input: "src/demo/main.ts",
   output: {
     file: "dist/demo/demo.js",
     sourcemap: true,
@@ -49,7 +49,8 @@ export default {
       extensions: [".mjs", ".js", ".ts", ".svelte"]
     }),
     typescript({
-      objectHashIgnoreUnknownHack: true
+      objectHashIgnoreUnknownHack: true,
+      tsconfig: "tsconfig.demo.json"
     }),
     svelte({
       css: function(css) {
