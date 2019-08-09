@@ -88,6 +88,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
     parent: TimeLine | undefined;
     settings: ControlParams = defaultSettings;
     rList: AnimEntity | null = null; // linked list of running entities
+    rListEnd: AnimEntity | null = null; // last node of the linked list of running entities
     lastTargetTime = -1;             // position of the last target frame
     lastTargetForward = true;        // true if the last target was going forward (i.e. time increase)
     tlFunctionCalled = false;        // true when the tl function has been called
@@ -410,13 +411,14 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
             ae.startRegistered = true;
         }
 
-        if (!this.rList) {
+        ae.nextEntity = null;
+        if (!this.rListEnd) {
             this.rList = ae;
-            ae.nextEntity = null;
+            this.rListEnd = ae;
         } else {
-            // insert new entity first
-            ae.nextEntity = this.rList;
-            this.rList = ae;
+            // append new entity at the end
+            this.rListEnd.nextEntity = ae;
+            this.rListEnd = ae;
         }
         ae.isRunning = true;
         // ae.skipRendering = this.skipRendering;
@@ -439,10 +441,16 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         }
         if (e === ae) {
             this.rList = ae.nextEntity;
+            if (this.rListEnd === ae) {
+                this.rListEnd = null;
+            }
         } else {
             while (e) {
                 if (e.nextEntity === ae) {
                     e.nextEntity = ae.nextEntity;
+                    if (this.rListEnd === ae) {
+                        this.rListEnd = e;
+                    }
                     e = null;
                 } else {
                     e = e.nextEntity;

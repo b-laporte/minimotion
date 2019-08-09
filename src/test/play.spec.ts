@@ -274,9 +274,9 @@ describe("play", () => {
             // release
             '6: #z.top = 0px;',
             '6: #y.left = 50px;',
-            '7: #z.top = 100px;',
             '7: #y.left = 0px;',
             '7: #y.top = 100px;',
+            '7: #z.top = 100px;',
             '8: #y.top = 50px;',
             '9: #y.top = 0px;'
         ], "logs");
