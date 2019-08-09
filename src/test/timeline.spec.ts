@@ -126,8 +126,8 @@ describe("Timeline", () => {
             await moveFwd(128);
             assert.deepEqual(logs(), [
                 '0: #x.top = 200px;',
-                '0: #z.top = 100px;',
                 '0: #y.top = 200px;',
+                '0: #z.top = 100px;',
                 '0: #x.top = 200px;'
             ], 'logs ok');
         });
@@ -137,8 +137,8 @@ describe("Timeline", () => {
             assert.deepEqual(logs(), [
                 '0: #x.top = 200px;',
                 '0: #y.top = 200px;',
-                '0: #x.top = 250px;',
-                '0: #z.top = 150px;'
+                '0: #z.top = 150px;',
+                '0: #x.top = 250px;'
             ], 'logs ok');
         });
 
@@ -147,9 +147,9 @@ describe("Timeline", () => {
             assert.deepEqual(logs(), [
                 '0: #x.top = 200px;',
                 '0: #y.top = 200px;',
-                '0: #y.top = 200px;',
+                '0: #z.top = 200px;',
                 '0: #x.top = 300px;',
-                '0: #z.top = 200px;'
+                '0: #y.top = 200px;'
             ], 'logs ok');
         });
 
@@ -159,8 +159,8 @@ describe("Timeline", () => {
                 '0: #x.top = 200px;',
                 '0: #y.top = 200px;',
                 '0: #z.top = 200px;',
-                '0: #y.top = 300px;',
-                '0: #x.top = 400px;'
+                '0: #x.top = 400px;',
+                '0: #y.top = 300px;'
             ], 'logs ok');
         });
 
@@ -215,8 +215,8 @@ describe("Timeline", () => {
             await moveFullFwdBack(160);
             assert.deepEqual(logs(), [
                 '0: #z.top = 200px;',
-                '0: #x.top = 300px;',
                 '0: #y.top = 200px;',
+                '0: #x.top = 300px;',
                 '0: #z.top = 200px;'
             ], 'logs ok');
         });
@@ -226,8 +226,8 @@ describe("Timeline", () => {
             assert.deepEqual(logs(), [
                 '0: #z.top = 200px;',
                 '0: #y.top = 200px;',
-                '0: #z.top = 150px;',
-                '0: #x.top = 250px;'
+                '0: #x.top = 250px;',
+                '0: #z.top = 150px;'
             ], 'logs ok');
         });
 
@@ -236,9 +236,9 @@ describe("Timeline", () => {
             assert.deepEqual(logs(), [
                 '0: #z.top = 200px;',
                 '0: #y.top = 200px;',
+                '0: #x.top = 200px;',
                 '0: #z.top = 100px;',
-                '0: #y.top = 200px;',
-                '0: #x.top = 200px;'
+                '0: #y.top = 200px;'
             ], 'logs ok');
         });
 
@@ -248,8 +248,8 @@ describe("Timeline", () => {
                 '0: #z.top = 200px;',
                 '0: #y.top = 200px;',
                 '0: #x.top = 200px;',
-                '0: #y.top = 100px;',
-                '0: #z.top = 0px;'
+                '0: #z.top = 0px;',
+                '0: #y.top = 100px;'
             ], 'logs ok');
         });
 
@@ -313,8 +313,8 @@ describe("Timeline", () => {
             await moveFullFwdBackFwd(128);
             assert.deepEqual(logs(), [
                 '0: #x.top = 200px;',
-                '0: #z.top = 100px;',
                 '0: #y.top = 200px;',
+                '0: #z.top = 100px;',
                 '0: #x.top = 200px;'
             ], 'logs ok');
         });
@@ -324,8 +324,8 @@ describe("Timeline", () => {
             assert.deepEqual(logs(), [
                 '0: #x.top = 200px;',
                 '0: #y.top = 200px;',
-                '0: #x.top = 250px;',
-                '0: #z.top = 150px;'
+                '0: #z.top = 150px;',
+                '0: #x.top = 250px;'
             ], 'logs ok');
         });
 
@@ -334,9 +334,9 @@ describe("Timeline", () => {
             assert.deepEqual(logs(), [
                 '0: #x.top = 200px;',
                 '0: #y.top = 200px;',
-                '0: #x.top = 300px;',
+                '0: #z.top = 200px;',
                 '0: #y.top = 200px;',
-                '0: #z.top = 200px;'
+                '0: #x.top = 300px;'
             ], 'logs ok');
         });
 
@@ -346,8 +346,8 @@ describe("Timeline", () => {
                 '0: #x.top = 200px;',
                 '0: #y.top = 200px;',
                 '0: #z.top = 200px;',
-                '0: #x.top = 400px;',
-                '0: #y.top = 300px;'
+                '0: #y.top = 300px;',
+                '0: #x.top = 400px;'
             ], 'logs ok');
         });
 
@@ -408,8 +408,8 @@ describe("Timeline", () => {
             await moveFwdBackFwd(tl, 208, 144, 288);
             assert.deepEqual(logs(), [
                 '0: #y.top = 200px;',
-                '0: #z.top = 150px;',
                 '0: #x.top = 250px;',
+                '0: #z.top = 150px;',
                 'BACK',
                 '0: #z.top = 200px;',
                 '0: #x.top = 400px;',
@@ -440,8 +440,8 @@ describe("Timeline", () => {
                 '0: #y.left = 0px;',
                 '0: #x.left = 0px;',
                 'BACK',
-                '0: #y.left = 50px;',
                 '0: #x.left = 100px;',
+                '0: #y.left = 50px;',
                 '0: #z.left = 0px;'
             ], 'logs ok');
         });
@@ -451,8 +451,8 @@ describe("Timeline", () => {
             assert.deepEqual(logs(), [
                 '0: #x.left = 0px;',
                 'BACK',
-                '0: #y.left = 50px;',
                 '0: #x.left = 100px;',
+                '0: #y.left = 50px;',
                 '0: #z.left = 0px;'
             ], 'logs ok');
         });
@@ -470,22 +470,22 @@ describe("Timeline", () => {
                 '0: #y.left = 0px;',
                 '0: #x.left = 0px;',
                 'BACK',
-                '0: #x.left = 100px;',
+                '0: #z.left = 100px;',
                 '0: #y.left = 100px;',
-                '0: #z.left = 100px;'
+                '0: #x.left = 100px;'
             ], 'logs ok');
         });
 
         it("should support parallel iteration fwd/back/fwd (2)", async function () {
             await moveFwdBackFwd(tl3, 32, 0, 64);
             assert.deepEqual(logs(), [
-                '0: #z.left = 0px;',
-                '0: #y.left = 0px;',
                 '0: #x.left = 0px;',
+                '0: #y.left = 0px;',
+                '0: #z.left = 0px;',
                 'BACK',
-                '0: #x.left = 66.6px;',
+                '0: #z.left = 66.6px;',
                 '0: #y.left = 66.6px;',
-                '0: #z.left = 66.6px;'
+                '0: #x.left = 66.6px;'
             ], 'logs ok');
         });
 
