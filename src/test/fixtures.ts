@@ -76,8 +76,8 @@ export class TestElement {
         this.style = new ElementStyle(id);
     }
 
-    getAttribute(name: string) {
-        return null;
+    hasAttribute(name: string) {
+        return false;
     }
 }
 

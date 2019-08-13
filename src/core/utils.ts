@@ -50,7 +50,7 @@ export function getAnimationType(target: ResolvedTarget, propName: string): Twee
     }
 
     if (target.nodeType || isSVG(target)) {
-        if ((target.getAttribute(propName) || (isSVG(target) && target[propName]))) return 'attribute';
+        if ((target.hasAttribute(propName) || (isSVG(target) && target[propName]))) return 'attribute';
         if (TRANSFORMS[propName] === 1) return 'transform';
         return 'css';
     }
