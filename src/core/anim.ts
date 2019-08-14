@@ -535,7 +535,7 @@ export class TimeLine implements Anim, AnimEntity, AnimTimeLine, AnimContainer {
         if (typeof selector === "string") {
             scope = scope || this.selectorCtxt;
             if (scope) {
-                return scope!.querySelectorAll(selector);
+                return Array.from(scope!.querySelectorAll(selector));
             }
         } else if (selector["style"]) {
             return [selector];
@@ -753,7 +753,7 @@ export class Player implements AnimPlayer {
     constructor(public animFunction: (a: Anim, ...args: any[]) => any, animFunctionArgs?: any[]) {
         this.timeLine = new TimeLine("root", animFunction, animFunctionArgs);
         if (typeof document !== "undefined") {
-            this.timeLine.selectorCtxt = document as any;
+            this.timeLine.selectorCtxt = document;
         }
     }
 

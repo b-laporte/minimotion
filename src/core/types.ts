@@ -16,7 +16,7 @@ export type ResolvedTarget = HTMLElement | TargetFunction;
 
 export interface SelectorContext {
     querySelector(selector: string): HTMLElement | null;
-    querySelectorAll(selector: string): HTMLElement[] | null;
+    querySelectorAll(selector: string): NodeListOf<HTMLElement> | HTMLElement[];
 }
 
 
