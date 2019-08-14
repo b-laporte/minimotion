@@ -95,7 +95,7 @@ class TestSelectorCtxt implements SelectorContext {
         return null;
     }
 
-    querySelectorAll(selector: string): HTMLElement[] | null {
+    querySelectorAll(selector: string): HTMLElement[] {
         const elts = this.elements, res: HTMLElement[] = [];
         let idx = elts.length;
         while (idx--) {
@@ -103,7 +103,7 @@ class TestSelectorCtxt implements SelectorContext {
                 res.push(elts[idx] as any as HTMLElement);
             }
         }
-        return res.length ? res.reverse() : null;
+        return res.reverse();
     }
 }
 
