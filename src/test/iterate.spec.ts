@@ -36,9 +36,9 @@ describe("iterate", () => {
             '1: #x.top = 33.3px;',
             '1: #y.top = 33.3px;',
             '1: #z.top = 33.3px;',
-            '2: #x.top = 66.6px;',
-            '2: #y.top = 66.6px;',
-            '2: #z.top = 66.6px;',
+            '2: #x.top = 66.7px;',
+            '2: #y.top = 66.7px;',
+            '2: #z.top = 66.7px;',
             '3: #x.top = 100px;',
             '3: #y.top = 100px;',
             '3: #z.top = 100px;'
@@ -87,19 +87,19 @@ describe("iterate", () => {
         assert.deepEqual(logs(), [
             '0: #x.top = 0px;',
             '1: #x.top = 33.3px;',
-            '2: #x.top = 66.6px;',
+            '2: #x.top = 66.7px;',
             '2: #y.top = 0px;',
             '3: #x.top = 100px;',
             '3: #y.top = 33.3px;',
-            '4: #y.top = 66.6px;',
+            '4: #y.top = 66.7px;',
             '4: #z.top = 0px;',
             '5: #y.top = 100px;',
             '5: #z.top = 33.3px;',
-            '6: #z.top = 66.6px;',
+            '6: #z.top = 66.7px;',
             '6: #x.top = 0px;',
             '7: #z.top = 100px;',
             '7: #x.top = 33.3px;',
-            '8: #x.top = 66.6px;',
+            '8: #x.top = 66.7px;',
             '9: #x.top = 100px;'
         ], "logs ok");
 
@@ -124,22 +124,22 @@ describe("iterate", () => {
         assert.deepEqual(logs(), [
             '0: #x.top = 0px;',
             '1: #x.top = 33.3px;',
-            '2: #x.top = 66.6px;',
+            '2: #x.top = 66.7px;',
             '2: #y.top = 0px;',
             '3: #x.top = 100px;',
             '3: #y.top = 33.3px;',
-            '4: #y.top = 66.6px;',
+            '4: #y.top = 66.7px;',
             '4: #z.top = 0px;',
             '5: #y.top = 100px;',
             '5: #z.top = 33.3px;',
-            '6: #z.top = 66.6px;',
+            '6: #z.top = 66.7px;',
             '7: #z.top = 100px;',
             '7: #z.left = 0px;',
             '8: #z.left = 50px;',
             '9: #z.left = 100px;',
             '9: #x.top = 0px;',
             '10: #x.top = 33.3px;',
-            '11: #x.top = 66.6px;',
+            '11: #x.top = 66.7px;',
             '12: #x.top = 100px;'
         ], "logs ok");
 

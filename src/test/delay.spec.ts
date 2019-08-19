@@ -33,7 +33,7 @@ describe("delay", () => {
         assert.deepEqual(logs(), [
             "3: #x.top = 0px;",
             "4: #x.top = 33.3px;",
-            "5: #x.top = 66.6px;",
+            "5: #x.top = 66.7px;",
             "6: #x.top = 100px;"
         ], "logs ok");
         assert.equal(lastTick(), 7, "lastTick");
@@ -51,7 +51,7 @@ describe("delay", () => {
         assert.deepEqual(logs(), [
             "1: #x.top = 0px;",
             "2: #x.top = 33.3px;",
-            "3: #x.top = 66.6px;",
+            "3: #x.top = 66.7px;",
             "4: #x.top = 100px;"
         ], "logs ok");
         assert.equal(lastTick(), 5, "lastTick");
@@ -69,7 +69,7 @@ describe("delay", () => {
         assert.deepEqual(logs(), [
             "0: #x.top = 0px;",
             "1: #x.top = 33.3px;",
-            "2: #x.top = 66.6px;",
+            "2: #x.top = 66.7px;",
             "3: #x.top = 100px;"
         ], "logs ok");
         assert.equal(lastTick(), 7, "lastTick");
@@ -88,11 +88,11 @@ describe("delay", () => {
         assert.deepEqual(logs(), [
             "0: #x.top = 0px;",
             "1: #x.top = 33.3px;",
-            "2: #x.top = 66.6px;",
+            "2: #x.top = 66.7px;",
             "3: #x.top = 100px;",
             "6: #y.left = 0px;",
             "7: #y.left = 33.3px;",
-            "8: #y.left = 66.6px;",
+            "8: #y.left = 66.7px;",
             "9: #y.left = 100px;"
         ], "logs ok");
         assert.equal(lastTick(), 10, "lastTick");

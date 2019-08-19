@@ -63,7 +63,7 @@ describe("parallelize", () => {
         assert.deepEqual(logs(), [
             "0: #x.top = 0px;",
             "1: #x.top = 33.3px;",
-            "2: #x.top = 66.6px;",
+            "2: #x.top = 66.7px;",
             "3: #x.top = 100px;"
         ], "logs ok");
         assert.equal(lastTick(), 4, "lastTick");
@@ -112,7 +112,7 @@ describe("parallelize", () => {
             '0: #x.top = 0px;',
             '1: #x.top = 33.3px;',
             '1: #y.left = 0px;',
-            '2: #x.top = 66.6px;',
+            '2: #x.top = 66.7px;',
             '2: #y.left = 25px;',
             '3: #x.top = 100px;',
             '3: #y.left = 50px;',
@@ -141,7 +141,7 @@ describe("parallelize", () => {
             '0: #x.top = 0px;',
             '1: #x.top = 33.3px;',
             '1: #y.left = 0px;',
-            '2: #x.top = 66.6px;',
+            '2: #x.top = 66.7px;',
             '2: #y.left = 25px;',
             '3: #x.top = 100px;',
             '3: #y.left = 50px;',
@@ -180,7 +180,7 @@ describe("parallelize", () => {
             '5: #y.left = 100px;',
             '5: #z.top = 0px;',
             '6: #z.top = 33.3px;',
-            '7: #z.top = 66.6px;',
+            '7: #z.top = 66.7px;',
             '8: #z.top = 100px;'
         ], "logs ok");
 
@@ -215,7 +215,7 @@ describe("parallelize", () => {
             '5: #y.left = 100px;',
             '5: #z.top = 0px;',
             '6: #z.top = 33.3px;',
-            '7: #z.top = 66.6px;',
+            '7: #z.top = 66.7px;',
             '8: #z.top = 100px;'
         ], "logs ok");
 
@@ -244,7 +244,7 @@ describe("parallelize", () => {
             '1: #z.top = 33.3px;',
             '2: #x.top = 40px;',
             '2: #y.left = 25px;',
-            '2: #z.top = 66.6px;',
+            '2: #z.top = 66.7px;',
             '3: #x.top = 60px;',
             '3: #y.left = 50px;',
             '3: #z.top = 100px;',

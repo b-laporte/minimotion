@@ -63,7 +63,7 @@ describe("sequence", () => {
         assert.deepEqual(logs(), [
             "0: #x.top = 0px;",
             "1: #x.top = 33.3px;",
-            "2: #x.top = 66.6px;",
+            "2: #x.top = 66.7px;",
             "3: #x.top = 100px;"
         ], "logs ok");
         assert.equal(lastTick(), 4, "lastTick");
@@ -112,11 +112,11 @@ describe("sequence", () => {
         assert.deepEqual(logs(), [
             "0: #x.top = 0px;",
             "1: #x.top = 33.3px;",
-            "2: #x.top = 66.6px;",
+            "2: #x.top = 66.7px;",
             "3: #x.top = 100px;",
             "3: #y.left = 0px;",
             "4: #y.left = 33.3px;",
-            "5: #y.left = 66.6px;",
+            "5: #y.left = 66.7px;",
             "6: #y.left = 100px;"
         ], "logs ok");
 
@@ -138,11 +138,11 @@ describe("sequence", () => {
         assert.deepEqual(logs(), [
             "0: #x.top = 0px;",
             "1: #x.top = 33.3px;",
-            "2: #x.top = 66.6px;",
+            "2: #x.top = 66.7px;",
             "3: #x.top = 100px;",
             "3: #y.left = 0px;",
             "4: #y.left = 33.3px;",
-            "5: #y.left = 66.6px;",
+            "5: #y.left = 66.7px;",
             "6: #y.left = 100px;"
         ], "logs ok");
         assert.equal(lastTick(), 7, "lastTick");
@@ -165,15 +165,15 @@ describe("sequence", () => {
         assert.deepEqual(logs(), [
             "0: #x.top = 0px;",
             "1: #x.top = 33.3px;",
-            "2: #x.top = 66.6px;",
+            "2: #x.top = 66.7px;",
             "3: #x.top = 100px;",
             "3: #y.left = 0px;",
             "4: #y.left = 33.3px;",
-            "5: #y.left = 66.6px;",
+            "5: #y.left = 66.7px;",
             "6: #y.left = 100px;",
             "6: #z.top = 0px;",
             "7: #z.top = 33.3px;",
-            "8: #z.top = 66.6px;",
+            "8: #z.top = 66.7px;",
             "9: #z.top = 100px;"
         ], "logs ok");
         assert.equal(lastTick(), 10, "lastTick");
@@ -197,14 +197,14 @@ describe("sequence", () => {
             '0: #x.top = 0px;',
             '1: #x.top = 33.3px;',
             '1: #y.left = 0px;',
-            '2: #x.top = 66.6px;',
+            '2: #x.top = 66.7px;',
             '2: #y.left = 33.3px;',
             '2: #z.top = 0px;',
             '3: #x.top = 100px;',
-            '3: #y.left = 66.6px;',
+            '3: #y.left = 66.7px;',
             '3: #z.top = 33.3px;',
             '4: #y.left = 100px;',
-            '4: #z.top = 66.6px;',
+            '4: #z.top = 66.7px;',
             '5: #z.top = 100px;'
         ], "logs ok");
         assert.equal(lastTick(), 6, "lastTick");
@@ -226,15 +226,15 @@ describe("sequence", () => {
         assert.deepEqual(logs(), [
             '0: #x.top = 0px;',
             '1: #x.top = 33.3px;',
-            '2: #x.top = 66.6px;',
+            '2: #x.top = 66.7px;',
             '3: #x.top = 100px;',
             '3: #y.left = 0px;',
             '4: #y.left = 33.3px;',
             '4: #z.top = 0px;',
-            '5: #y.left = 66.6px;',
+            '5: #y.left = 66.7px;',
             '5: #z.top = 33.3px;',
             '6: #y.left = 100px;',
-            '6: #z.top = 66.6px;',
+            '6: #z.top = 66.7px;',
             '7: #z.top = 100px;'
         ], "logs ok");
         assert.equal(lastTick(), 8, "lastTick");

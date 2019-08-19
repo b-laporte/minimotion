@@ -483,9 +483,9 @@ describe("Timeline", () => {
                 '0: #y.left = 0px;',
                 '0: #z.left = 0px;',
                 'BACK',
-                '0: #z.left = 66.6px;',
-                '0: #y.left = 66.6px;',
-                '0: #x.left = 66.6px;'
+                '0: #z.left = 66.7px;',
+                '0: #y.left = 66.7px;',
+                '0: #x.left = 66.7px;'
             ], 'logs ok');
         });
 
