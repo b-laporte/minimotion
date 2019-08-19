@@ -66,7 +66,7 @@ describe("repeat", () => {
             '3: #x.top = 200px;',
             '3: #x.top = 200px;',
             '4: #x.top = 233.3px;',
-            '5: #x.top = 266.6px;',
+            '5: #x.top = 266.7px;',
             '6: #x.top = 300px;'
         ], "logs ok");
     });

@@ -17,10 +17,10 @@ describe("animate", () => {
 
         assert.deepEqual(logs(), [
             "0: #x.top = 100px;",
-            "1: #x.top = 116.6px;",
+            "1: #x.top = 116.7px;",
             "2: #x.top = 133.3px;",
             "3: #x.top = 150px;",
-            "4: #x.top = 166.6px;",
+            "4: #x.top = 166.7px;",
             "5: #x.top = 183.3px;",
             "6: #x.top = 200px;"
         ], "logs ok");
@@ -39,7 +39,7 @@ describe("animate", () => {
         assert.deepEqual(logs(), [
             "2: #x.top = 0px;",
             "3: #x.top = 33.3px;",
-            "4: #x.top = 66.6px;",
+            "4: #x.top = 66.7px;",
             "5: #x.top = 100px;"
         ], "logs ok");
         assert.equal(lastTick(), 6, "lastTick");
@@ -57,12 +57,12 @@ describe("animate", () => {
         assert.deepEqual(logs(), [
             // linear
             '0: #x.top = 0px;',
-            '1: #x.top = 7.6px;',
-            '2: #x.top = 15.3px;',
-            '3: #x.top = 23px;',
-            '4: #x.top = 30.7px;',
-            '5: #x.top = 38.4px;',
-            '6: #x.top = 46.1px;',
+            '1: #x.top = 7.7px;',
+            '2: #x.top = 15.4px;',
+            '3: #x.top = 23.1px;',
+            '4: #x.top = 30.8px;',
+            '5: #x.top = 38.5px;',
+            '6: #x.top = 46.2px;',
             '7: #x.top = 53.8px;',
             '8: #x.top = 61.5px;',
             '9: #x.top = 69.2px;',
@@ -72,18 +72,18 @@ describe("animate", () => {
             '13: #x.top = 100px;',
             // easeOutElastic with .7 elasticity (very elastic)
             '13: #y.top = 0px;',
-            '14: #y.top = 54.7px;',
+            '14: #y.top = 54.8px;',
             '15: #y.top = 93.5px;',
-            '16: #y.top = 109.6px;',
+            '16: #y.top = 109.7px;',
             '17: #y.top = 111px;',
             '18: #y.top = 106.6px;',
             '19: #y.top = 102.2px;',
             '20: #y.top = 99.7px;',
-            '21: #y.top = 98.9px;',
-            '22: #y.top = 99.1px;',
+            '21: #y.top = 99px;',
+            '22: #y.top = 99.2px;',
             '23: #y.top = 99.6px;',
             '24: #y.top = 99.9px;',
-            '25: #y.top = 100px;',
+            '25: #y.top = 100.1px;',
             '26: #y.top = 100px;'
         ], "logs ok");
     });
@@ -144,11 +144,11 @@ describe("animate", () => {
         assert.deepEqual(logs(), [
             "0: #x.top = 0px;",
             "1: #x.top = 33.3px;",
-            "2: #x.top = 66.6px;",
+            "2: #x.top = 66.7px;",
             "3: #x.top = 100px;",
             "3: #y.left = 0px;",
             "4: #y.left = 33.3px;",
-            "5: #y.left = 66.6px;",
+            "5: #y.left = 66.7px;",
             "6: #y.left = 100px;"
         ], "logs ok");
         assert.equal(lastTick(), 7, "last tick");
@@ -165,7 +165,7 @@ describe("animate", () => {
         assert.deepEqual(logs(), [
             "0: #x.top = 0px;",
             "1: #x.top = 33.3px;",
-            "2: #x.top = 66.6px;",
+            "2: #x.top = 66.7px;",
             "3: #x.top = 100px;",
             "5: #y.left = 0px;",
             "6: #y.left = 50px;",
@@ -251,7 +251,7 @@ describe("animate", () => {
         await p.play();
         assert.deepEqual(logs(), [
             "0: #x.color = rgba(0, 0, 0, 1);",
-            "1: #x.color = rgba(5, 120, 127, 1);",
+            "1: #x.color = rgba(5, 120, 128, 1);",
             "2: #x.color = rgba(10, 240, 255, 1);"
         ], "logs");
     });
@@ -271,7 +271,7 @@ describe("animate", () => {
         await p.play();
         assert.deepEqual(logs(), [
             '0: #x.color = rgba(0, 255, 0, 1);',
-            '1: #x.color = rgba(127, 255, 127, 0.75);',
+            '1: #x.color = rgba(128, 255, 128, 0.75);',
             '2: #x.color = rgba(255, 255, 255, 0.5);'
         ], "logs");
     });
@@ -281,7 +281,7 @@ describe("animate", () => {
         await p.play();
         assert.deepEqual(logs(), [
             "0: #x.color = rgba(255, 0, 0, 1);", // dom value is red in test fixture
-            "1: #x.color = rgba(132, 120, 127, 1);",
+            "1: #x.color = rgba(133, 120, 128, 1);",
             "2: #x.color = rgba(10, 240, 255, 1);"
         ], "logs");
     });

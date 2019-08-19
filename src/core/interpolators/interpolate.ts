@@ -1,4 +1,4 @@
-const trunc = Math.trunc;
+const round = Math.round;
 
 export function interpolate(
   from: number,
@@ -6,5 +6,5 @@ export function interpolate(
   easing: number,
   decimalLevel: number
 ) {
-  return trunc((from + (to - from) * easing) * decimalLevel) / decimalLevel;
+  return round((from + (to - from) * easing) * decimalLevel) / decimalLevel;
 }

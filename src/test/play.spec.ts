@@ -23,11 +23,11 @@ describe("play", () => {
             '1: #x.top = 100px;',
             '1: #y.top = 0px;',
             '2: #y.top = 33.3px;',
-            '3: #y.top = 66.6px;',
+            '3: #y.top = 66.7px;',
             '4: #y.top = 100px;',
             '4: #y.left = 0px;',
             '5: #y.left = 33.3px;',
-            '6: #y.left = 66.6px;',
+            '6: #y.left = 66.7px;',
             '7: #y.left = 100px;',
             '7: #z.top = 0px;',
             '8: #z.top = 100px;'
@@ -77,15 +77,15 @@ describe("play", () => {
             // cycle 1
             '0: #x.left = 0px;',
             '1: #x.left = 33.3px;',
-            '2: #x.left = 66.6px;',
+            '2: #x.left = 66.7px;',
             '3: #x.left = 100px;',
             // cycle 2
             '4: #x.left = 33.3px;', // y.left = 0px is skipped to avoid losing one frame
-            '5: #x.left = 66.6px;',
+            '5: #x.left = 66.7px;',
             '6: #x.left = 100px;',
             // cycle 3
             '7: #x.left = 33.3px;',
-            '8: #x.left = 66.6px;',
+            '8: #x.left = 66.7px;',
             '9: #x.left = 100px;'
         ], "logs");
     });
@@ -128,26 +128,26 @@ describe("play", () => {
             // cycle 1
             '0: #x.left = 0px;',
             '1: #x.left = 33.3px;',
-            '2: #x.left = 66.6px;',
+            '2: #x.left = 66.7px;',
             '3: #x.left = 100px;',
             // back
-            '4: #x.left = 66.6px;',
+            '4: #x.left = 66.7px;',
             '5: #x.left = 33.3px;',
             '6: #x.left = 0px;',
             // cycle 2
             '7: #x.left = 33.3px;',
-            '8: #x.left = 66.6px;',
+            '8: #x.left = 66.7px;',
             '9: #x.left = 100px;',
             // back
-            '10: #x.left = 66.6px;',
+            '10: #x.left = 66.7px;',
             '11: #x.left = 33.3px;',
             '12: #x.left = 0px;',
             // cycle 3
             '13: #x.left = 33.3px;',
-            '14: #x.left = 66.6px;',
+            '14: #x.left = 66.7px;',
             '15: #x.left = 100px;',
             // back
-            '16: #x.left = 66.6px;',
+            '16: #x.left = 66.7px;',
             '17: #x.left = 33.3px;',
             '18: #x.left = 0px;'
         ], "logs");
@@ -160,36 +160,36 @@ describe("play", () => {
             // cycle 1
             '0: #x.left = 0px;',
             '1: #x.left = 33.3px;',
-            '2: #x.left = 66.6px;',
+            '2: #x.left = 66.7px;',
             '3: #x.left = 100px;',
             // back
             '4: #x.left = 83.3px;',
-            '5: #x.left = 66.6px;',
+            '5: #x.left = 66.7px;',
             '6: #x.left = 50px;',
             '7: #x.left = 33.3px;',
-            '8: #x.left = 16.6px;',
+            '8: #x.left = 16.7px;',
             '9: #x.left = 0px;',
             // cycle 2
             '10: #x.left = 33.3px;',
-            '11: #x.left = 66.6px;',
+            '11: #x.left = 66.7px;',
             '12: #x.left = 100px;',
             // back
             '13: #x.left = 83.3px;',
-            '14: #x.left = 66.6px;',
+            '14: #x.left = 66.7px;',
             '15: #x.left = 50px;',
             '16: #x.left = 33.3px;',
-            '17: #x.left = 16.6px;',
+            '17: #x.left = 16.7px;',
             '18: #x.left = 0px;',
             // cycle 3
             '19: #x.left = 33.3px;',
-            '20: #x.left = 66.6px;',
+            '20: #x.left = 66.7px;',
             '21: #x.left = 100px;',
             // back
             '22: #x.left = 83.3px;',
-            '23: #x.left = 66.6px;',
+            '23: #x.left = 66.7px;',
             '24: #x.left = 50px;',
             '25: #x.left = 33.3px;',
-            '26: #x.left = 16.6px;',
+            '26: #x.left = 16.7px;',
             '27: #x.left = 0px;'
         ], "logs");
     });
@@ -200,36 +200,36 @@ describe("play", () => {
         assert.deepEqual(logs(), [
             // cycle 1
             '0: #x.left = 0px;',
-            '1: #x.left = 16.6px;',
+            '1: #x.left = 16.7px;',
             '2: #x.left = 33.3px;',
             '3: #x.left = 50px;',
-            '4: #x.left = 66.6px;',
+            '4: #x.left = 66.7px;',
             '5: #x.left = 83.3px;',
             '6: #x.left = 100px;',
             // back
-            '7: #x.left = 66.6px;',
+            '7: #x.left = 66.7px;',
             '8: #x.left = 33.3px;',
             '9: #x.left = 0px;',
             // cycle 2
-            '10: #x.left = 16.6px;',
+            '10: #x.left = 16.7px;',
             '11: #x.left = 33.3px;',
             '12: #x.left = 50px;',
-            '13: #x.left = 66.6px;',
+            '13: #x.left = 66.7px;',
             '14: #x.left = 83.3px;',
             '15: #x.left = 100px;',
             // back
-            '16: #x.left = 66.6px;',
+            '16: #x.left = 66.7px;',
             '17: #x.left = 33.3px;',
             '18: #x.left = 0px;',
             // cycle 3
-            '19: #x.left = 16.6px;',
+            '19: #x.left = 16.7px;',
             '20: #x.left = 33.3px;',
             '21: #x.left = 50px;',
-            '22: #x.left = 66.6px;',
+            '22: #x.left = 66.7px;',
             '23: #x.left = 83.3px;',
             '24: #x.left = 100px;',
             // back
-            '25: #x.left = 66.6px;',
+            '25: #x.left = 66.7px;',
             '26: #x.left = 33.3px;',
             '27: #x.left = 0px;'
         ], "logs");
