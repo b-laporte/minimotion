@@ -1,4 +1,6 @@
 <script>
+  import 'prismjs/themes/prism-dark.css';
+
   import Sidebar from "./sidebar";
   import { DEMOS } from "./samples";
   let activeDemo = DEMOS.find(demo => demo.type != "category");
@@ -61,11 +63,6 @@
 
     border-bottom: 3px solid orange;
   }
-
-  .source {
-    padding-top: 2em;
-    font-size: larger;
-  }
 </style>
 
 <svelte:window on:hashchange={fromHash} />
@@ -76,7 +73,7 @@
     <div class="demo-title">{activeDemo.title}</div>
     <div>
       <svelte:component this={activeDemo.sample} />
-      <pre class="source">{activeDemo.source}</pre>
+      <pre><code class="typescript">{@html activeDemo.source}</code></pre>
     </div>
   </div>
 </div>

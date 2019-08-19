@@ -4,7 +4,10 @@ import resolve from "rollup-plugin-node-resolve";
 import gzip from "rollup-plugin-gzip";
 import { terser } from "rollup-plugin-terser";
 import svelte from "rollup-plugin-svelte";
+import postcss from 'rollup-plugin-postcss';
 import { promises as fs } from "fs";
+import * as Prism from 'prismjs';
+import 'prismjs/components/prism-javascript';
 
 const SOURCE_PREFIX = "source:";
 const SOURCE_SUFFIX = ".src";
@@ -18,6 +21,7 @@ const demoSourceCodePlugin = {
       let source = await fs.readFile(fileId, "utf8");
       source = source.replace(/^[\s\S]*(async function animation)/, '$1');
       source = source.replace(/<\/script>[\s\S]*$/, '');
+      source = Prism.highlight(source, Prism.languages.javascript, 'javascript');
       return `export default ${JSON.stringify(source)};`;
     }
     return null;
@@ -57,6 +61,7 @@ export default {
         css.write("dist/demo/demo.css");
       }
     }),
+    postcss(),
     terser(),
     gzip()
   ]
