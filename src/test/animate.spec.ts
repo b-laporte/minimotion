@@ -286,6 +286,34 @@ describe("animate", () => {
         ], "logs");
     });
 
+    it("should read the precision of 'to' value", async function () {
+        function anim(a: Anim) {
+            a.animate({ target: "#x", top: ["-0.001%", "0.00100%"], duration: 40, easing: linear });
+        }
+        const p = new TestPlayer(animCtxtXYZ(), anim, ['#0AF0FF']);
+        await p.play();
+        assert.deepEqual(logs(), [
+           "0: #x.top = -0.001%;",
+           "1: #x.top = -0.00033%;",
+           "2: #x.top = 0.00033%;",
+           "3: #x.top = 0.001%;",
+        ], "logs");
+    });
+
+    it("should read the precision of 'from' value", async function () {
+        function anim(a: Anim) {
+            a.animate({ target: "#x", top: ["-0.001001%", "0.001%"], duration: 40, easing: linear });
+        }
+        const p = new TestPlayer(animCtxtXYZ(), anim, ['#0AF0FF']);
+        await p.play();
+        assert.deepEqual(logs(), [
+           "0: #x.top = -0.001001%;",
+           "1: #x.top = -0.000334%;",
+           "2: #x.top = 0.000333%;",
+           "3: #x.top = 0.001%;",
+        ], "logs");
+    });
+
     // transform prop
     // svg attributes
 
