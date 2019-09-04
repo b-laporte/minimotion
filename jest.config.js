@@ -15,5 +15,6 @@ module.exports = {
     "ts-jest": {
       tsConfig: "tsconfig.test.json"
     }
-  }
+  },
+  testMatch :[ "<rootDir>/src/test/**/*.spec.ts" ]
 };
