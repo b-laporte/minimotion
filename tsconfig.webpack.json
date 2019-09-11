@@ -1,0 +1,9 @@
+{
+    "extends": "./tsconfig.json",
+    "include": ["webpack/loader.ts"],
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "ES5",
+        "outDir": "dist/lib/webpack"
+    }
+}

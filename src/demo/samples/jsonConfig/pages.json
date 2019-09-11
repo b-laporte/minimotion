@@ -1,0 +1,13 @@
+{
+    "pages": [
+        { 
+            "name": "sample",
+            "content": "@include-xtml:../../xtml/sample.xtml"
+        }
+    ],
+    "references": {
+        "bar" : {
+            "src" : "./a/b/c.d-v1.js"
+        }
+    }
+}

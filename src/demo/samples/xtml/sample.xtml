@@ -1,0 +1,23 @@
+// e.g. https://animejs.com/documentation/#gridStaggering
+<*page path="samples/staggering/grid">
+    <.description title="Grid">
+        Staggering values based a 2D array that allow "ripple" effects.
+        Line 2
+        <*code> anime.stagger(value, {grid: [rows, columns]}) </>
+
+        <*paramDescription>
+            <.param name="array">
+                A 2 items array, the first value is the number of rows, the second the number of columns
+            </>
+        </>
+    </>
+    <.sample foo={bar}>
+        <.description>
+            <*code @ws> 
+                 < !@include:ts file=”samples.ts” block=”sample1” />
+        </>
+        <.targets>
+            <*targets.grid class=".staggering-grid-demo" cellClass=".el" columns=14 rows=5/>
+        </>
+    </>
+</*page>
