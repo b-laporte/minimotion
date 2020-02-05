@@ -63,6 +63,7 @@ export async function exhaustAsyncPipe() {
         }
         if (ASYNC_COUNTER > 10000) {
             // purpose of ASYNC_COUNTER is to track changes, we don't care of the actual value
+            // eslint-disable-next-line require-atomic-updates
             ASYNC_COUNTER = 1;
         }
         count++;

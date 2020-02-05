@@ -31,21 +31,6 @@
     activeDemo = demo;
   }
 
-  function onDemoKeydown(event, demo) {
-    if (["enter", " "].includes(event.key.toLowerCase())) {
-      activeDemo = demo;
-      event.preventDefault();
-    }
-  }
-
-  function onInputKeydown(event) {
-    if (event.key === "Escape") {
-      filter = "";
-      event.stopPropagation();
-      event.preventDefault();
-    }
-  }
-
   $: filterDemos(filter);
 </script>
 
@@ -60,19 +45,6 @@
     font-size: 4rem;
     color: #555;
     padding-left: 2rem;
-  }
-
-  .filter {
-    height: 2em;
-  }
-
-  .message {
-    color: #856404;
-    background-color: #fff3cd;
-    border: 1px solid #ffeeba;
-    padding: 1em;
-    border-radius: 0.25em;
-    font-weight: bold;
   }
 
   .category {
@@ -106,13 +78,6 @@
 
 <div class="sidebar">
   <div class="logo">minimotion</div>
-  <!-- <input
-		type="text"
-		class="filter"
-		bind:value={filter}
-		on:keydown={onInputKeydown}
-	/> -->
-
   <div class="demo-list">
     {#each filteredDemos as item}
       {#if item.type === 'category'}
@@ -122,7 +87,6 @@
           class="demo"
           class:active={item === activeDemo}
           on:click={() => onDemoClick(item)}
-          on:keydown={event => onDemoKeydown(event, item)}
         >
           {item.title}
         </div>
