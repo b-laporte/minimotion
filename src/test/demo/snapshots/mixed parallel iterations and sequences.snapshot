@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`samples TLParamsInheritance 1`] = `
+exports[`samples mixed parallel iterations and sequences 1`] = `
 Array [
   "0: DIV.square.el style.transform= translateX(0px)",
   "1: DIV.square.el style.transform= translateX(41.8px)",

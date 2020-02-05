@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`samples Sample 4 1`] = `
+exports[`samples iteration with sub-sequence 1`] = `
 Array [
   "0: DIV.square.square1 style.left=0px",
   "1: DIV.square.square1 style.left=1.3px",

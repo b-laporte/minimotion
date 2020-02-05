@@ -1,12 +1,18 @@
 <style>
   div.main {
+    height: 190px;
+    margin-left: 50px;
+  }
+
+  div.container {
     position: relative;
-    height: 180px;
+    top: 20px;
   }
 
   div.square {
     position: absolute;
     display: inline-block;
+    border-radius: 2px;
     height: 30px;
     width: 30px;
   }
@@ -31,7 +37,9 @@
 </style>
 
 <div class="main">
-  <div class="square square1" />
-  <div class="square square2" />
-  <div class="square square3" />
+  <div class="container">
+    <div class="square square1" />
+    <div class="square square2" />
+    <div class="square square3" />
+  </div>
 </div>

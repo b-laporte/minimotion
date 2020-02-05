@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`samples gridAxisStaggering 1`] = `
+exports[`samples position staggering 1`] = `
 Array [
   "6: DIV.square.el #34 style.transform= translateX(0px) translateY(0) rotateZ(0deg)",
   "6: DIV.square.el #35 style.transform= translateX(0px) translateY(0) rotateZ(0deg)",

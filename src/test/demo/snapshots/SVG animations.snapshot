@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`samples svgAttr 1`] = `
+exports[`samples SVG animations 1`] = `
 Array [
   "1: polygon points=64 68.65 8.574 100 63.441 67.68 64 4 64.559 67.68 119.426 100",
   "2: polygon points=64 68.66 8.574 100 63.427 67.67 64 4 64.573 67.67 119.426 100",

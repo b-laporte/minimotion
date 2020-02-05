@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`samples rangeValueStaggering 1`] = `
+exports[`samples multi-property animation 1`] = `
 Array [
   "0: DIV.square.el #0 style.transform= translateX(0px) rotate(0deg)",
   "0: DIV.square.el #1 style.transform= translateX(0px) rotate(0deg)",

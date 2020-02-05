@@ -11,6 +11,17 @@
       elasticity: 0.8
     });
 
+    a.set({
+      transform: "translateX(0px) translateY(0px) scaleX(1) scaleY(1)"
+    });
+    
+    await move(a, "Y", -40, 500, 1.75, 50);
+    await move(a, "X", 250, 1000, 4, 100);
+    await move(a, "Y", 40, 500, 2, 50);
+    await move(a, "X", 0, 1000, 4, 100);
+    await move(a, "Y", 0, 500, 1.75, 50);
+
+    // sub-animation function (could be external & shared as a library)
     async function move(a, xORy, value, duration, scaleMax, scaleMaxTime) {
       a.animate({
         [`translate${xORy}`]: value,
@@ -21,22 +32,11 @@
         duration: scaleMaxTime,
         easing: easeOutExpo
       });
-      a.animate({
+      await a.animate({
         [`scale${xORy}`]: [scaleMax, 1],
         duration: duration - scaleMaxTime
       });
     }
-
-    a.set({
-      transform: "translateX(0px) translateY(0px) scaleX(1) scaleY(1)"
-    });
-    await a.sequence(
-      async a => await move(a, "Y", -40, 500, 1.75, 50),
-      async a => await move(a, "X", 250, 1000, 4, 100),
-      async a => await move(a, "Y", 40, 500, 2, 50),
-      async a => await move(a, "X", 0, 1000, 4, 100),
-      async a => await move(a, "Y", 0, 500, 1.75, 50)
-    );
   }
 </script>
 

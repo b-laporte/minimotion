@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`samples morphing 1`] = `
+exports[`samples SVG points animation 1`] = `
 Array [
   "0: polygon.polymorph points=70 24 119.574 60.369 100.145 117.631 50.855 101.631 3.426 54.369",
   "1: polygon.polymorph points=70 25.02 119.514 60.309 100.804 118.529 51.454 100.613 4.444 54.728",

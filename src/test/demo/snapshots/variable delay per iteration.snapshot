@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`samples staggeringStartValue 1`] = `
+exports[`samples variable delay per iteration 1`] = `
 Array [
   "31: DIV.square.el #0 style.transform= translateX(0px)",
   "32: DIV.square.el #0 style.transform= translateX(32.9px)",

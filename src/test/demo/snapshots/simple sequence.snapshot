@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`samples timelineBasics 1`] = `
+exports[`samples simple sequence 1`] = `
 Array [
   "0: DIV.square.el style.transform= translateX(0px)",
   "1: DIV.square.el style.transform= translateX(27.8px)",

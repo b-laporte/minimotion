@@ -83,15 +83,32 @@
   }
 
   input[type="range"] {
-    width: 530px;
+    width: 620px;
   }
 
   div.player {
     padding-top: 10px;
+    cursor: default;
+    font-size: 1rem;
   }
 
   div.speeds {
     padding-top: 5px;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    border: 0;
+    border-radius: 5px;
+    padding: 0.3rem 0.8rem;
+    margin: 0.1rem 0.5rem 0.2rem 0;
+    background-color: #1670c5;
+    color: #ffffff;
+  }
+
+  .play {
+    background-color: #2cf91a;
+    color: #111;
   }
 </style>
 
@@ -103,39 +120,42 @@
   on:input={setPosition}
   step="1" />
 <div class="player">
-  <a href="#" on:click|preventDefault={play}>Play</a>
-  |
-  <a href="#" on:click|preventDefault={pause}>Pause</a>
-  |
-  <a href="#" on:click|preventDefault={playBack}>Play back</a>
-  |
-  <a href="#" on:click|preventDefault={stop}>Stop</a>
+  <button class="btn" on:click|preventDefault={pause}>||</button>
+  <button class="btn play" on:click|preventDefault={play}>Play</button>
+  <button class="btn" on:click|preventDefault={playBack}>&lt;&lt;</button>
+  <button class="btn" on:click|preventDefault={stop}>Stop</button>
 </div>
 <div class="speeds">
   Speed:
   <a
-    href="#"
+    href="./#"
+    class:active={speed === 0.1}
+    on:click|preventDefault={() => setSpeed(0.1)}>
+    x0.1
+  </a>
+  <a
+    href="./#"
     class:active={speed === 0.5}
     on:click|preventDefault={() => setSpeed(0.5)}>
     x0.5
   </a>
   |
   <a
-    href="#"
+    href="./#"
     class:active={speed === 1}
     on:click|preventDefault={() => setSpeed(1)}>
     x1
   </a>
   |
   <a
-    href="#"
+    href="./#"
     class:active={speed === 2}
     on:click|preventDefault={() => setSpeed(2)}>
     x2
   </a>
   |
   <a
-    href="#"
+    href="./#"
     class:active={speed === 5}
     on:click|preventDefault={() => setSpeed(5)}>
     x5

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`samples animationKeyframes 1`] = `
+exports[`samples elasticity 1`] = `
 Array [
   "0: DIV.circle.el style.transform= translateY(0px)",
   "1: DIV.circle.el style.transform= translateY(-5.6px)",

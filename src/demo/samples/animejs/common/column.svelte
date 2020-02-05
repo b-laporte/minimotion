@@ -15,7 +15,7 @@
     margin: 1px;
     width: 18px;
     height: 18px;
-    background-color: #00d672;
+    background-color: #20fe50;
   }
   .shadow {
     position: absolute;

@@ -15,7 +15,7 @@
     width: 28px;
     height: 28px;
     margin: 1px;
-    background-color: #3cffec;
+    background-color: #20fe50;
   }
   .circle {
     border-radius: 50%;
@@ -25,7 +25,7 @@
     height: 0;
     border-style: solid;
     border-width: 0 14px 24px 14px;
-    border-color: transparent transparent #3cffec transparent;
+    border-color: transparent transparent #20fe50 transparent;
   }
 </style>
 

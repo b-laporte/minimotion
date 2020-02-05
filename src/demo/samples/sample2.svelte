@@ -7,7 +7,7 @@
     a.iterate({ targets: ".square", sequence: true }, a => {
       a.animate({
         left: [0, 500],
-        duration: 100,
+        duration: 400,
         easing: easeInOutCubic,
         release: -80
       });

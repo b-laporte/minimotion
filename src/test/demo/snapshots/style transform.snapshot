@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`samples Transform chain 1`] = `
+exports[`samples style transform 1`] = `
 Array [
   "0: DIV.square.square1 style.transform=translateX(0px) rotate(0deg) translateX(0px)",
   "1: DIV.square.square1 style.transform=translateX(0.6px) rotate(0.1deg) translateX(0.2px)",

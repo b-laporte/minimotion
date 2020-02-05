@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`samples staggeringFrom 1`] = `
+exports[`samples parametric delay 1`] = `
 Array [
   "3: DIV.square.el #2 style.transform= translateX(0px)",
   "3: DIV.square.el #3 style.transform= translateX(0px)",

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`samples Custom init/apply properties 1`] = `
+exports[`samples custom JS transformation function 1`] = `
 Array [
   "13: DIV.square style.background-color=rgb(254, 136, 32)",
   "13: DIV.square style.transform=translateX(0px) rotate(0deg) translateX(0px)",

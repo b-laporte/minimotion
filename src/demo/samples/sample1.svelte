@@ -4,8 +4,8 @@
   import { easeInOutCubic, linear } from "../../core/easings";
 
   async function animation(a) {
-    a.defaults({ duration: 500, easing: easeInOutCubic });
-    await a.animate({ target: ".square1", left: [0, 500], release: -400 });
+    a.defaults({ duration: 400, easing: easeInOutCubic });
+    await a.animate({ target: ".square1", left: [0, 500], release: -200 });
     await a.animate({
       target: ".square2",
       left: [0, 500],

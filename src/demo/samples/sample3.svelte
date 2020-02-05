@@ -7,7 +7,7 @@
     a.iterate(".square", (a, idx) => {
       a.animate({
         left: [0, 500],
-        duration: 100,
+        duration: 400,
         easing: easeInOutCubic,
         delay: idx * 40
       });
