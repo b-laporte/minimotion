@@ -16,10 +16,17 @@
         "type": "git"
     },
     "author": "Bertrand Laporte",
-    "main": "dist/lib/index.js",
+    "main": "dist/minimotion.js",
+    "module": "dist/minimotion.mjs",
+    "typings": "dist/types/index.d.ts",
+    "files": [
+        "dist/minimotion.*",
+        "dist/types"
+    ],
     "scripts": {
         "clean": "rm -rf dist/",
-        "build": "tsc -p tsconfig.build.json",
+        "build": "rollup -c rollup.build.config.js",
+        "postbuild": "tsc -p tsconfig.build.d.json",
         "lint": "eslint \"src/**/*.{js,ts,svelte}\"",
         "test": "jest",
         "serve-dist": "serve dist",
