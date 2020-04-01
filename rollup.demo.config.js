@@ -46,7 +46,7 @@ export default {
   plugins: [
     demoSourceCodePlugin,
     copy({
-      targets: [{ src: "src/demo/index.html", dest: "dist/" }]
+      targets: [{ src: "src/demo/index.html", dest: "dist/demo/" }]
     }),
     resolve({
       mainFields: ["module"],

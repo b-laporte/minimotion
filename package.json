@@ -29,7 +29,7 @@
         "postbuild": "tsc -p tsconfig.build.d.json",
         "lint": "eslint \"src/**/*.{js,ts,svelte}\"",
         "test": "jest",
-        "serve-dist": "serve dist",
+        "serve-dist": "serve dist/demo",
         "doc": "rollup -c rollup.demo.config.js",
         "doc-watch": "rollup -c rollup.demo.config.js -w",
         "doc-dev": "npm-run-all --parallel serve-dist doc-watch"
