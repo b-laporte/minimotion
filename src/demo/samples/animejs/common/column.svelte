@@ -13,9 +13,10 @@
   }
   .square {
     margin: 1px;
-    width: 18px;
-    height: 18px;
-    background-color: #20fe50;
+    width: 22px;
+    height: 22px;
+    border-radius: 2px;
+    background-color: orange;
   }
   .shadow {
     position: absolute;

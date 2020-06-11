@@ -16,9 +16,9 @@
 </script>
 
 <Column />
-<Player {animation} />
-<br />
-<label>
-  Center:
-  <input type="number" bind:value={center} />
-</label>
+<Player {animation} params>
+  <label>
+    <div>Center</div>
+    <input type="number" bind:value={center} />
+  </label>
+</Player>
