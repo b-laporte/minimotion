@@ -1,12 +1,14 @@
-import typescript from "rollup-plugin-typescript2";
-import copy from "rollup-plugin-copy";
-import resolve from "rollup-plugin-node-resolve";
-import gzip from "rollup-plugin-gzip";
-import { terser } from "rollup-plugin-terser";
-import svelte from "rollup-plugin-svelte";
-import postcss from 'rollup-plugin-postcss';
 import { promises as fs } from "fs";
+import { terser } from "rollup-plugin-terser";
 import * as Prism from 'prismjs';
+import copy from "rollup-plugin-copy";
+import gzip from "rollup-plugin-gzip";
+import postcss from 'rollup-plugin-postcss';
+import prettier from "prettier";
+import resolve from "rollup-plugin-node-resolve";
+import svelte from "rollup-plugin-svelte";
+import typescript from "rollup-plugin-typescript2";
+
 import 'prismjs/components/prism-javascript';
 
 const SOURCE_PREFIX = "source:";
@@ -21,6 +23,7 @@ const demoSourceCodePlugin = {
       let source = await fs.readFile(fileId, "utf8");
       source = source.replace(/^[\s\S]*(async function animation)/, '$1');
       source = source.replace(/<\/script>[\s\S]*$/, '');
+      source = prettier.format(source, { tabWidth: 4, filepath: "foo.js" }); // foo.js is used here to infer JavaScript
       source = Prism.highlight(source, Prism.languages.javascript, 'javascript');
       return `export default ${JSON.stringify(source)};`;
     }

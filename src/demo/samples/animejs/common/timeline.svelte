@@ -1,6 +1,6 @@
 <style>
   .wrapper {
-    padding: 50px;
+    padding: 10px 50px 50px;
   }
   .shadow {
     position: absolute;
@@ -8,24 +8,30 @@
   }
   .line {
     width: 100%;
-    padding: 1px 0px;
+    padding: 8px 0px;
   }
   .square,
   .circle {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
     margin: 1px;
-    background-color: #20fe50;
   }
+  .square {
+    border-radius: 2px;
+    background-color: #2096fe;
+  }
+
   .circle {
     border-radius: 50%;
+    background-color: #20fe50;
   }
+
   .triangle {
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 0 14px 24px 14px;
-    border-color: transparent transparent #20fe50 transparent;
+    border-width: 0 18px 30px 18px;
+    border-color: transparent transparent orange transparent;
   }
 </style>
 

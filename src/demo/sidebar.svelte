@@ -1,5 +1,6 @@
 <script>
   import { DEMOS } from "./samples";
+  import Logo from "./logo";
 
   let filter = "";
   export let activeDemo;
@@ -27,7 +28,7 @@
     });
   }
 
-  function onDemoClick(demo) {
+  function navigate(demo) {
     activeDemo = demo;
   }
 
@@ -36,15 +37,22 @@
 
 <style>
   .sidebar {
-    padding: 1em;
     background-color: #2a2a2a;
-    height: 100vh;
+    min-height: 100vh;
   }
 
   .logo {
-    font-size: 4rem;
-    color: #555;
-    padding-left: 2rem;
+    background-color: #1567b0;
+    color: white;
+    height: 7.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo :global(svg) {
+    height: calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
   }
 
   .category {
@@ -52,17 +60,24 @@
     margin-bottom: 0.5rem;
     font-weight: bold;
     color: rgb(99, 172, 249);
+    text-transform: capitalize;
+  }
+
+  .category:not(:first-child) {
+    margin-top: 2rem;
   }
 
   .demo-list {
     font-size: 1rem;
-    margin-top: 2rem;
+    margin: 2rem 0;
     padding: 0 4rem 0 2rem;
     cursor: default;
   }
 
   .demo {
     cursor: default;
+    text-indent: -1rem;
+    margin: 0.25rem 0 0.25rem 1rem;
   }
 
   .demo:hover {
@@ -77,7 +92,9 @@
 </style>
 
 <div class="sidebar">
-  <div class="logo">minimotion</div>
+  <a href="/" class="logo" on:click={() => navigate(null)}>
+    <Logo />
+  </a>
   <div class="demo-list">
     {#each filteredDemos as item}
       {#if item.type === 'category'}
@@ -86,8 +103,7 @@
         <div
           class="demo"
           class:active={item === activeDemo}
-          on:click={() => onDemoClick(item)}
-        >
+          on:click={() => navigate(item)}>
           {item.title}
         </div>
       {/if}

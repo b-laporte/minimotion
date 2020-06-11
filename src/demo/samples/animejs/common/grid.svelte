@@ -19,27 +19,34 @@
   }
   .square {
     position: absolute;
-    width: 18px;
-    height: 18px;
-    background-color: #00d672;
+    width: 22px;
+    height: 22px;
+    border-radius: 2px;
+    background-color: orange;
   }
   .shadow {
     opacity: 0.2;
   }
 </style>
 
-<div class="wrapper" style="width: {width * 20 + 2}px; height: {height * 20 + 2}px;">
+<div
+  class="wrapper"
+  style="width: {width * 24 + 2}px; height: {height * 24 + 2}px;">
   <div class="grid">
     {#each heightArray as yItem, y}
       {#each widthArray as xItem, x}
-        <div class="square el" style="left: {x * 20 + 1}px; top: {y * 20 + 1}px;" />
+        <div
+          class="square el"
+          style="left: {x * 24 + 1}px; top: {y * 24 + 1}px;" />
       {/each}
     {/each}
   </div>
   <div class="grid shadow">
     {#each heightArray as yItem, y}
       {#each widthArray as xItem, x}
-        <div class="square" style="left: {x * 20 + 1}px; top: {y * 20 + 1}px;" />
+        <div
+          class="square"
+          style="left: {x * 24 + 1}px; top: {y * 24 + 1}px;" />
       {/each}
     {/each}
   </div>

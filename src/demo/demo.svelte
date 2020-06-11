@@ -2,11 +2,13 @@
   import "prismjs/themes/prism-dark.css";
 
   import Sidebar from "./sidebar";
+  import Home from "./home";
   import { DEMOS } from "./samples";
-  let activeDemo = DEMOS.find(demo => demo.type != "category");
+  let firstDemo = DEMOS.find(demo => demo.type != "category");
+  let activeDemo;
 
   function fromHash() {
-    let value = decodeURIComponent(window.location.hash.slice(1));
+    let value = decodeURIComponent(window.location.hash.slice(2));
     let demo = DEMOS.find(
       demo => demo.title === value && demo.type != "category"
     );
@@ -18,15 +20,17 @@
   }
 
   function toHash(demo) {
-    const hash = `#${encodeURIComponent(demo.title)}`;
+    const hash = demo ? `#/${encodeURIComponent(demo.title)}` : "#/";
     if (window.location.hash !== hash) {
       window.location.hash = hash;
     }
   }
 
   fromHash();
-
-  $: toHash(activeDemo);
+  $: if (activeDemo) {
+    toHash(activeDemo);
+  }
+  $: notes = activeDemo && activeDemo.animejs;
 </script>
 
 <style>
@@ -43,26 +47,57 @@
   .layout {
     height: 100%;
     display: grid;
-    gap: 2em;
-    grid-template-columns: 4fr 14fr;
+    gap: 2rem;
+    grid-template-columns: 5fr 14fr;
     grid-template-rows: 100%;
   }
 
-  .content {
-    padding: 1em;
+  .demo-title {
+    box-sizing: border-box;
+    background-color: #2096fe;
+    display: flex;
+    align-items: center;
+    padding: 0 2rem 0.25rem;
+    margin-left: -2rem;
+    font-size: 3rem;
+    height: 7.5rem;
   }
 
   .panel {
-    margin-top: 3rem;
+    margin-top: 2rem;
+    margin-right: 2rem;
   }
 
-  .demo-title {
-    padding-top: 1.1rem;
-    font-size: 3rem;
+  .demo {
+    padding: 1rem;
+    background-color: #2a2a2a;
+  }
+
+  .demo > h3 {
+    margin-top: 0;
+  }
+
+  h3 {
+    color: #2096fe;
+  }
+
+  .notes {
+    color: #888;
+    padding: 0 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .animejs a {
+    color: inherit;
+  }
+
+  .sources {
+    margin-top: 2rem;
+    padding: 0 1rem;
   }
 
   pre.code {
-    margin-top: 3rem;
+    white-space: pre-wrap;
   }
 
   code.typescript {
@@ -105,17 +140,46 @@
 
 <svelte:window on:hashchange={fromHash} />
 
-<div class="layout">
-  <Sidebar bind:activeDemo />
-  <div class="content">
-    <div class="demo-title">{activeDemo.title}</div>
-    <div class="panel">
-      <svelte:component this={activeDemo.sample} />
-      <pre class="code">
-        <code class="typescript">
-          {@html activeDemo.source}
-        </code>
-      </pre>
+{#if activeDemo}
+  <div class="layout">
+    <Sidebar bind:activeDemo />
+    <div class="content">
+      <div class="demo-title">{activeDemo.title}</div>
+      <div class="panel">
+        <div class="demo">
+          <h3>Live Preview</h3>
+          <svelte:component this={activeDemo.sample} />
+        </div>
+
+        <div class="sources">
+          <h3>Sources</h3>
+          <pre class="code">
+            <code class="typescript">
+              {@html activeDemo.source}
+            </code>
+          </pre>
+        </div>
+
+        {#if notes}
+          <div class="notes">
+            <h3>Notes</h3>
+            {#if activeDemo.animejs}
+              <div class="animejs">
+                This demo is a minimotion rewrite of
+                <a
+                  href={`https://animejs.com/documentation/#${activeDemo.animejs}`}
+                  target="_blank"
+                  rel="noopener no-referer">
+                  an animejs example.
+                </a>
+                Same markup is re-used for the sole purpose of comparison.
+              </div>
+            {/if}
+          </div>
+        {/if}
+      </div>
     </div>
   </div>
-</div>
+{:else}
+  <Home on:click={() => (activeDemo = firstDemo)} />
+{/if}

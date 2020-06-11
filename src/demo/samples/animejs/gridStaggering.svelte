@@ -33,32 +33,33 @@
   }
 </script>
 
-<Grid {width} {height}/>
+<Grid {width} {height} />
 
-<Player {animation} />
-<br />
-<label>
-  Width:
-  <input type="number" bind:value={width} />
-</label>
-<br />
-<label>
-  Height:
-  <input type="number" bind:value={height} />
-</label>
-<br />
-<label>
-  Center X:
-  <input type="number" bind:value={xCenter} />
-</label>
-<br />
-<label>
-  Center Y:
-  <input type="number" bind:value={yCenter} />
-</label>
-<br />
-<label>
-  Distance power:
-  <input type="number" bind:value={nDistance} />
-</label>
-<br />
+<Player {animation} params>
+
+  <label>
+    <div>Width</div>
+    <input type="number" bind:value={width} />
+  </label>
+
+  <label>
+    <div>Height</div>
+    <input type="number" bind:value={height} />
+  </label>
+
+  <label>
+    <div>Center X</div>
+    <input type="number" bind:value={xCenter} />
+  </label>
+
+  <label>
+    <div>Center Y</div>
+    <input type="number" bind:value={yCenter} />
+  </label>
+
+  <label>
+    <div>Distance power</div>
+    <input type="number" bind:value={nDistance} />
+  </label>
+
+</Player>

@@ -51,7 +51,8 @@ export const DEMOS = [
     {
         title: "simple sequence",
         sample: timelineBasics,
-        source: timelineBasicsSrc
+        source: timelineBasicsSrc,
+        animejs:  "timelineBasics",
     },
     {
         title: "sequence with overlap",
@@ -61,7 +62,8 @@ export const DEMOS = [
     {
         title: "sequence group",
         sample: timelineOffsets,
-        source: timelineOffsetsSrc
+        source: timelineOffsetsSrc,
+        animejs: "timelineOffsets",
     },
     {
         title: "iteration in sequence",
@@ -76,12 +78,14 @@ export const DEMOS = [
     {
         title: "multi-property animation",
         sample: rangeValueStaggering,
-        source: rangeValueStaggeringSrc
+        source: rangeValueStaggeringSrc,
+        animejs: "rangeValueStaggering",
     },
     {
         title: "elasticity", // animationKeyframes
         sample: animationKeyframes,
-        source: animationKeyframesSrc
+        source: animationKeyframesSrc,
+        animejs: "animationKeyframes",
     },
     {
         title: "iteration with sub-sequence",
@@ -91,17 +95,14 @@ export const DEMOS = [
     {
         title: "custom animation functions",
         sample: propertyKeyframes,
-        source: propertyKeyframesSrc
+        source: propertyKeyframesSrc,
+        animejs: "propertyKeyframes",
     },
     {
         title: "mixed parallel iterations and sequences",
         sample: TLParamsInheritance,
-        source: TLParamsInheritanceSrc
-    },
-    // ----------------------------------------------------
-    {
-        type: "category",
-        title: "animejs"
+        source: TLParamsInheritanceSrc,
+        animejs: "TLParamsInheritance",
     },
     
     // ----------------------------------------------------
@@ -112,28 +113,33 @@ export const DEMOS = [
     {
         title: "simple delay",
         sample: staggeringBasics,
-        source: staggeringBasicsSrc
+        source: staggeringBasicsSrc,
+        animejs: "staggeringBasics",
     },
     {
         title: "variable delay per iteration",
         sample: staggeringStartValue,
-        source: staggeringStartValueSrc
+        source: staggeringStartValueSrc,
+        animejs: "staggeringStartValue",
     },
     
     {
         title: "parametric delay",
         sample: staggeringFrom,
-        source: staggeringFromSrc
+        source: staggeringFromSrc,
+        animejs: "staggeringFrom",
     },
     {
         title: "reverse order with delays",
         sample: staggeringDirection,
-        source: staggeringDirectionSrc
+        source: staggeringDirectionSrc,
+        animejs: "staggeringDirection",
     },
     {
         title: "delay with easing function",
         sample: staggeringEasing,
-        source: staggeringEasingSrc
+        source: staggeringEasingSrc,
+        animejs: "staggeringEasing",
     },
     // ----------------------------------------------------
     {
@@ -143,12 +149,14 @@ export const DEMOS = [
     {
         title: "scale staggering",
         sample: gridStaggering,
-        source: gridStaggeringSrc
+        source: gridStaggeringSrc,
+        animejs: "gridStaggering",
     },
     {
         title: "position staggering",
         sample: gridAxisStaggering,
-        source: gridAxisStaggeringSrc
+        source: gridAxisStaggeringSrc,
+        animejs: "gridAxisStaggering",
     },
     // ----------------------------------------------------
     {
@@ -158,12 +166,14 @@ export const DEMOS = [
     {
         title: "SVG animations",
         sample: svgAttr,
-        source: svgAttrSrc
+        source: svgAttrSrc,
+        animejs: "svgAttr",
     },
     {
         title: "SVG points animation",
         sample: morphing,
-        source: morphingSrc
+        source: morphingSrc,
+        animejs: "morphing",
     },
     // ----------------------------------------------------
     {

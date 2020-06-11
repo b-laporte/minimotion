@@ -3,6 +3,7 @@
   import { tick, onDestroy } from "svelte";
 
   export let animation;
+  export let params = false;
 
   let player;
   let animDuration = 0;
@@ -74,22 +75,16 @@
 </script>
 
 <style>
-  a {
-    color: #ffffff;
-  }
-
-  a.active {
-    color: #2cf91a;
-  }
-
   input[type="range"] {
-    width: 620px;
+    width: 100%;
   }
 
   div.player {
     padding-top: 10px;
     cursor: default;
     font-size: 1rem;
+    display: flex;
+    align-items: center;
   }
 
   div.speeds {
@@ -106,9 +101,44 @@
     color: #ffffff;
   }
 
-  .play {
+  .btn:last-child {
+    margin-right: 0;
+  }
+
+  .play,
+  button.active {
     background-color: #2cf91a;
     color: #111;
+  }
+
+  .speeds {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+  }
+
+  .params {
+    margin-top: 1rem;
+  }
+
+  .params :global(label) {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 0.125rem;
+  }
+
+  .params :global(label > input) {
+    font-size: 1rem;
+    flex: 1;
+    margin-right: 1rem;
+  }
+
+  .params :global(label > div) {
+    width: 125px;
+  }
+
+  .params h3 {
+    color: #1670c5;
   }
 </style>
 
@@ -124,40 +154,38 @@
   <button class="btn play" on:click|preventDefault={play}>Play</button>
   <button class="btn" on:click|preventDefault={playBack}>&lt;&lt;</button>
   <button class="btn" on:click|preventDefault={stop}>Stop</button>
+
+  <div class="speeds">
+    Speed&nbsp;
+    <button
+      class="btn"
+      class:active={speed === 0.1}
+      on:click={() => setSpeed(0.1)}>
+      &times;0.1
+    </button>
+    <button
+      class="btn"
+      class:active={speed === 0.5}
+      on:click={() => setSpeed(0.5)}>
+      &times;0.5
+    </button>
+
+    <button class="btn" class:active={speed === 1} on:click={() => setSpeed(1)}>
+      &times;1
+    </button>
+
+    <button class="btn" class:active={speed === 2} on:click={() => setSpeed(2)}>
+      &times;2
+    </button>
+
+    <button class="btn" class:active={speed === 5} on:click={() => setSpeed(5)}>
+      &times;5
+    </button>
+  </div>
 </div>
-<div class="speeds">
-  Speed:
-  <a
-    href="./#"
-    class:active={speed === 0.1}
-    on:click|preventDefault={() => setSpeed(0.1)}>
-    x0.1
-  </a>
-  <a
-    href="./#"
-    class:active={speed === 0.5}
-    on:click|preventDefault={() => setSpeed(0.5)}>
-    x0.5
-  </a>
-  |
-  <a
-    href="./#"
-    class:active={speed === 1}
-    on:click|preventDefault={() => setSpeed(1)}>
-    x1
-  </a>
-  |
-  <a
-    href="./#"
-    class:active={speed === 2}
-    on:click|preventDefault={() => setSpeed(2)}>
-    x2
-  </a>
-  |
-  <a
-    href="./#"
-    class:active={speed === 5}
-    on:click|preventDefault={() => setSpeed(5)}>
-    x5
-  </a>
-</div>
+{#if params}
+  <div class="params">
+    <h3>Parameters</h3>
+    <slot>No paramater</slot>
+  </div>
+{/if}
