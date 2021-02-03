@@ -16,6 +16,8 @@
         "type": "git"
     },
     "author": "Bertrand Laporte",
+    "copyright": "Amadeus s.a.s.",
+    "license": "MIT",
     "main": "dist/minimotion.js",
     "module": "dist/minimotion.mjs",
     "typings": "dist/types/index.d.ts",
@@ -34,7 +36,6 @@
         "doc-watch": "rollup -c rollup.demo.config.js -w",
         "doc-dev": "npm-run-all --parallel serve-dist doc-watch"
     },
-    "license": "Apache-2.0",
     "bugs": {},
     "devDependencies": {
         "@types/jest": "24.0.17",

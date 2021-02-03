@@ -1,2 +1,6 @@
 
-[Work in Progress]
+# Minimotions
+
+Composable JavaScript animations with async timelines
+
+

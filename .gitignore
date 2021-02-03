@@ -9,5 +9,6 @@ misc/
 .yarnclean
 .vscode
 .rpt2_cache
+.history
 yarn-error.log
 todo.md
